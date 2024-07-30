@@ -48,13 +48,13 @@ class application:
 
     def pagePF(self):
         self.menu.destroy()
-        self.doc = Document()
+        self.doc = Document('.\code\CPS\'s\CPS PESSOA FISICA.docx')
 
         self.cpsPF = Frame(self.window, bd=4, bg='lightblue')
         self.cpsPF.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         #Titulo
-        Label(self.cpsPF, text='Gerador de CPS Pessoa física', background='lightblue', font=('Bold', 17))\
+        Label(self.cpsPF, text='Gerador de CPS Pessoa física', background='lightblue', font=('arial',17,'bold'))\
             .place(relx=0.3,rely=0.05)
 
         #Botão voltar
@@ -81,7 +81,7 @@ class application:
         #Labels e Entrys
         #Contratante
         Label(self.cpsPF, text='Contratante',\
-            background='lightblue', font=('Italic', 15))\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.2)
 
         ###########nome
@@ -144,25 +144,25 @@ class application:
             textvariable=self.referencias['$rgContra'])\
                 .place(relx=0.35,rely=0.52,relwidth=0.20,relheight=0.05)
 
-        ###########SSP
+        ###########Org. Emissor
 
-        Label(self.cpsPF, text='SSP',\
+        Label(self.cpsPF, text='Org.',\
             background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.45)
+                .place(relx=0.9,rely=0.45)
 
         self.sspEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$sspContra'])\
-                .place(relx=0.61,rely=0.52,relwidth=0.05,relheight=0.05)
+                .place(relx=0.9,rely=0.52,relwidth=0.05,relheight=0.05)
 
         ###########CPF
 
         Label(self.cpsPF, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.45)
+                .place(relx=0.6,rely=0.45)
 
         self.cpfEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$cpfContra'])\
-                .place(relx=0.7,rely=0.52,relwidth=0.25,relheight=0.05)
+                .place(relx=0.6,rely=0.52,relwidth=0.25,relheight=0.05)
 
         ###########Estado Civil
 
@@ -193,7 +193,7 @@ class application:
 
         #Contrato
         Label(self.cpsPF, text='Contrato',\
-            background='lightblue', font=('Italic', 15))\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.7)
 
         ###########Valor pagamento
@@ -233,14 +233,14 @@ class application:
 
     def pageIN(self):
         self.menu.destroy()
-        self.doc = Document()
+        self.doc = Document('.\code\CPS\'s\CPS INATIVIDADE.docx')
 
         self.cpsIN = Frame(self.window, bd=4, bg='lightblue')
         self.cpsIN.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         #Titulo
-        Label(self.cpsIN, text='Gerador de CPS Inatividade', background='lightblue', font=('Bold', 17))\
-            .place(relx=0.3,rely=0.05)
+        Label(self.cpsIN, text='Gerador de CPS Inatividade', background='lightblue', font=('arial',17,'bold'))\
+            .place(relx=0.3,rely=0.02)
 
         #Botão voltar
         Button(self.cpsIN, text='Voltar ao menu',\
@@ -274,8 +274,8 @@ class application:
         #Labels e Entrys
         #Empresa
         Label(self.cpsIN, text='Empresa',\
-            background='lightblue', font=('Italic', 15))\
-                .place(relx=0.05,rely=0.1)
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely=0.11)
                 
         ###########nome empresa
 
@@ -349,7 +349,7 @@ class application:
         
         #Socio
         Label(self.cpsIN, text='Sócio',\
-            background='lightblue', font=('Italic', 15))\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.42)
 
         ###########nome
@@ -412,25 +412,25 @@ class application:
             textvariable=self.referencias['$rgContra'])\
                 .place(relx=0.35,rely=0.66,relwidth=0.20,relheight=0.05)
 
-        ###########SSP
+        ###########Org. Emissor
 
-        Label(self.cpsIN, text='SSP',\
+        Label(self.cpsIN, text='Org.',\
             background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.61)
+                .place(relx=0.9,rely=0.61)
 
         self.sspEntry = Entry(self.cpsIN,\
             textvariable=self.referencias['$sspContra'])\
-                .place(relx=0.61,rely=0.66,relwidth=0.05,relheight=0.05)
+                .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
 
         ###########CPF
 
         Label(self.cpsIN, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.61)
+                .place(relx=0.6,rely=0.61)
 
         self.cpfEntry = Entry(self.cpsIN,\
             textvariable=self.referencias['$cpfContra'])\
-                .place(relx=0.7,rely=0.66,relwidth=0.25,relheight=0.05)
+                .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
 
         ###########Estado Civil
 
@@ -461,7 +461,7 @@ class application:
 
         #Contrato
         Label(self.cpsIN, text='Contrato',\
-            background='lightblue', font=('Italic', 15))\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.8)
 
         ###########Valor pagamento
