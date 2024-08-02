@@ -14,17 +14,25 @@ class application:
 
     def tela(self):
         self.window.configure(background='darkblue')
-        self.window.resizable(True,True)
-        self.window.minsize(width=860, height=500)
-        self.window.maxsize(width=860, height=500)
+        self.window.resizable(False,False)
+        self.window.geometry('880x500')
+        self.window.iconbitmap('./code/imgs/delta-icon.ico')
         self.window.title('Gerador de CPS')
 
     def pageMenu(self):
         self.menu = Frame(self.window, bd=4, bg='lightblue')
         self.menu.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
-        self.textOrientacao = Label(self.menu, text='Selecione o tipo de CPS que deseja fazer:', background='lightblue', font=('Bold', 15))\
-        .place(relx=0.12,rely=0.1,relheight=0.15)
+        self.textOrientacao = Label(self.menu, text='Selecione o tipo de CPS que deseja fazer:', background='lightblue', font=('arial',20,'bold'))\
+        .place(relx=0.15,rely=0.2,relheight=0.15)
+        
+        #Logo
+        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png')
+        
+        self.logo = self.logo.subsample(4,4)
+        
+        Label(self.window, image=self.logo, background='lightblue')\
+            .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
 
         #Pessoa física
         self.btnPF = Button(self.menu, text='CPS Pessoa Física',\
@@ -48,7 +56,7 @@ class application:
 
     def pagePF(self):
         self.menu.destroy()
-        self.doc = Document('.\code\CPS\'s\CPS PESSOA FISICA.docx')
+        self.doc = Document('./code/CPS\'s/CPS PESSOA FISICA.docx')
 
         self.cpsPF = Frame(self.window, bd=4, bg='lightblue')
         self.cpsPF.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
@@ -233,14 +241,22 @@ class application:
 
     def pageIN(self):
         self.menu.destroy()
-        self.doc = Document('.\code\CPS\'s\CPS INATIVIDADE.docx')
+        self.doc = Document('./code/CPS\'s/CPS INATIVIDADE.docx')
 
         self.cpsIN = Frame(self.window, bd=4, bg='lightblue')
         self.cpsIN.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         #Titulo
         Label(self.cpsIN, text='Gerador de CPS Inatividade', background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.02)
+            .place(relx=0.3,rely=0.045)
+            
+        #Logo
+        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
+        
+        self.logo = self.logo.subsample(5,5)
+        
+        Label(self.cpsIN, image=self.logo, background='lightblue')\
+            .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
 
         #Botão voltar
         Button(self.cpsIN, text='Voltar ao menu',\
@@ -275,7 +291,13 @@ class application:
         #Empresa
         Label(self.cpsIN, text='Empresa',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.11)
+                .place(relx=0.05,rely=0.12)
+                
+        # self.canvas = Canvas(self.cpsIN, width=600, height=200)
+        # self.canvas.pack()
+
+        # # Add a line in canvas widget
+        # self.canvas.create_line(100,150,550,150, fill="green", width=5)
                 
         ###########nome empresa
 
@@ -536,11 +558,9 @@ class application:
 
         self.doc.save('CPS_testeResult.docx')
         messagebox.showinfo(title='Aviso', message='Abrindo arquivo gerado!')
-        os.startfile('C:\pedro\CPS Pessoa Física\Code\CPS_testeResult.docx')
+        os.startfile('C:\\pedro\\CPS Pessoa Física\\Code\\CPS_testeResult.docx')
 
         frame_ativo.destroy()
         self.pageMenu()
-
-
 
 application()
