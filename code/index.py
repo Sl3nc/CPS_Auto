@@ -5,7 +5,24 @@ import os
 
 window = Tk()
 
-class application:
+class Validator:
+    def str_validator(text):
+        return not text.isdecimal()
+    
+    def num_validator(text):
+        return text.isdecimal()
+    
+    def cpf_validator(text):
+        if len(text) == 12 or not text.isdecimal():
+            return False
+        self.cpsIN.nametowidget(wid).insert(0, 'oi')
+        return True
+    #https://stackoverflow.com/questions/69947934/how-to-change-the-value-in-an-entry-when-validating
+    
+    def date_validator(text):
+        ...
+
+class App:
     def __init__(self):
         self.window = window
         self.tela()
@@ -281,7 +298,8 @@ class application:
             '$sspContra' : StringVar(),  #sspValidator
             '$cpfContra' : StringVar(),  #cpfValidator
             '$estadoContra' : StringVar(), #strValidator
-            "$comple" : StringVar(), #strValidator
+            "$compleEmp" : StringVar(), #strValidator
+            "$compleContra" : StringVar(), #strValidator
             "$dtVenc" : StringVar(),  #dateValidator
             "$valPag" : StringVar(), #intValidator
             "$dtInic" : StringVar()  #dateValidator
@@ -291,13 +309,14 @@ class application:
         #Empresa
         Label(self.cpsIN, text='Empresa',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.12)
+                .place(relx=0.05,rely=0.115)
                 
-        # self.canvas = Canvas(self.cpsIN, width=600, height=200)
-        # self.canvas.pack()
-
-        # # Add a line in canvas widget
-        # self.canvas.create_line(100,150,550,150, fill="green", width=5)
+        self.canvas = Canvas(self.cpsIN, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.17,rely=0.15)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
                 
         ###########nome empresa
 
@@ -306,7 +325,8 @@ class application:
                 .place(relx=0.05,rely=0.18)
 
         self.nomeEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$nomeEmp'])\
+            textvariable=self.referencias['$nomeEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
 
         ###########rua
@@ -316,7 +336,8 @@ class application:
                 .place(relx=0.35,rely=0.18)
 
         self.ruaEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$ruaEmp'])\
+            textvariable=self.referencias['$ruaEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
 
         ###########Num
@@ -326,8 +347,9 @@ class application:
                 .place(relx=0.6,rely=0.18)
 
         self.numEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$numEmp'])\
-                .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
+            textvariable=self.referencias['$numEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
 
         ###########bairro
 
@@ -336,7 +358,8 @@ class application:
                 .place(relx=0.7,rely=0.18)
 
         self.bairroEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$bairroEmp'])\
+            textvariable=self.referencias['$bairroEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
 
         ###########CEP
@@ -346,7 +369,8 @@ class application:
                 .place(relx=0.05,rely=0.31)
 
         self.cepEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cepEmp'])\
+            textvariable=self.referencias['$cepEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
 
         ###########CNPJ
@@ -356,7 +380,8 @@ class application:
                 .place(relx=0.35,rely=0.31)
 
         self.cnpjEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cnpjEmp'])\
+            textvariable=self.referencias['$cnpjEmp'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
                 
         ###########Complemento
@@ -366,22 +391,30 @@ class application:
                 .place(relx=0.6,rely=0.31)
 
         self.complementoEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$comple'])\
+            textvariable=self.referencias['$compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
         
         #Socio
         Label(self.cpsIN, text='Sócio',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.42)
+                
+        self.canvas = Canvas(self.cpsIN, width=655, height=10,border=-5)
+        self.canvas.place(relx=0.13,rely=0.455)
+                
+        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
 
         ###########nome
 
-        Label(self.cpsIN, text='Nome',\
+        Label(self.cpsIN, text='Nome sócio',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.48)
 
         self.nomeEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$nomeContra'])\
+            textvariable=self.referencias['$nomeContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
 
         ###########rua
@@ -391,7 +424,8 @@ class application:
                 .place(relx=0.35,rely=0.48)
 
         self.ruaEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$ruaContra'])\
+            textvariable=self.referencias['$ruaContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.53,relwidth=0.20,relheight=0.05)
 
         ###########Num
@@ -401,7 +435,8 @@ class application:
                 .place(relx=0.6,rely=0.48)
 
         self.numEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$numContra'])\
+            textvariable=self.referencias['$numContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.61,rely=0.53,relwidth=0.05,relheight=0.05)
 
         ###########bairro
@@ -411,7 +446,8 @@ class application:
                 .place(relx=0.7,rely=0.48)
 
         self.bairroEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$bairroContra'])\
+            textvariable=self.referencias['$bairroContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
 
         ###########CEP
@@ -421,7 +457,8 @@ class application:
                 .place(relx=0.05,rely=0.61)
 
         self.cepEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cepContra'])\
+            textvariable=self.referencias['$cepContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
 
         ###########RG
@@ -431,7 +468,8 @@ class application:
                 .place(relx=0.35,rely=0.61)
 
         self.rgEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$rgContra'])\
+            textvariable=self.referencias['$rgContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.66,relwidth=0.20,relheight=0.05)
 
         ###########Org. Emissor
@@ -441,7 +479,8 @@ class application:
                 .place(relx=0.9,rely=0.61)
 
         self.sspEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$sspContra'])\
+            textvariable=self.referencias['$sspContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
 
         ###########CPF
@@ -451,7 +490,8 @@ class application:
                 .place(relx=0.6,rely=0.61)
 
         self.cpfEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cpfContra'])\
+            textvariable=self.referencias['$cpfContra'],\
+                validate='key', validatecommand=(self.cpsIN.register(Validator.cpf_validator), '%P', self.cpfEntry))\
                 .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
 
         ###########Estado Civil
@@ -478,13 +518,20 @@ class application:
                 .place(relx=0.6,rely=0.73)
 
         self.complementoEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$comple'])\
+            textvariable=self.referencias['$compleContra'])\
                 .place(relx=0.61,rely=0.78,relwidth=0.35,relheight=0.05)
 
         #Contrato
         Label(self.cpsIN, text='Contrato',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.8)
+                .place(relx=0.05,rely=0.81)
+                
+        self.canvas = Canvas(self.cpsIN, width=625, height=10,border=-5)
+        self.canvas.place(relx=0.17,rely=0.845)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
 
         ###########Valor pagamento
 
@@ -493,7 +540,8 @@ class application:
                 .place(relx=0.05,rely=0.88)
 
         self.valPagEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$valPag'])\
+            textvariable=self.referencias['$valPag'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.93,relwidth=0.15,relheight=0.05)
 
         ###########Data inicio
@@ -503,7 +551,8 @@ class application:
                 .place(relx=0.25,rely=0.88)
 
         self.dtInicEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$dtInic'])\
+            textvariable=self.referencias['$dtInic'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
 
         ###########Data pagamento
@@ -513,7 +562,8 @@ class application:
                 .place(relx=0.4,rely=0.88)
 
         self.dtPagEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$dtVenc'])\
+            textvariable=self.referencias['$dtVenc'],\
+                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
 
         #Botão enviar
@@ -563,4 +613,4 @@ class application:
         frame_ativo.destroy()
         self.pageMenu()
 
-application()
+App()
