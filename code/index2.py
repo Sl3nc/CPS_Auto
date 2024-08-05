@@ -9,7 +9,7 @@ class Formater:
     def cpf_formater(entry):
         print('oi')
         text = entry.get()
-        if len(text) in (2,5):
+        if len(text) == 3:
             entry.insert(END,'.')
 
 class Validator:
