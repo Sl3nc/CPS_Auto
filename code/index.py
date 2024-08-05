@@ -10,6 +10,7 @@ class Formater:
         text = entry.get()
         if len(text) == 3:
             entry.insert(END,'.')
+        #test[:3] + "." + test[3:6] + "." + test[6:9] + "-" + test[9:]
 
 class Validator:
     def str_validator(text):
@@ -202,12 +203,28 @@ class App:
 
         self.estadoEntry = StringVar(self.cpsPF)
 
-        self.estadoEntryOpt = ('solteiro(a)', 'casado(a)','divorsiado(a)','viuvo(a)')
+        self.estadoEntryOpt = ('solteiro(a)','divorsiado(a)','viuvo(a)')
 
         self.estadoEntry.set('solteiro(a)')
 
-        self.popup = OptionMenu(self.cpsPF, self.estadoEntry, *self.estadoEntryOpt)\
-            .place(relx=0.35,rely=0.67,relwidth=0.2,relheight=0.06)
+        self.popup = OptionMenu(self.cpsPF, self.estadoEntry, *self.estadoEntryOpt)
+        
+        self.menuCasado = self.popup['menu']
+
+        #Casado
+        self.subLista = Menu(self.menuCasado, tearoff=False)
+        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
+        self.subLista.add_command(label='Comunhão Parcial de Bens', \
+            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
+        
+        self.subLista.add_command(label='Comunhão Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
+        
+        self.subLista.add_command(label='Separação Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em STB'))
+
+
+        self.popup.place(relx=0.35,rely=0.67,relwidth=0.2,relheight=0.06)
 
         self.referencias['$estadoContra'] = self.estadoEntry
 
