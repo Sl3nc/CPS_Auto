@@ -1,15 +1,22 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter.filedialog import asksaveasfilename
 from docx import Document
 import os
 
 window = Tk()
 
 class Formater:
-    def cpf_formater(entry):
-        text = entry.get()
-        if len(text) == 3:
-            entry.insert(END,'.')
+    def cpf_formater(text, var, index, mode): #TODO cpf formater
+        valor = text.get()
+        if len(valor) < 12:
+            valor.replace('.', '')
+            valor.replace('-', '')
+        elif len(valor) == 12:
+           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        elif len(valor) > 12:
+            print('apagar esse valor')
+        text.set(valor)
         #test[:3] + "." + test[3:6] + "." + test[6:9] + "-" + test[9:]
 
 class Validator:
@@ -20,7 +27,7 @@ class Validator:
         return text.isdecimal()
     
     def cpf_validator(text):
-        if len(text) == 15 or not text.isdecimal():
+        if len(text) == 20 or not text.isdecimal():
             return False
         return True
     #https://stackoverflow.com/questions/69947934/how-to-change-the-value-in-an-entry-when-validating
@@ -95,15 +102,16 @@ class App:
 
         self.referencias = {
             '$nomeContra' : StringVar(), #strValidator
+            '$estadoContra' : StringVar(), #strValidator
             '$ruaContra' : StringVar(), #strValidator
             '$numContra' : StringVar(), #intValidator
+            "$compleContra" : StringVar(), #strValidator
             '$bairroContra' : StringVar(),  #strValidator
             '$cepContra' : StringVar(),  #intValidator
             '$rgContra' : StringVar(),  #rgValidator
             '$sspContra' : StringVar(),  #sspValidator
             '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoContra' : StringVar(), #strValidator
-            "$comple" : StringVar(), #strValidator
+            "$numEmpre" : StringVar(),  #dateValidator
             "$dtVenc" : StringVar(),  #dateValidator
             "$valPag" : StringVar(), #intValidator
             "$dtInic" : StringVar()  #dateValidator
@@ -164,48 +172,18 @@ class App:
         self.cepEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$cepContra'])\
                 .place(relx=0.05,rely=0.52,relwidth=0.25,relheight=0.05)
-
-        ###########RG
-
-        Label(self.cpsPF, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.45)
-
-        self.rgEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$rgContra'])\
-                .place(relx=0.35,rely=0.52,relwidth=0.20,relheight=0.05)
-
-        ###########Org. Emissor
-
-        Label(self.cpsPF, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.9,rely=0.45)
-
-        self.sspEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$sspContra'])\
-                .place(relx=0.9,rely=0.52,relwidth=0.05,relheight=0.05)
-
-        ###########CPF
-
-        Label(self.cpsPF, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.45)
-
-        self.cpfEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$cpfContra'])\
-                .place(relx=0.6,rely=0.52,relwidth=0.25,relheight=0.05)
-
+        
         ###########Estado Civil
 
         Label(self.cpsPF, text='Estado Civil',\
             background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.60)
+                .place(relx=0.35,rely=0.45)
 
         self.estadoEntry = StringVar(self.cpsPF)
 
         self.estadoEntryOpt = ('solteiro(a)','divorsiado(a)','viuvo(a)')
 
-        self.estadoEntry.set('solteiro(a)')
+        self.estadoEntry.set('')
 
         self.popup = OptionMenu(self.cpsPF, self.estadoEntry, *self.estadoEntryOpt)
         
@@ -224,7 +202,7 @@ class App:
             command= lambda: self.estadoEntry.set('casado(a) em STB'))
 
 
-        self.popup.place(relx=0.35,rely=0.67,relwidth=0.2,relheight=0.06)
+        self.popup.place(relx=0.35,rely=0.52,relwidth=0.2,relheight=0.06)
 
         self.referencias['$estadoContra'] = self.estadoEntry
 
@@ -232,51 +210,94 @@ class App:
 
         Label(self.cpsPF, text='Complemento',\
             background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.6)
+                .place(relx=0.6,rely=0.45)
 
         self.complementoEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$comple'])\
-                .place(relx=0.61,rely=0.67,relwidth=0.35,relheight=0.05)
+            textvariable=self.referencias['$compleContra'])\
+                .place(relx=0.61,rely=0.52,relwidth=0.34,relheight=0.05)
+
+        ###########RG
+
+        Label(self.cpsPF, text='RG',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.60)
+
+        self.rgEntry = Entry(self.cpsPF,\
+            textvariable=self.referencias['$rgContra'])\
+                .place(relx=0.05,rely=0.67,relwidth=0.20,relheight=0.05)
+        
+        ###########Num. Empregados
+
+        Label(self.cpsPF, text='Num. Empregados',\
+            background='lightblue', font=(10))\
+                .place(relx=0.35,rely=0.6)
+
+        self.numEmpreEntry = Entry(self.cpsPF,\
+            textvariable=self.referencias['$numEmpre'])\
+                .place(relx=0.35,rely=0.67,relwidth=0.05,relheight=0.05)
+
+        
+        ###########CPF
+
+        Label(self.cpsPF, text='CPF',\
+            background='lightblue', font=(10))\
+                .place(relx=0.61,rely=0.6)
+
+        self.cpfEntry = Entry(self.cpsPF,\
+            textvariable=self.referencias['$cpfContra'])\
+                .place(relx=0.61,rely=0.67,relwidth=0.25,relheight=0.05)
+        
+        
+        ###########Org. Emissor
+
+        Label(self.cpsPF, text='Org.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.9,rely=0.6)
+
+        self.sspEntry = Entry(self.cpsPF,\
+            textvariable=self.referencias['$sspContra'])\
+                .place(relx=0.9,rely=0.67,relwidth=0.05,relheight=0.05)
+        
 
         #Contrato
         Label(self.cpsPF, text='Contrato',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.7)
+                .place(relx=0.05,rely=0.75)
 
         ###########Valor pagamento
 
         Label(self.cpsPF, text='Val. pagamento',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.8)
+                .place(relx=0.05,rely=0.85)
 
         self.valPagEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$valPag'])\
-                .place(relx=0.05,rely=0.87,relwidth=0.15,relheight=0.05)
+                .place(relx=0.05,rely=0.92,relwidth=0.15,relheight=0.05)
 
         ###########Data inicio
 
         Label(self.cpsPF, text='Dia início',\
             background='lightblue', font=(10))\
-                .place(relx=0.25,rely=0.8)
+                .place(relx=0.25,rely=0.85)
 
         self.dtInicEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$dtInic'])\
-                .place(relx=0.25,rely=0.87,relwidth=0.1,relheight=0.05)
+                .place(relx=0.25,rely=0.92,relwidth=0.1,relheight=0.05)
 
         ###########Data pagamento
 
         Label(self.cpsPF, text='Dia vencimento',\
             background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.8)
+                .place(relx=0.4,rely=0.85)
 
         self.dtPagEntry = Entry(self.cpsPF,\
             textvariable=self.referencias['$dtVenc'])\
-                .place(relx=0.4,rely=0.87,relwidth=0.1,relheight=0.05)
+                .place(relx=0.4,rely=0.92,relwidth=0.1,relheight=0.05)
 
         #Botão enviar
         Button(self.cpsPF, text='Gerar CPS',\
             command= lambda: self.alterar_doc(frame_ativo=self.cpsPF))\
-                .place(relx=0.61,rely=0.8,relwidth=0.35,relheight=0.12)
+                .place(relx=0.61,rely=0.85,relwidth=0.35,relheight=0.12)
 
     def pageIN(self):
         self.menu.destroy()
@@ -505,17 +526,22 @@ class App:
                 validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
 
-        ###########CPF
+        ###########TODO CPF
+
+        self.val = StringVar()
+
+        self.val.trace_add('write', lambda *args, passed = self.val: Formater.cpf_formater(passed, *args) )
 
         Label(self.cpsIN, text='CPF',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.61)
+        
 
-        self.cpfEntry = Entry(self.cpsIN)
-        self.cpfEntry['textvariable'] =self.referencias['$cpfContra']
-        self.cpfEntry['validate'] ='key'
-        self.cpfEntry['validatecommand']=(self.cpsIN.register(Validator.cpf_validator), '%P')
-        self.cpfEntry.place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
+        self.cpfEntry = Entry(self.cpsIN, textvariable = self.val, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.cpf_validator), '%P'))\
+                .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
+
+        self.referencias['$cpfContra'] = self.val
 
         ###########Estado Civil
 
@@ -629,9 +655,11 @@ class App:
                     par.text = par.text.replace(itens, self.referencias[itens].get())
 
 
-        self.doc.save('CPS_testeResult.docx')
-        messagebox.showinfo(title='Aviso', message='Abrindo arquivo gerado!')
-        os.startfile('C:\\pedro\\CPS Pessoa Física\\Code\\CPS_testeResult.docx')
+        file = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
+
+        self.doc.save(file+'.docx')
+
+        os.startfile(file+'.docx')
 
         frame_ativo.destroy()
         self.pageMenu()
