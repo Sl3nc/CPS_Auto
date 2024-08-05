@@ -7,8 +7,9 @@ window = Tk()
 
 class Formater:
     def cpf_formater(entry):
+        print('oi')
         text = entry.get()
-        if len(text) == 3:
+        if len(text) in (2,5):
             entry.insert(END,'.')
 
 class Validator:
@@ -27,11 +28,29 @@ class Validator:
     def date_validator(text):
         ...
 
+class doc:
+    def __init__(self, text = None):
+        self.doc = text
+
+    def alterar_doc(self, frame_ativo):
+        for par in self.doc.paragraphs:
+            for itens in self.referencias:
+                if par.text.find(itens) != -1:
+                    par.text = par.text.replace(itens, self.referencias[itens].get())
+
+
+        self.doc.save('CPS_testeResult.docx')
+        messagebox.showinfo(title='Aviso', message='Abrindo arquivo gerado!')
+        os.startfile('C:\\pedro\\CPS Pessoa Física\\Code\\CPS_testeResult.docx')
+
+        
+
 class App:
     def __init__(self):
         self.window = window
         self.tela()
         self.pageMenu()
+        self.doc = doc()
         window.mainloop()
 
     def tela(self):
@@ -78,7 +97,7 @@ class App:
 
     def pagePF(self):
         self.menu.destroy()
-        self.doc = Document('./code/CPS\'s/CPS PESSOA FISICA.docx')
+        self.doc(Document('./code/CPS\'s/CPS PESSOA FISICA.docx'))
 
         self.cpsPF = Frame(self.window, bd=4, bg='lightblue')
         self.cpsPF.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
@@ -498,6 +517,7 @@ class App:
         self.cpfEntry['textvariable'] =self.referencias['$cpfContra']
         self.cpfEntry['validate'] ='key'
         self.cpfEntry['validatecommand']=(self.cpsIN.register(Validator.cpf_validator), '%P')
+        self.referencias['$cpfContra'].trace('w', Formater.cpf_formater(self.cpfEntry))
         self.cpfEntry.place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
 
         ###########Estado Civil
@@ -605,18 +625,6 @@ class App:
             command= lambda: (self.cpsSN.destroy, self.pageMenu()))\
                 .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
 
-    def alterar_doc(self, frame_ativo):
-        for par in self.doc.paragraphs:
-            for itens in self.referencias:
-                if par.text.find(itens) != -1:
-                    par.text = par.text.replace(itens, self.referencias[itens].get())
-
-
-        self.doc.save('CPS_testeResult.docx')
-        messagebox.showinfo(title='Aviso', message='Abrindo arquivo gerado!')
-        os.startfile('C:\\pedro\\CPS Pessoa Física\\Code\\CPS_testeResult.docx')
-
-        frame_ativo.destroy()
-        self.pageMenu()
+    
 
 App()
