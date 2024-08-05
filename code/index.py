@@ -16,8 +16,7 @@ class Formater:
            valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
         elif len(valor) > 12:
             print('apagar esse valor')
-        text.set(valor)
-        #test[:3] + "." + test[3:6] + "." + test[6:9] + "-" + test[9:]
+        text.set(valor) #<- problema aqui, na hora de setar
 
 class Validator:
     def str_validator(text):
