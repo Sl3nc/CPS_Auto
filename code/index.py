@@ -179,18 +179,20 @@ class App:
 
         self.referencias = {
             '$nomeContra' : StringVar(), #strValidator
+            '$rgContra' : StringVar(),  #rgValidator
+            '$emissorContra' : StringVar(),  #sspValidator
+            '$cpfContra' : StringVar(),  #cpfValidator
+            '$estadoCivilContra' : StringVar(), #strValidator
             '$estadoContra' : StringVar(), #strValidator
+            '$municipioContra' : StringVar(), #strValidator
             '$ruaContra' : StringVar(), #strValidator
+            '$bairroContra' : StringVar(),  #strValidator
             '$numContra' : StringVar(), #intValidator
             "$compleContra" : StringVar(), #strValidator
-            '$bairroContra' : StringVar(),  #strValidator
             '$cepContra' : StringVar(),  #intValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$sspContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
             "$numEmpre" : StringVar(),  #dateValidator
+            "$valPag" : StringVar(), #valValidator
             "$dtVenc" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #intValidator
             "$dtInic" : StringVar()  #dateValidator
         }
 
@@ -293,7 +295,7 @@ class App:
 
         self.popup.place(relx=0.35,rely=0.52,relwidth=0.2,relheight=0.06)
 
-        self.referencias['$estadoContra'] = self.estadoEntry
+        self.referencias['$estadoCivilContra'] = self.estadoEntry
 
         ###########Complemento
 
@@ -361,7 +363,7 @@ class App:
                 .place(relx=0.9,rely=0.6)
 
         self.sspEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$sspContra'],\
+            textvariable=self.referencias['$emissorContra'],\
                 validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.67,relwidth=0.05,relheight=0.05)
         
@@ -463,9 +465,9 @@ class App:
             '$bairroContra' : StringVar(),  #strValidator
             '$cepContra' : StringVar(),  #intValidator
             '$rgContra' : StringVar(),  #rgValidator
-            '$sspContra' : StringVar(),  #sspValidator
+            '$emissorContra' : StringVar(),  #sspValidator
             '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoContra' : StringVar(), #strValidator
+            '$estadoCivilContra' : StringVar(), #strValidator
             "$compleEmp" : StringVar(), #strValidator
             "$compleContra" : StringVar(), #strValidator
             "$dtVenc" : StringVar(),  #dateValidator
@@ -675,7 +677,7 @@ class App:
                 .place(relx=0.9,rely=0.61)
 
         self.sspEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$sspContra'],\
+            textvariable=self.referencias['$emissorContra'],\
                 validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
 
@@ -712,7 +714,7 @@ class App:
         self.popup = OptionMenu(self.cpsIN, self.estadoEntry, *self.estadoEntryOpt)\
             .place(relx=0.35,rely=0.77,relwidth=0.2,relheight=0.06)
 
-        self.referencias['$estadoContra'] = self.estadoEntry
+        self.referencias['$estadoCivilContra'] = self.estadoEntry
 
         ###########Complemento
 
