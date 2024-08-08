@@ -7,8 +7,8 @@ import os
 
 window = Tk()
 
-class Formater:
-    def cpf_formater(text, var, index, mode): #TODO cpf formater
+class Formater: #TODO Formaters
+    def cpf_formater(text, var, index, mode):
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 11:
@@ -17,44 +17,54 @@ class Formater:
             valor = valor.replace('.','').replace('-','')
         text.set(valor)
 
-    def cnpj_formater(text, var, index, mode): #TODO cpf formater
+    def cnpj_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 11:
-           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        if len(valor) == 14:
+           valor = valor[:2] + "." + valor[2:5] + "." + valor[5:8] + "/" + valor[8:12] + "-" + valor[12:]
         else:
-            valor = valor.replace('.','').replace('-','')
+            valor = valor.replace('.','').replace('-','').replace('/','')
+        text.set(valor)
+    
+
+    def cep_formater(text, var, index, mode): 
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 8:
+           valor = valor[:5] + "-" + valor[5:]
+        else:
+            valor = valor.replace('-','')
         text.set(valor)
 
-    def cep_formater(text, var, index, mode): #TODO cpf formater
+    def rg_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 11:
-           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
-        else:
-            valor = valor.replace('.','').replace('-','')
-        text.set(valor)
-
-    def rg_formater(text, var, index, mode): #TODO cpf formater
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 11:
-           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        if len(valor) == 10:
+           valor = valor[:2] + "-" + valor[2:4] + "." + valor[4:7] + "." + valor[7:]
         else:
             valor = valor.replace('.','').replace('-','')
         text.set(valor)
     
-    def date_formater(text, var, index, mode): #TODO cpf formater
+    def date_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 11:
-           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        if len(valor) == 8:
+           valor = valor[:2] + "/" + valor[2:4] + "/" + valor[4:]
         else:
-            valor = valor.replace('.','').replace('-','')
+            valor = valor.replace('/','')
+        text.set(valor)
+
+    def valor_formater(text, var, index, mode): 
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 1:
+           valor = "R$" + valor[:1]
+        elif len(valor) < 1:
+            valor = valor.replace('R$','')
         text.set(valor)
         
 
-class Validator:
+class Validator:    #TODO Validators
     def str_validator(text):
         return not text.isdecimal()
     
@@ -72,8 +82,8 @@ class Validator:
         
     def cnpj_validator(text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 15:
-            if len(text) >= 12:
+        if len(text) < 19:
+            if len(text) >= 15:
                 return re.match(padrao, text) is not None
             else:
                 return text.isdecimal()
@@ -81,26 +91,22 @@ class Validator:
     
     def cep_validator(text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 15:
-            if len(text) >= 12:
+        if len(text) < 10:
+            if len(text) >= 9:
                 return re.match(padrao, text) is not None
             else:
                 return text.isdecimal()
         return False
     
     def rg_validator(text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 15:
-            if len(text) >= 12:
-                return re.match(padrao, text) is not None
-            else:
-                return text.isdecimal()
+        if len(text) < 14:
+            return True
         return False
     
     def date_validator(text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 15:
-            if len(text) >= 12:
+        if len(text) < 11:
+            if len(text) >= 9:
                 return re.match(padrao, text) is not None
             else:
                 return text.isdecimal()
@@ -201,7 +207,8 @@ class App:
                 .place(relx=0.05,rely=0.3)
 
         self.nomeEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$nomeContra'])\
+            textvariable=self.referencias['$nomeContra'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.37,relwidth=0.25,relheight=0.05)
 
         ###########rua
@@ -211,7 +218,8 @@ class App:
                 .place(relx=0.35,rely=0.30)
 
         self.ruaEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$ruaContra'])\
+            textvariable=self.referencias['$ruaContra'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.37,relwidth=0.20,relheight=0.05)
 
         ###########Num
@@ -221,7 +229,8 @@ class App:
                 .place(relx=0.6,rely=0.30)
 
         self.numEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$numContra'])\
+            textvariable=self.referencias['$numContra'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.61,rely=0.37,relwidth=0.05,relheight=0.05)
 
         ###########bairro
@@ -231,18 +240,27 @@ class App:
                 .place(relx=0.7,rely=0.30)
 
         self.bairroEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$bairroContra'])\
+            textvariable=self.referencias['$bairroContra'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.37,relwidth=0.25,relheight=0.05)
 
-        ###########CEP
+        ###########CEP 
+        
+        self.valCEP_Contra = StringVar()
+
+        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
+            Formater.cep_formater(passed, *args) )
 
         Label(self.cpsPF, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.45)
+        
 
-        self.cepEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$cepContra'])\
+        self.CEPEntry = Entry(self.cpsPF, textvariable = self.valCEP_Contra, \
+            validate ='key', validatecommand =(self.cpsPF.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.52,relwidth=0.25,relheight=0.05)
+
+        self.referencias['$cepContra'] = self.valCEP_Contra
         
         ###########Estado Civil
 
@@ -288,14 +306,22 @@ class App:
                 .place(relx=0.61,rely=0.52,relwidth=0.34,relheight=0.05)
 
         ###########RG
+        
+        self.valRG = StringVar()
+
+        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
+            Formater.rg_formater(passed, *args) )
 
         Label(self.cpsPF, text='RG',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.60)
+                .place(relx=0.05,rely=0.6)
+        
 
-        self.rgEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$rgContra'])\
-                .place(relx=0.05,rely=0.67,relwidth=0.20,relheight=0.05)
+        self.CEPEntry = Entry(self.cpsPF, textvariable = self.valRG, \
+            validate ='key', validatecommand =(self.cpsPF.register(Validator.rg_validator), '%P'))\
+                .place(relx=0.05,rely=0.67,relwidth=0.2,relheight=0.05)
+
+        self.referencias['$rgContra'] = self.valRG
         
         ###########Num. Empregados
 
@@ -304,19 +330,28 @@ class App:
                 .place(relx=0.35,rely=0.6)
 
         self.numEmpreEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$numEmpre'])\
+            textvariable=self.referencias['$numEmpre'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.67,relwidth=0.05,relheight=0.05)
 
         
         ###########CPF
+        
+        self.valCPF = StringVar()
+
+        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
+            Formater.cpf_formater(passed, *args) )
 
         Label(self.cpsPF, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.61,rely=0.6)
+                .place(relx=0.6,rely=0.61)
+        
 
-        self.cpfEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$cpfContra'])\
+        self.cpfEntry = Entry(self.cpsPF, textvariable = self.valCPF, \
+            validate ='key', validatecommand =(self.cpsPF.register(Validator.cpf_validator), '%P'))\
                 .place(relx=0.61,rely=0.67,relwidth=0.25,relheight=0.05)
+
+        self.referencias['$cpfContra'] = self.valCPF
         
         
         ###########Org. Emissor
@@ -326,7 +361,8 @@ class App:
                 .place(relx=0.9,rely=0.6)
 
         self.sspEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$sspContra'])\
+            textvariable=self.referencias['$sspContra'],\
+                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.67,relwidth=0.05,relheight=0.05)
         
 
@@ -336,34 +372,52 @@ class App:
                 .place(relx=0.05,rely=0.75)
 
         ###########Valor pagamento
+        
+        self.valPag = StringVar(value='R$ ')
 
-        Label(self.cpsPF, text='Val. pagamento',\
+        Label(self.cpsPF, text='Val. Pagamento',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.85)
+        
+        self.valEntry = Entry(self.cpsPF, textvariable = self.valPag, )\
+                .place(relx=0.05,rely=0.92,relwidth=0.1,relheight=0.05)
 
-        self.valPagEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$valPag'])\
-                .place(relx=0.05,rely=0.92,relwidth=0.15,relheight=0.05)
+        self.referencias['$valPag'] = self.valPag
 
         ###########Data inicio
+        
+        self.valDT_inic = StringVar()
 
-        Label(self.cpsPF, text='Dia início',\
+        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
+            Formater.date_formater(passed, *args) )
+
+        Label(self.cpsPF, text='Data início',\
             background='lightblue', font=(10))\
                 .place(relx=0.25,rely=0.85)
+        
 
-        self.dtInicEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$dtInic'])\
-                .place(relx=0.25,rely=0.92,relwidth=0.1,relheight=0.05)
+        self.cpfEntry = Entry(self.cpsPF, textvariable = self.valDT_inic, \
+            validate ='key', validatecommand =(self.cpsPF.register(Validator.date_validator), '%P')).place(relx=0.25,rely=0.92,relwidth=0.1,relheight=0.05)
+
+        self.referencias['$dtInic'] = self.valDT_inic
 
         ###########Data pagamento
+        
+        self.valDT_venc = StringVar()
 
-        Label(self.cpsPF, text='Dia vencimento',\
+        self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
+            Formater.date_formater(passed, *args) )
+
+        Label(self.cpsPF, text='Data vencimento',\
             background='lightblue', font=(10))\
                 .place(relx=0.4,rely=0.85)
+        
 
-        self.dtPagEntry = Entry(self.cpsPF,\
-            textvariable=self.referencias['$dtVenc'])\
+        self.cpfEntry = Entry(self.cpsPF, textvariable = self.valDT_venc, \
+            validate ='key', validatecommand =(self.cpsPF.register(Validator.date_validator), '%P'))\
                 .place(relx=0.4,rely=0.92,relwidth=0.1,relheight=0.05)
+
+        self.referencias['$dtVenc'] = self.valDT_venc
 
         #Botão enviar
         Button(self.cpsPF, text='Gerar CPS',\
@@ -476,27 +530,41 @@ class App:
                 validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
 
-        ###########CEP
+        ########### CEP Empre
+
+        self.valCEP_Empre = StringVar()
+
+        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
+            Formater.cep_formater(passed, *args) )
 
         Label(self.cpsIN, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.31)
+        
 
-        self.cepEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cepEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCEP_Empre, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
 
-        ###########CNPJ
+        self.referencias['$cepEmp'] = self.valCEP_Empre
+
+        ###########TODO CNPJ
+        
+        self.valCNPJ = StringVar()
+
+        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
+            Formater.cnpj_formater(passed, *args) )
 
         Label(self.cpsIN, text='CNPJ',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.31)
+        
 
-        self.cnpjEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cnpjEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCNPJ, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.cnpj_validator), '%P'))\
                 .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
+
+        self.referencias['$cnpjEmp'] = self.valCNPJ
                 
         ###########Complemento
 
@@ -564,27 +632,41 @@ class App:
                 validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
 
-        ###########CEP
+        ###########TODO CEP
+        
+        self.valCEP_Contra = StringVar()
+
+        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
+            Formater.cep_formater(passed, *args) )
 
         Label(self.cpsIN, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.61)
+        
 
-        self.cepEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$cepContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCEP_Contra, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
 
-        ###########RG
+        self.referencias['$cepContra'] = self.valCEP_Contra
+
+        ###########TODO RG
+        
+        self.valRG = StringVar()
+
+        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
+            Formater.rg_formater(passed, *args) )
 
         Label(self.cpsIN, text='RG',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.61)
+        
 
-        self.rgEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$rgContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.66,relwidth=0.20,relheight=0.05)
+        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valRG, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.rg_validator), '%P'))\
+                .place(relx=0.35,rely=0.66,relwidth=0.2,relheight=0.05)
+
+        self.referencias['$rgContra'] = self.valRG
 
         ###########Org. Emissor
 
@@ -599,9 +681,9 @@ class App:
 
         ###########TODO CPF
 
-        self.val = StringVar()
+        self.valCPF = StringVar()
 
-        self.val.trace_add('write', lambda *args, passed = self.val:\
+        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
             Formater.cpf_formater(passed, *args) )
 
         Label(self.cpsIN, text='CPF',\
@@ -609,11 +691,11 @@ class App:
                 .place(relx=0.6,rely=0.61)
         
 
-        self.cpfEntry = Entry(self.cpsIN, textvariable = self.val, \
+        self.cpfEntry = Entry(self.cpsIN, textvariable = self.valCPF, \
             validate ='key', validatecommand =(self.cpsIN.register(Validator.cpf_validator), '%P'))\
                 .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
 
-        self.referencias['$cpfContra'] = self.val
+        self.referencias['$cpfContra'] = self.valCPF
 
         ###########Estado Civil
 
@@ -654,38 +736,54 @@ class App:
         
         # x,angulo x , y, angulo y
 
-        ###########Valor pagamento
+        ###########TODO Valor pagamento
 
-        Label(self.cpsIN, text='Val. pagamento',\
+        self.valPag = StringVar(value='R$ ')
+
+        Label(self.cpsIN, text='Val. Pagamento',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
+        
+        self.valEntry = Entry(self.cpsIN, textvariable = self.valPag, )\
+                .place(relx=0.05,rely=0.93,relwidth=0.1,relheight=0.05)
 
-        self.valPagEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$valPag'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.93,relwidth=0.15,relheight=0.05)
+        self.referencias['$valPag'] = self.valPag
 
-        ###########Data inicio
+        ###########TODO Data inicio
+        
+        self.valDT_inic = StringVar()
 
-        Label(self.cpsIN, text='Dia início',\
+        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
+            Formater.date_formater(passed, *args) )
+
+        Label(self.cpsIN, text='Data início',\
             background='lightblue', font=(10))\
                 .place(relx=0.25,rely=0.88)
+        
 
-        self.dtInicEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$dtInic'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+        self.cpfEntry = Entry(self.cpsIN, textvariable = self.valDT_inic, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.date_validator), '%P'))\
                 .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
 
-        ###########Data pagamento
+        self.referencias['$dtInic'] = self.valDT_inic
 
-        Label(self.cpsIN, text='Dia vencimento',\
+        ###########TODO Data vencimento
+        
+        self.valDT_venc = StringVar()
+
+        self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
+            Formater.date_formater(passed, *args) )
+
+        Label(self.cpsIN, text='Data vencimento',\
             background='lightblue', font=(10))\
                 .place(relx=0.4,rely=0.88)
+        
 
-        self.dtPagEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$dtVenc'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
+        self.cpfEntry = Entry(self.cpsIN, textvariable = self.valDT_venc, \
+            validate ='key', validatecommand =(self.cpsIN.register(Validator.date_validator), '%P'))\
                 .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
+
+        self.referencias['$dtVenc'] = self.valDT_venc
 
         #Botão enviar
         Button(self.cpsIN, text='Gerar CPS',\
@@ -730,6 +828,8 @@ class App:
         file = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
         self.doc.save(file+'.docx')
+
+        
 
         os.startfile(file+'.docx')
 
