@@ -2,21 +2,57 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from docx import Document
+import re
 import os
 
 window = Tk()
 
 class Formater:
     def cpf_formater(text, var, index, mode): #TODO cpf formater
+        #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) < 12:
-            valor.replace('.', '')
-            valor.replace('-', '')
-        elif len(valor) == 12:
+        if len(valor) == 11:
            valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
-        elif len(valor) > 12:
-            print('apagar esse valor')
-        text.set(valor) #<- problema aqui, na hora de setar
+        else:
+            valor = valor.replace('.','').replace('-','')
+        text.set(valor)
+
+    def cnpj_formater(text, var, index, mode): #TODO cpf formater
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 11:
+           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        else:
+            valor = valor.replace('.','').replace('-','')
+        text.set(valor)
+
+    def cep_formater(text, var, index, mode): #TODO cpf formater
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 11:
+           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        else:
+            valor = valor.replace('.','').replace('-','')
+        text.set(valor)
+
+    def rg_formater(text, var, index, mode): #TODO cpf formater
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 11:
+           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        else:
+            valor = valor.replace('.','').replace('-','')
+        text.set(valor)
+    
+    def date_formater(text, var, index, mode): #TODO cpf formater
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 11:
+           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
+        else:
+            valor = valor.replace('.','').replace('-','')
+        text.set(valor)
+        
 
 class Validator:
     def str_validator(text):
@@ -26,13 +62,49 @@ class Validator:
         return text.isdecimal()
     
     def cpf_validator(text):
-        if len(text) == 20 or not text.isdecimal():
-            return False
-        return True
-    #https://stackoverflow.com/questions/69947934/how-to-change-the-value-in-an-entry-when-validating
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 15:
+            if len(text) >= 12:
+                return re.match(padrao, text) is not None
+            else:
+                return text.isdecimal()
+        return False
+        
+    def cnpj_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 15:
+            if len(text) >= 12:
+                return re.match(padrao, text) is not None
+            else:
+                return text.isdecimal()
+        return False
+    
+    def cep_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 15:
+            if len(text) >= 12:
+                return re.match(padrao, text) is not None
+            else:
+                return text.isdecimal()
+        return False
+    
+    def rg_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 15:
+            if len(text) >= 12:
+                return re.match(padrao, text) is not None
+            else:
+                return text.isdecimal()
+        return False
     
     def date_validator(text):
-        ...
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 15:
+            if len(text) >= 12:
+                return re.match(padrao, text) is not None
+            else:
+                return text.isdecimal()
+        return False
 
 class App:
     def __init__(self):
@@ -529,7 +601,8 @@ class App:
 
         self.val = StringVar()
 
-        self.val.trace_add('write', lambda *args, passed = self.val: Formater.cpf_formater(passed, *args) )
+        self.val.trace_add('write', lambda *args, passed = self.val:\
+            Formater.cpf_formater(passed, *args) )
 
         Label(self.cpsIN, text='CPF',\
             background='lightblue', font=(10))\
