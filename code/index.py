@@ -818,7 +818,18 @@ class App:
             command= lambda: (self.cpsSN.destroy, self.pageMenu()))\
                 .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
 
+    def input_vazio(self):
+        itens = self.referencias.values()
+        for item in itens:
+            if not item.get():
+                return True
+        return False
+
     def alterar_doc(self, frame_ativo):
+        if self.input_vazio():
+            messagebox.showwarning(title='Aviso', message='Existem entradas vazias, favor preencher todas')
+            return None
+
         for par in self.doc.paragraphs:
             for itens in self.referencias:
                 if par.text.find(itens) != -1:
@@ -829,7 +840,7 @@ class App:
 
         self.doc.save(file+'.docx')
 
-        
+        messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
 
         os.startfile(file+'.docx')
 
