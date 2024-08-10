@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from docx import Document
-import time
+from num2words import num2words
 import keyboard
 import re
 import os
@@ -66,10 +66,13 @@ class Formater: #TODO Formaters
     def valor_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if 'R$' not in valor:
-           valor = 'R$ ' + valor[1:]
+        if valor[0:2] != 'R$':
+            valor = valor.replace('R', '')
+            valor = valor.replace('$', '')
+            valor = 'R$' + valor
         if ',' not in valor:
-            valor = valor[:len(valor)] + ',00'
+            valor = valor + ',00'
+        
         text.set(valor)
         
 
@@ -425,9 +428,9 @@ class App:
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.85)
         
-        Entry(self.cpsPF, textvariable = self.valPag, )\
+        self.entryVal = Entry(self.cpsPF, textvariable = self.valPag, )\
                 .place(relx=0.06,rely=0.92,relwidth=0.1,relheight=0.05)
-
+                
         self.referencias['$valPag'] = self.valPag
 
         ###########Data inicio
@@ -478,17 +481,17 @@ class App:
 
         Label(self.cpsPF, text='Num. Empreg.',\
             background='lightblue', font=(10))\
-                .place(relx=0.5,rely=0.85)
+                .place(relx=0.55,rely=0.85)
 
         Entry(self.cpsPF,\
             textvariable=self.referencias['$numEmpre'],\
                 validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.5,rely=0.92,relwidth=0.05,relheight=0.05)
+                .place(relx=0.58,rely=0.92,relwidth=0.05,relheight=0.05)
 
         #Botão enviar
         Button(self.cpsPF, text='Gerar CPS',\
             command= lambda: self.alterar_doc(frame_ativo=self.cpsPF))\
-                .place(relx=0.61,rely=0.85,relwidth=0.35,relheight=0.12)
+                .place(relx=0.7,rely=0.85,relwidth=0.25,relheight=0.12)
         
     def pageIN(self):
         self.menu.destroy()
@@ -892,10 +895,27 @@ class App:
                 return True
         return False
 
+    def mudar_pre_envio(self):
+        estadoCiv = self.referencias['$estadoCivilContra']
+        if 'STB' in estadoCiv.get():
+            estadoCiv.set('Casado em Separação Total de Bens')
+        elif 'CPB' in estadoCiv.get():
+            estadoCiv.set('Casado em Comunhão Parcial de Bens')
+        elif 'CTB' in estadoCiv.get():
+            estadoCiv.set('Casado em Comunhão Total de Bens')
+            
+        valor = self.referencias['$valPag']
+        valorExtenso = num2words\
+            (valor[2:].get().replace(',','.'),lang='pt-br')
+        valor.set(valor + valorExtenso)
+        
+
     def alterar_doc(self, frame_ativo):
         if self.input_vazio():
             messagebox.showwarning(title='Aviso', message='Existem entradas vazias, favor preencher todas')
             return None
+        
+        self.mudar_pre_envio()
 
         for par in self.doc.paragraphs:
             for itens in self.referencias:
