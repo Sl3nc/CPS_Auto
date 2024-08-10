@@ -907,7 +907,7 @@ class App:
         valor = self.referencias['$valPag']
         valorExtenso = num2words\
             (valor[2:].get().replace(',','.'),lang='pt-br')
-        valor.set(valor + valorExtenso)
+        valor.set(f'{valor} ({valorExtenso})')
         
 
     def alterar_doc(self, frame_ativo):
