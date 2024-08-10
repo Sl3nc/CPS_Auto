@@ -1,8 +1,9 @@
 from tkinter import *
+from tkinter import ttk
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
-from docx import Document
 from num2words import num2words
+from docx import Document
 import keyboard
 import re
 import os
@@ -11,6 +12,8 @@ import os
 def enter_press(event):
     if event.keysym == 'Return':
         keyboard.send('tab')
+    elif event.keysym == 'Down' or event.keysym == 'Up':
+        keyboard.send('space')
         
 window = Tk()
 window.bind('<KeyRelease>', enter_press)
@@ -289,7 +292,7 @@ class App:
         self.referencias['$cpfContra'] = self.valCPF
 
         ###########Estado Civil
-
+        
         Label(self.cpsPF, text='Estado Civil',\
             background='lightblue', font=(10))\
                 .place(relx=0.75,rely=0.3)
@@ -298,12 +301,8 @@ class App:
 
         self.estadoEntryOpt = ('solteiro(a)','divorsiado(a)','viuvo(a)')
 
-        self.estadoEntry.set('')
+        self.popup = ttk.OptionMenu(self.cpsPF, self.estadoEntry,'', *self.estadoEntryOpt)
 
-        self.popup = OptionMenu(self.cpsPF, self.estadoEntry, *self.estadoEntryOpt)
-
-        self.popup.config(takefocus=1)
-        
         self.menuCasado = self.popup['menu']
 
         #Casado
@@ -905,17 +904,18 @@ class App:
             estadoCiv.set('Casado em Comunhão Total de Bens')
             
         valor = self.referencias['$valPag']
-        valorExtenso = num2words\
-            (valor[2:].get().replace(',','.'),lang='pt-br')
-        valor.set(f'{valor} ({valorExtenso})')
+        valorDbl = valor.get()[2:].replace(',','.')
+        valorExtenso = num2words(valorDbl,lang='pt-br')
+        valor.set(f'{valor.get()} ({valorExtenso})')
         
 
     def alterar_doc(self, frame_ativo):
+        self.mudar_pre_envio()
+        
         if self.input_vazio():
             messagebox.showwarning(title='Aviso', message='Existem entradas vazias, favor preencher todas')
             return None
         
-        self.mudar_pre_envio()
 
         for par in self.doc.paragraphs:
             for itens in self.referencias:
