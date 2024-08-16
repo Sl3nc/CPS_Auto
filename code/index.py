@@ -1606,10 +1606,10 @@ class App:
         elif 'CTB' in estadoCiv.get():
             estadoCiv.set('Casado em Comunhão Total de Bens')
             
-        valor = self.referencias['$valPag']
-        valorDbl = valor.get()[2:].replace(',','.')
-        valorExtenso = num2words(valorDbl,lang='pt-br')
-        valor.set(f'{valor.get()} ({valorExtenso})')     
+        # valor = self.referencias['$valPag']
+        # valorDbl = valor.get()[2:].replace(',','.')
+        # valorExtenso = num2words(valorDbl,lang='pt-br')
+        # valor.set(f'{valor.get()} ({valorExtenso})')     
 
     def alterar_doc(self, frame_ativo):
         self.mudar_pre_envio()
