@@ -126,9 +126,32 @@ class Validator:    #TODO Validators
                 return text.isdecimal()
         return False
 
+class Doc:
+    def __init__(self, caminho):
+        self.caminho = caminho
+
+class Pages:
+    def __init__(self):
+
+class PessoaFisica:
+    def __init__(self):
+
+class Inatividade:
+    def  __init__(self, tipo):
+        self.titulo = ''
+        self.doc = Doc(tipo)
+        self.referencias = {
+            
+        }
+    
+    def definir_tipo(self):
+        if tipo == 'IN':
+            self.doc = Document('./code/CPS\'s/CPS INATIVIDADE.docx')
+
 class App:
     def __init__(self):
         self.window = window
+        self.pages = Pages()
         self.tela()
         self.pageMenu()
         window.mainloop()
@@ -1589,13 +1612,6 @@ class App:
             command= lambda: self.alterar_doc(frame_ativo=self.cpsSN))\
                 .place(relx=0.61,rely=0.865,relwidth=0.35,relheight=0.12)
 
-    def input_vazio(self):
-        # itens = self.referencias.copy()
-        # del itens['$compleContra']
-        # for item in itens.values():
-        #     if not item.get():
-        #         return True
-        return False
 
     def mudar_pre_envio(self):
         estadoCiv = self.referencias['$estadoCivilContra']
@@ -1635,7 +1651,5 @@ class App:
 
         frame_ativo.destroy()
         self.pageMenu()
-
-
 
 App()
