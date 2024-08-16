@@ -887,7 +887,7 @@ class PessoaFisica(Person):
     def __init__(self):
         super().__init__('Pessoa Fisica', './code/CPS\'s/CPS INATIVIDADE.docx')
     
-class Inatividade(Enter):
+class Inatividade(Enterprise):
     def __init__(self):
         super().__init__('Inatividade', './code/CPS\'s/CPS INATIVIDADE.docx')
         
