@@ -4,7 +4,6 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docx import Document
-from abc import abstractmethod
 import keyboard
 import re
 import os
@@ -127,50 +126,80 @@ class Validator:    #TODO Validators
                 return text.isdecimal()
         return False
 
+#Arquivo
+
 class File:
-    def __init__(self, caminho):
-        self.arquivo = Document(f'./code/CPS\'s/CPS {caminho.uppcase()} .docx')    
+    def __init__(self, nome):
+        self.arquivo = Document(f'./code/CPS\'s/CPS {nome.upper()}.docx')    
 
-    def alterar(self, referencias):
-        self.mudar_pre_envio()
-        
-        if self.input_vazio():
-            messagebox.showwarning(title='Aviso', message='Existem entradas vazias, favor preencher todas')
-            return None
-        
-
+    def alterar(self, referencias):        
         for par in self.arquivo.paragraphs:
             for itens in referencias:
                 if par.text.find(itens) != -1:
                     par.text = par.text.replace(itens, referencias[itens].get())
 
-
+    def abrir(self):
         file = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
-        self.doc.save(file+'.docx')
+        self.arquivo.save(file+'.docx')
 
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
 
         os.startfile(file+'.docx')
 
-        frame_ativo.destroy()
-        self.pageMenu()
+#Páginas
 
 class Pages:
     def __init__(self, titulo):
+        self.frame = Frame(window, bd=4, bg='lightblue')
+        self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
         self.titulo = titulo
-        self.file = File(caminho)
-        
-        @abstractmethod
-        def index(self):
-            pass
-        
-        def executar(self):
+        self.file = File(titulo)
+
+    def __set_estadoCivil(self):
+        estadoCiv = self.referencias['$estadoCivilContra']
+        if 'STB' in estadoCiv.get():
+            estadoCiv.set('Casado em Separação Total de Bens')
+        elif 'CPB' in estadoCiv.get():
+            estadoCiv.set('Casado em Comunhão Parcial de Bens')
+        elif 'CTB' in estadoCiv.get():
+            estadoCiv.set('Casado em Comunhão Total de Bens')
+    
+    def __set_valorPag(self):
+        valor = self.referencias['$valPag']
+        valorDbl = valor.get()[2:].replace(',','.')
+        valorExtenso = num2words(valorDbl,lang='pt-br')
+        valor.set(f'{valor.get()} ({valorExtenso})') 
+    
+    def __input_vazio(self):
+        itens = self.referencias.copy()
+        del itens['$compleContra']
+        itens.pop('$compleContra', None)
+        for item in itens.values():
+            if not item.get():
+                return True
+        return False
+
+    def executar(self):
+        try:
+            if self.__input_vazio():
+                raise Exception ('Existem entradas vazias, favor preencher todas')
+            self.__set_estadoCivil()
+            self.__set_valorPag()
+
             self.file.alterar(self.referencias)
+            self.file.abrir()
+
+            self.frame.destroy()
+        except Exception as e:
+            messagebox.showwarning(title='Aviso', message= e)
+
 
 class Enterprise(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
+        
         self.referencias = {
             '$nomeEmp' : StringVar(), #strValidator
             '$ruaEmp' : StringVar(), #strValidator
@@ -197,11 +226,8 @@ class Enterprise(Pages):
         }
         
     def index(self):
-        self.frame_enterprise = Frame(self.window, bd=4, bg='lightblue')
-        self.frame_enterprise.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
         #Titulo
-        Label(self.frame_enterprise, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
+        Label(self.frame, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
             .place(relx=0.3,rely=0.045)
             
         #Logo
@@ -209,23 +235,23 @@ class Enterprise(Pages):
         
         self.logo = self.logo.subsample(5,5)
         
-        Label(self.frame_enterprise, image=self.logo, background='lightblue')\
+        Label(self.frame, image=self.logo, background='lightblue')\
             .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
 
         #Botão voltar
-        Button(self.frame_enterprise, text='Voltar ao menu',\
-            command= lambda: (self.frame_enterprise.destroy, self.pageMenu()))\
+        Button(self.frame, text='Voltar ao menu',\
+            command= lambda: (self.frame.destroy()))\
                 .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
 
         
 
         #Labels e Entrys
         #Empresa
-        Label(self.frame_enterprise, text='Empresa',\
+        Label(self.frame, text='Empresa',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.115)
                 
-        self.canvas = Canvas(self.frame_enterprise, width=625, height=10, background='darkblue',border=-5)
+        self.canvas = Canvas(self.frame, width=625, height=10, background='darkblue',border=-5)
         self.canvas.place(relx=0.17,rely=0.15)
                 
         self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
@@ -234,46 +260,46 @@ class Enterprise(Pages):
                 
         ###########nome empresa
 
-        Label(self.frame_enterprise, text='Nome empresa',\
+        Label(self.frame, text='Nome empresa',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.18)
 
-        self.nomeEmpEntry = Entry(self.frame_enterprise,\
+        self.nomeEmpEntry = Entry(self.frame,\
             textvariable=self.referencias['$nomeEmp'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
 
         ###########rua
 
-        Label(self.frame_enterprise, text='Rua',\
+        Label(self.frame, text='Rua',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.18)
 
-        self.ruaEmpEntry = Entry(self.frame_enterprise,\
+        self.ruaEmpEntry = Entry(self.frame,\
             textvariable=self.referencias['$ruaEmp'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
 
         ###########Num
 
-        Label(self.frame_enterprise, text='Num.',\
+        Label(self.frame, text='Num.',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.18)
 
-        self.numEmpEntry = Entry(self.frame_enterprise,\
+        self.numEmpEntry = Entry(self.frame,\
             textvariable=self.referencias['$numEmp'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
                     .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
 
         ###########bairro
 
-        Label(self.frame_enterprise, text='Bairro',\
+        Label(self.frame, text='Bairro',\
             background='lightblue', font=(10))\
                 .place(relx=0.7,rely=0.18)
 
-        self.bairroEmpEntry = Entry(self.frame_enterprise,\
+        self.bairroEmpEntry = Entry(self.frame,\
             textvariable=self.referencias['$bairroEmp'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
 
         ########### CEP Empre
@@ -283,13 +309,13 @@ class Enterprise(Pages):
         self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
             Formater.cep_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='CEP',\
+        Label(self.frame, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.31)
         
 
-        self.CEPEntry = Entry(self.frame_enterprise, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.cep_validator), '%P'))\
+        self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
 
         self.referencias['$cepEmp'] = self.valCEP_Empre
@@ -301,33 +327,33 @@ class Enterprise(Pages):
         self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
             Formater.cnpj_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='CNPJ',\
+        Label(self.frame, text='CNPJ',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.31)
         
 
-        self.CEPEntry = Entry(self.frame_enterprise, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.cnpj_validator), '%P'))\
+        self.CEPEntry = Entry(self.frame, textvariable = self.valCNPJ, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cnpj_validator), '%P'))\
                 .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
 
         self.referencias['$cnpjEmp'] = self.valCNPJ
                 
         ###########Complemento
 
-        Label(self.frame_enterprise, text='Complemento',\
+        Label(self.frame, text='Complemento',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.31)
 
-        self.complementoEntry = Entry(self.frame_enterprise,\
+        self.complementoEntry = Entry(self.frame,\
             textvariable=self.referencias['$compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
         
         #Socio
-        Label(self.frame_enterprise, text='Sócio',\
+        Label(self.frame, text='Sócio',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.42)
                 
-        self.canvas = Canvas(self.frame_enterprise, width=655, height=10,border=-5)
+        self.canvas = Canvas(self.frame, width=655, height=10,border=-5)
         self.canvas.place(relx=0.13,rely=0.455)
                 
         self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
@@ -336,46 +362,46 @@ class Enterprise(Pages):
 
         ###########nome
 
-        Label(self.frame_enterprise, text='Nome sócio',\
+        Label(self.frame, text='Nome sócio',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.48)
 
-        self.nomeEntry = Entry(self.frame_enterprise,\
+        self.nomeEntry = Entry(self.frame,\
             textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
 
         ###########rua
 
-        Label(self.frame_enterprise, text='Rua',\
+        Label(self.frame, text='Rua',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.48)
 
-        self.ruaEntry = Entry(self.frame_enterprise,\
+        self.ruaEntry = Entry(self.frame,\
             textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.35,rely=0.53,relwidth=0.20,relheight=0.05)
 
         ###########Num
 
-        Label(self.frame_enterprise, text='Num.',\
+        Label(self.frame, text='Num.',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.48)
 
-        self.numEntry = Entry(self.frame_enterprise,\
+        self.numEntry = Entry(self.frame,\
             textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.61,rely=0.53,relwidth=0.05,relheight=0.05)
 
         ###########bairro
 
-        Label(self.frame_enterprise, text='Bairro',\
+        Label(self.frame, text='Bairro',\
             background='lightblue', font=(10))\
                 .place(relx=0.7,rely=0.48)
 
-        self.bairroEntry = Entry(self.frame_enterprise,\
+        self.bairroEntry = Entry(self.frame,\
             textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
 
         ###########TODO CEP
@@ -385,13 +411,13 @@ class Enterprise(Pages):
         self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
             Formater.cep_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='CEP',\
+        Label(self.frame, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.61)
         
 
-        self.CEPEntry = Entry(self.frame_enterprise, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.cep_validator), '%P'))\
+        self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Contra, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
 
         self.referencias['$cepContra'] = self.valCEP_Contra
@@ -403,26 +429,26 @@ class Enterprise(Pages):
         self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
             Formater.rg_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='RG',\
+        Label(self.frame, text='RG',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.61)
         
 
-        self.CEPEntry = Entry(self.frame_enterprise, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.rg_validator), '%P'))\
+        self.CEPEntry = Entry(self.frame, textvariable = self.valRG, \
+            validate ='key', validatecommand =(self.frame.register(Validator.rg_validator), '%P'))\
                 .place(relx=0.35,rely=0.66,relwidth=0.2,relheight=0.05)
 
         self.referencias['$rgContra'] = self.valRG
 
         ###########Org. Emissor
 
-        Label(self.frame_enterprise, text='Org.',\
+        Label(self.frame, text='Org.',\
             background='lightblue', font=(10))\
                 .place(relx=0.9,rely=0.61)
 
-        self.sspEntry = Entry(self.frame_enterprise,\
+        self.sspEntry = Entry(self.frame,\
             textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.frame_enterprise.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
 
         ###########TODO CPF
@@ -432,50 +458,50 @@ class Enterprise(Pages):
         self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
             Formater.cpf_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='CPF',\
+        Label(self.frame, text='CPF',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.61)
         
 
-        Entry(self.frame_enterprise, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.cpf_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valCPF, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cpf_validator), '%P'))\
                 .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
 
         self.referencias['$cpfContra'] = self.valCPF
 
         ###########Estado Civil
 
-        Label(self.frame_enterprise, text='Estado Civil',\
+        Label(self.frame, text='Estado Civil',\
             background='lightblue', font=(10))\
                 .place(relx=0.35,rely=0.72)
 
-        self.estadoEntry = StringVar(self.frame_enterprise)
+        self.estadoEntry = StringVar(self.frame)
 
         self.estadoEntryOpt = ('solteiro(a)', 'casado(a)','divorsiado(a)','viuvo(a)')
 
         self.estadoEntry.set('solteiro(a)')
 
-        self.popup = OptionMenu(self.frame_enterprise, self.estadoEntry, *self.estadoEntryOpt)\
+        self.popup = OptionMenu(self.frame, self.estadoEntry, *self.estadoEntryOpt)\
             .place(relx=0.35,rely=0.77,relwidth=0.2,relheight=0.06)
 
         self.referencias['$estadoCivilContra'] = self.estadoEntry
 
         ###########Complemento
 
-        Label(self.frame_enterprise, text='Complemento',\
+        Label(self.frame, text='Complemento',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.73)
 
-        self.complementoEntry = Entry(self.frame_enterprise,\
+        self.complementoEntry = Entry(self.frame,\
             textvariable=self.referencias['$compleContra'])\
                 .place(relx=0.61,rely=0.78,relwidth=0.35,relheight=0.05)
 
         #Contrato
-        Label(self.frame_enterprise, text='Contrato',\
+        Label(self.frame, text='Contrato',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.81)
                 
-        self.canvas = Canvas(self.frame_enterprise, width=625, height=10,border=-5)
+        self.canvas = Canvas(self.frame, width=625, height=10,border=-5)
         self.canvas.place(relx=0.17,rely=0.845)
                 
         self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
@@ -486,11 +512,11 @@ class Enterprise(Pages):
 
         self.valPag = StringVar(value='R$ ')
 
-        Label(self.frame_enterprise, text='Val. Pagamento',\
+        Label(self.frame, text='Val. Pagamento',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
         
-        self.valEntry = Entry(self.frame_enterprise, textvariable = self.valPag, )\
+        self.valEntry = Entry(self.frame, textvariable = self.valPag, )\
                 .place(relx=0.05,rely=0.93,relwidth=0.1,relheight=0.05)
 
         self.referencias['$valPag'] = self.valPag
@@ -502,13 +528,13 @@ class Enterprise(Pages):
         self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
             Formater.date_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='Data início',\
+        Label(self.frame, text='Data início',\
             background='lightblue', font=(10))\
                 .place(relx=0.25,rely=0.88)
         
 
-        Entry(self.frame_enterprise, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.date_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valDT_inic, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P'))\
                 .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
 
         self.referencias['$dtInic'] = self.valDT_inic
@@ -520,63 +546,48 @@ class Enterprise(Pages):
         self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
             Formater.date_formater(passed, *args) )
 
-        Label(self.frame_enterprise, text='Data vencimento',\
+        Label(self.frame, text='Data vencimento',\
             background='lightblue', font=(10))\
                 .place(relx=0.4,rely=0.88)
         
 
-        Entry(self.frame_enterprise, textvariable = self.valDT_venc, \
-            validate ='key', validatecommand =(self.frame_enterprise.register(Validator.date_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valDT_venc, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P'))\
                 .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
 
         self.referencias['$dtVenc'] = self.valDT_venc
 
         #Botão enviar
-        Button(self.frame_enterprise, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.frame_enterprise))\
+        Button(self.frame, text='Gerar CPS',\
+            command= lambda: self.executar())\
                 .place(relx=0.61,rely=0.865,relwidth=0.35,relheight=0.12)
-        
-    def changes(self):
-        estadoCiv = self.referencias['$estadoCivilContra']
-        if 'STB' in estadoCiv.get():
-            estadoCiv.set('Casado em Separação Total de Bens')
-        elif 'CPB' in estadoCiv.get():
-            estadoCiv.set('Casado em Comunhão Parcial de Bens')
-        elif 'CTB' in estadoCiv.get():
-            estadoCiv.set('Casado em Comunhão Total de Bens')
-            
-        # valor = self.referencias['$valPag']
-        # valorDbl = valor.get()[2:].replace(',','.')
-        # valorExtenso = num2words(valorDbl,lang='pt-br')
-        # valor.set(f'{valor.get()} ({valorExtenso})') 
-    
+
 class Person(Pages):
-    def __init__(self):
-        super().__init__(titulo, caminho)
+    def __init__(self, titulo):
+        super().__init__(titulo)
+        
         self.referencias = {
-            '$nomeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$numContra' : StringVar(), #intValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            "$compleEmp" : StringVar(), #strValidator
-            "$compleContra" : StringVar(), #strValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #intValidator
-            "$dtInic" : StringVar()  #dateValidator
+            '$nomeContra' : StringVar(),
+            '$ruaContra' : StringVar(), 
+            '$numContra' : StringVar(), 
+            '$bairroContra' : StringVar(),  
+            '$cidadeContra' : StringVar(), 
+            '$estadoContra' : StringVar(), 
+            '$cepContra' : StringVar(),  
+            '$rgContra' : StringVar(),  
+            '$emissorContra' : StringVar(), 
+            '$cpfContra' : StringVar(), 
+            '$estadoCivilContra' : StringVar(), 
+            "$compleContra" : StringVar(), 
+            "$dtVenc" : StringVar(),  
+            "$numEmpre" : StringVar(),
+            "$valPag" : StringVar(), 
+            "$dtInic" : StringVar()  
         }
     
     def index(self):
-        self.frame_Person = Frame(self.window, bd=4, bg='lightblue')
-        self.frame_Person.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-        
-
         #Titulo
-        Label(self.frame_Person, text='Gerador de CPS Pessoa física', background='lightblue', font=('arial',17,'bold'))\
+        Label(self.frame, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
             .place(relx=0.3,rely=0.05)
 
         #Logo
@@ -584,55 +595,35 @@ class Person(Pages):
         
         self.logo = self.logo.subsample(5,5)
         
-        Label(self.frame_Person, image=self.logo, background='lightblue')\
+        Label(self.frame, image=self.logo, background='lightblue')\
             .place(relx=0.75,rely=0.09,relwidth=0.12,relheight=0.15)
 
         #Botão voltar
-        Button(self.frame_Person, text='Voltar ao menu',\
-            command= lambda: (self.frame_Person.destroy, self.pageMenu()))\
+        Button(self.frame, text='Voltar ao menu',\
+            command= lambda: (self.frame.destroy()))\
                 .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
-
-        self.referencias = {
-            '$nomeContra' : StringVar(), #strValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            '$estadoContra' : StringVar(), #strValidator
-            '$cidadeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$numContra' : StringVar(), #intValidator
-            "$compleContra" : StringVar(), #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            "$numEmpre" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #valValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$dtAss" : StringVar(),  #dateValidator
-            "$dtInic" : StringVar()  #dateValidator
-        }
 
         #Labels e Entrys
         #Contratante
-        Label(self.frame_Person, text='Contratante',\
+        Label(self.frame, text='Contratante',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.2)
 
         ############Linha
-        self.canvas = Canvas(self.frame_Person, width=600, height=10, background='darkblue',border=-5)
+        self.canvas = Canvas(self.frame, width=600, height=10, background='darkblue',border=-5)
         self.canvas.place(relx=0.2,rely=0.23)
                 
         self.canvas.create_line(-5,0,600,0, fill="darkblue", width=10)
 
         ###########nome
 
-        Label(self.frame_Person, text='Nome',\
+        Label(self.frame, text='Nome',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.3)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.37,relwidth=0.25,relheight=0.05)
         
          ###########RG
@@ -642,26 +633,26 @@ class Person(Pages):
         self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
             Formater.rg_formater(passed, *args) )
 
-        Label(self.frame_Person, text='RG',\
+        Label(self.frame, text='RG',\
             background='lightblue', font=(10))\
                 .place(relx=0.33,rely=0.3)
         
 
-        Entry(self.frame_Person, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.frame_Person.register(Validator.rg_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valRG, \
+            validate ='key', validatecommand =(self.frame.register(Validator.rg_validator), '%P'))\
                 .place(relx=0.33,rely=0.37,relwidth=0.15,relheight=0.05)
 
         self.referencias['$rgContra'] = self.valRG
         
         ###########Org. Emissor
 
-        Label(self.frame_Person, text='Org.',\
+        Label(self.frame, text='Org.',\
             background='lightblue', font=(10))\
                 .place(relx=0.5,rely=0.3)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.5,rely=0.37,relwidth=0.05,relheight=0.05)
 
         ###########CPF
@@ -671,28 +662,28 @@ class Person(Pages):
         self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
             Formater.cpf_formater(passed, *args) )
 
-        Label(self.frame_Person, text='CPF',\
+        Label(self.frame, text='CPF',\
             background='lightblue', font=(10))\
                 .place(relx=0.575,rely=0.3)
         
 
-        Entry(self.frame_Person, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.frame_Person.register(Validator.cpf_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valCPF, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cpf_validator), '%P'))\
                 .place(relx=0.575,rely=0.37,relwidth=0.15,relheight=0.05)
 
         self.referencias['$cpfContra'] = self.valCPF
 
         ###########Estado Civil
         
-        Label(self.frame_Person, text='Estado Civil',\
+        Label(self.frame, text='Estado Civil',\
             background='lightblue', font=(10))\
                 .place(relx=0.75,rely=0.3)
 
-        self.estadoEntry = StringVar(self.frame_Person)
+        self.estadoEntry = StringVar(self.frame)
 
         self.estadoEntryOpt = ('solteiro(a)','divorsiado(a)','viuvo(a)')
 
-        self.popup = ttk.OptionMenu(self.frame_Person, self.estadoEntry,'', *self.estadoEntryOpt)
+        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
 
         self.menuCasado = self.popup['menu']
 
@@ -715,35 +706,35 @@ class Person(Pages):
 
         ###########rua
 
-        Label(self.frame_Person, text='Rua',\
+        Label(self.frame, text='Rua',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.45)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.52,relwidth=0.25,relheight=0.05)
 
         ###########Num
 
-        Label(self.frame_Person, text='Num.',\
+        Label(self.frame, text='Num.',\
             background='lightblue', font=(10))\
                 .place(relx=0.33,rely=0.45)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.33,rely=0.52,relwidth=0.05,relheight=0.05)
 
         ###########bairro
 
-        Label(self.frame_Person, text='Bairro',\
+        Label(self.frame, text='Bairro',\
             background='lightblue', font=(10))\
                 .place(relx=0.415,rely=0.45)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.415,rely=0.52,relwidth=0.25,relheight=0.05)
         
         ###########CEP 
@@ -753,56 +744,56 @@ class Person(Pages):
         self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
             Formater.cep_formater(passed, *args) )
 
-        Label(self.frame_Person, text='CEP',\
+        Label(self.frame, text='CEP',\
             background='lightblue', font=(10))\
                 .place(relx=0.7,rely=0.45)
         
 
-        Entry(self.frame_Person, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.frame_Person.register(Validator.cep_validator), '%P'))\
+        Entry(self.frame, textvariable = self.valCEP_Contra, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.7,rely=0.52,relwidth=0.25,relheight=0.05)
 
         self.referencias['$cepContra'] = self.valCEP_Contra
         
         ###########Cidade
 
-        Label(self.frame_Person, text='Cidade',\
+        Label(self.frame, text='Cidade',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.6)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$cidadeContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.05,rely=0.67,relwidth=0.25,relheight=0.05)
         
         ###########Estado
 
-        Label(self.frame_Person, text='Estado',\
+        Label(self.frame, text='Estado',\
             background='lightblue', font=(10))\
                 .place(relx=0.33,rely=0.6)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$estadoContra'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: not text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.33,rely=0.67,relwidth=0.25,relheight=0.05)
 
         ###########Complemento
 
-        Label(self.frame_Person, text='Complemento (opcional)',\
+        Label(self.frame, text='Complemento (opcional)',\
             background='lightblue', font=(10))\
                 .place(relx=0.6,rely=0.6)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$compleContra'])\
                 .place(relx=0.61,rely=0.67,relwidth=0.34,relheight=0.05)
 
          #Contrato
-        Label(self.frame_Person, text='Contrato',\
+        Label(self.frame, text='Contrato',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.75)
 
         ############Linha
-        self.canvas = Canvas(self.frame_Person, width=625, height=10, background='darkblue',border=-5)
+        self.canvas = Canvas(self.frame, width=625, height=10, background='darkblue',border=-5)
         self.canvas.place(relx=0.17,rely=0.78)
                 
         self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
@@ -814,11 +805,11 @@ class Person(Pages):
         self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
             Formater.valor_formater(passed, *args) )
 
-        Label(self.frame_Person, text='Val. Contrato.',\
+        Label(self.frame, text='Val. Contrato.',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.85)
         
-        self.entryVal = Entry(self.frame_Person, textvariable = self.valPag, )\
+        self.entryVal = Entry(self.frame, textvariable = self.valPag, )\
                 .place(relx=0.06,rely=0.92,relwidth=0.1,relheight=0.05)
                 
         self.referencias['$valPag'] = self.valPag
@@ -830,13 +821,13 @@ class Person(Pages):
         self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
             Formater.date_formater(passed, *args) )
 
-        Label(self.frame_Person, text='Data início',\
+        Label(self.frame, text='Data início',\
             background='lightblue', font=(10))\
                 .place(relx=0.185,rely=0.85)
         
 
-        Entry(self.frame_Person, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.frame_Person.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.92,relwidth=0.1,relheight=0.05)
+        Entry(self.frame, textvariable = self.valDT_inic, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.92,relwidth=0.1,relheight=0.05)
 
         self.referencias['$dtInic'] = self.valDT_inic
 
@@ -847,64 +838,49 @@ class Person(Pages):
         self.valDT_ass.trace_add('write', lambda *args, passed = self.valDT_ass:\
             Formater.date_formater(passed, *args) )
 
-        Label(self.frame_Person, text='Data Ass.',\
+        Label(self.frame, text='Data Ass.',\
             background='lightblue', font=(10))\
                 .place(relx=0.3,rely=0.85)
         
 
-        Entry(self.frame_Person, textvariable = self.valDT_ass, \
-            validate ='key', validatecommand =(self.frame_Person.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.92,relwidth=0.1,relheight=0.05)
+        Entry(self.frame, textvariable = self.valDT_ass, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.92,relwidth=0.1,relheight=0.05)
 
         self.referencias['$dtAss'] = self.valDT_ass
 
         ###########Dia vencimento
         
-        Label(self.frame_Person, text='Dia Venc.',\
+        Label(self.frame, text='Dia Venc.',\
             background='lightblue', font=(10))\
                 .place(relx=0.42,rely=0.85)
         
 
-        Entry(self.frame_Person,textvariable=self.referencias['$dtVenc'], validate='key', validatecommand=(self.frame_Person.register(lambda text: text.isdecimal()), '%S')).place(relx=0.42,rely=0.92,relwidth=0.1,relheight=0.05)
+        Entry(self.frame,textvariable=self.referencias['$dtVenc'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S')).place(relx=0.42,rely=0.92,relwidth=0.1,relheight=0.05)
 
 
         ###########Num. Empregados
 
-        Label(self.frame_Person, text='Num. Empreg.',\
+        Label(self.frame, text='Num. Empreg.',\
             background='lightblue', font=(10))\
                 .place(relx=0.55,rely=0.85)
 
-        Entry(self.frame_Person,\
+        Entry(self.frame,\
             textvariable=self.referencias['$numEmpre'],\
-                validate='key', validatecommand=(self.frame_Person.register(lambda text: text.isdecimal()), '%S'))\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.58,rely=0.92,relwidth=0.05,relheight=0.05)
 
         #Botão enviar
-        Button(self.frame_Person, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.frame_Person))\
+        Button(self.frame, text='Gerar CPS',\
+            command= lambda: self.executar())\
                 .place(relx=0.7,rely=0.85,relwidth=0.25,relheight=0.12)
-     
-class PessoaFisica(Person):
-    def __init__(self):
-        super().__init__('Pessoa Fisica', './code/CPS\'s/CPS INATIVIDADE.docx')
-    
-class Inatividade(Enterprise):
-    def __init__(self):
-        super().__init__('Inatividade', './code/CPS\'s/CPS INATIVIDADE.docx')
-        
-class LucroPresumido(Empresa):
-    def __init__(self):
-        super().__init__('Inatividade', './code/CPS\'s/CPS INATIVIDADE.docx')
-        
-class SimplesNacional(Empresa):
-    def __init__(self):
-        super().__init__('Inatividade', './code/CPS\'s/CPS INATIVIDADE.docx')
+
+#Aplicação
 
 class App:
     def __init__(self):
         self.window = window
-        self.pages = Pages()
         self.tela()
-        self.pageMenu()
+        self.menu()
         window.mainloop()
 
     def tela(self):
@@ -922,1445 +898,29 @@ class App:
         .place(relx=0.15,rely=0.2,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png')
-        
-        self.logo = self.logo.subsample(4,4)
+        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
         
         Label(self.window, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
 
         #Pessoa física
-        self.btnPF = Button(self.menu, text='CPS Pessoa Física',\
-            command= lambda: PessoaFisica.index())\
+        Button(self.menu, text='CPS Pessoa Física',\
+            command= lambda: Person('Pessoa Fisica').index())\
                 .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
 
         #Inatividade
-        self.btnIN = Button(self.menu, text='CPS Inatividade',\
-            command= lambda: Inatividade.index())\
+        Button(self.menu, text='CPS Inatividade',\
+            command= lambda: Enterprise('Inatividade').index())\
                 .place(relx=0.60,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Lucro Presumido
-        self.btnLP = Button(self.menu, text='CPS Lucros',\
-            command= lambda: LucroPresumido.index())\
+        Button(self.menu, text='CPS Lucros',\
+            command= lambda: Enterprise('Lucro Presumido').index())\
                 .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Simples Nacional
-        self.btnSN = Button(self.menu, text='CPS Simples Nacional',\
-            command= lambda: SimplesNacional.index())\
+        Button(self.menu, text='CPS Simples Nacional',\
+            command= lambda: Enterprise('Simples Nacional').index())\
                 .place(relx=0.60,rely=0.7,relwidth=0.25,relheight=0.15)
-
-    def pagePF(self):
-        self.menu.destroy()
-        self.doc = Document('./code/CPS\'s/CPS PESSOA FISICA.docx')
-
-        self.cpsPF = Frame(self.window, bd=4, bg='lightblue')
-        self.cpsPF.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-        
-
-        #Titulo
-        Label(self.cpsPF, text='Gerador de CPS Pessoa física', background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.05)
-
-        #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
-        
-        self.logo = self.logo.subsample(5,5)
-        
-        Label(self.cpsPF, image=self.logo, background='lightblue')\
-            .place(relx=0.75,rely=0.09,relwidth=0.12,relheight=0.15)
-
-        #Botão voltar
-        Button(self.cpsPF, text='Voltar ao menu',\
-            command= lambda: (self.cpsPF.destroy, self.pageMenu()))\
-                .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
-
-        self.referencias = {
-            '$nomeContra' : StringVar(), #strValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            '$estadoContra' : StringVar(), #strValidator
-            '$cidadeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$numContra' : StringVar(), #intValidator
-            "$compleContra" : StringVar(), #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            "$numEmpre" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #valValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$dtAss" : StringVar(),  #dateValidator
-            "$dtInic" : StringVar()  #dateValidator
-        }
-
-        #Labels e Entrys
-        #Contratante
-        Label(self.cpsPF, text='Contratante',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.2)
-
-        ############Linha
-        self.canvas = Canvas(self.cpsPF, width=600, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.2,rely=0.23)
-                
-        self.canvas.create_line(-5,0,600,0, fill="darkblue", width=10)
-
-        ###########nome
-
-        Label(self.cpsPF, text='Nome',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.3)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.37,relwidth=0.25,relheight=0.05)
-        
-         ###########RG
-        
-        self.valRG = StringVar()
-
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
-
-        Label(self.cpsPF, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.3)
-        
-
-        Entry(self.cpsPF, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.cpsPF.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.33,rely=0.37,relwidth=0.15,relheight=0.05)
-
-        self.referencias['$rgContra'] = self.valRG
-        
-        ###########Org. Emissor
-
-        Label(self.cpsPF, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.5,rely=0.3)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.5,rely=0.37,relwidth=0.05,relheight=0.05)
-
-        ###########CPF
-        
-        self.valCPF = StringVar()
-
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
-
-        Label(self.cpsPF, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.575,rely=0.3)
-        
-
-        Entry(self.cpsPF, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.cpsPF.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.575,rely=0.37,relwidth=0.15,relheight=0.05)
-
-        self.referencias['$cpfContra'] = self.valCPF
-
-        ###########Estado Civil
-        
-        Label(self.cpsPF, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.75,rely=0.3)
-
-        self.estadoEntry = StringVar(self.cpsPF)
-
-        self.estadoEntryOpt = ('solteiro(a)','divorsiado(a)','viuvo(a)')
-
-        self.popup = ttk.OptionMenu(self.cpsPF, self.estadoEntry,'', *self.estadoEntryOpt)
-
-        self.menuCasado = self.popup['menu']
-
-        #Casado
-        self.subLista = Menu(self.menuCasado, tearoff=False)
-        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
-        self.subLista.add_command(label='Comunhão Parcial de Bens', \
-            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
-        
-        self.subLista.add_command(label='Comunhão Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
-        
-        self.subLista.add_command(label='Separação Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em STB'))
-
-
-        self.popup.place(relx=0.75,rely=0.37,relwidth=0.2,relheight=0.06)
-
-        self.referencias['$estadoCivilContra'] = self.estadoEntry
-
-        ###########rua
-
-        Label(self.cpsPF, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.45)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.52,relwidth=0.25,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsPF, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.45)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.52,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsPF, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.415,rely=0.45)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.415,rely=0.52,relwidth=0.25,relheight=0.05)
-        
-        ###########CEP 
-        
-        self.valCEP_Contra = StringVar()
-
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsPF, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.45)
-        
-
-        Entry(self.cpsPF, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.cpsPF.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.7,rely=0.52,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepContra'] = self.valCEP_Contra
-        
-        ###########Cidade
-
-        Label(self.cpsPF, text='Cidade',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.6)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$cidadeContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.67,relwidth=0.25,relheight=0.05)
-        
-        ###########Estado
-
-        Label(self.cpsPF, text='Estado',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.6)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$estadoContra'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.67,relwidth=0.25,relheight=0.05)
-
-        ###########Complemento
-
-        Label(self.cpsPF, text='Complemento (opcional)',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.6)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$compleContra'])\
-                .place(relx=0.61,rely=0.67,relwidth=0.34,relheight=0.05)
-
-         #Contrato
-        Label(self.cpsPF, text='Contrato',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.75)
-
-        ############Linha
-        self.canvas = Canvas(self.cpsPF, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.17,rely=0.78)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor pagamento
-        
-        self.valPag = StringVar(value='R$ ')
-
-        self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
-            Formater.valor_formater(passed, *args) )
-
-        Label(self.cpsPF, text='Val. Contrato.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.85)
-        
-        self.entryVal = Entry(self.cpsPF, textvariable = self.valPag, )\
-                .place(relx=0.06,rely=0.92,relwidth=0.1,relheight=0.05)
-                
-        self.referencias['$valPag'] = self.valPag
-
-        ###########Data inicio
-        
-        self.valDT_inic = StringVar()
-
-        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsPF, text='Data início',\
-            background='lightblue', font=(10))\
-                .place(relx=0.185,rely=0.85)
-        
-
-        Entry(self.cpsPF, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.cpsPF.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.92,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtInic'] = self.valDT_inic
-
-        ###########Data Assinatura
-        
-        self.valDT_ass = StringVar()
-
-        self.valDT_ass.trace_add('write', lambda *args, passed = self.valDT_ass:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsPF, text='Data Ass.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.3,rely=0.85)
-        
-
-        Entry(self.cpsPF, textvariable = self.valDT_ass, \
-            validate ='key', validatecommand =(self.cpsPF.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.92,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtAss'] = self.valDT_ass
-
-        ###########Dia vencimento
-        
-        Label(self.cpsPF, text='Dia Venc.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.42,rely=0.85)
-        
-
-        Entry(self.cpsPF,textvariable=self.referencias['$dtVenc'], validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S')).place(relx=0.42,rely=0.92,relwidth=0.1,relheight=0.05)
-
-
-        ###########Num. Empregados
-
-        Label(self.cpsPF, text='Num. Empreg.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.55,rely=0.85)
-
-        Entry(self.cpsPF,\
-            textvariable=self.referencias['$numEmpre'],\
-                validate='key', validatecommand=(self.cpsPF.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.58,rely=0.92,relwidth=0.05,relheight=0.05)
-
-        #Botão enviar
-        Button(self.cpsPF, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.cpsPF))\
-                .place(relx=0.7,rely=0.85,relwidth=0.25,relheight=0.12)
-        
-    def pageIN(self):
-        self.menu.destroy()
-        self.doc = Document('./code/CPS\'s/CPS INATIVIDADE.docx')
-
-        self.cpsIN = Frame(self.window, bd=4, bg='lightblue')
-        self.cpsIN.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        #Titulo
-        Label(self.cpsIN, text='Gerador de CPS Inatividade', background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.045)
-            
-        #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
-        
-        self.logo = self.logo.subsample(5,5)
-        
-        Label(self.cpsIN, image=self.logo, background='lightblue')\
-            .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
-
-        #Botão voltar
-        Button(self.cpsIN, text='Voltar ao menu',\
-            command= lambda: (self.cpsIN.destroy, self.pageMenu()))\
-                .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
-
-        self.referencias = {
-            '$nomeEmp' : StringVar(), #strValidator
-            '$ruaEmp' : StringVar(), #strValidator
-            '$numEmp' : StringVar(), #intValidator
-            '$bairroEmp' : StringVar(),  #strValidator
-            '$cepEmp' : StringVar(),  #intValidator
-            '$rgEmp' : StringVar(),  #rgValidator
-            '$sspEmp' : StringVar(),  #sspValidator
-            '$cnpjEmp' : StringVar(),  #cpfValidator
-            '$nomeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$numContra' : StringVar(), #intValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            "$compleEmp" : StringVar(), #strValidator
-            "$compleContra" : StringVar(), #strValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #intValidator
-            "$dtInic" : StringVar()  #dateValidator
-        }
-
-        #Labels e Entrys
-        #Empresa
-        Label(self.cpsIN, text='Empresa',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.115)
-                
-        self.canvas = Canvas(self.cpsIN, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.17,rely=0.15)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-                
-        ###########nome empresa
-
-        Label(self.cpsIN, text='Nome empresa',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.18)
-
-        self.nomeEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$nomeEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsIN, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.18)
-
-        self.ruaEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$ruaEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsIN, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.18)
-
-        self.numEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$numEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
-                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsIN, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.18)
-
-        self.bairroEmpEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$bairroEmp'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ########### CEP Empre
-
-        self.valCEP_Empre = StringVar()
-
-        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsIN, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepEmp'] = self.valCEP_Empre
-
-        ###########TODO CNPJ
-        
-        self.valCNPJ = StringVar()
-
-        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
-            Formater.cnpj_formater(passed, *args) )
-
-        Label(self.cpsIN, text='CNPJ',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.cnpj_validator), '%P'))\
-                .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$cnpjEmp'] = self.valCNPJ
-                
-        ###########Complemento
-
-        Label(self.cpsIN, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.31)
-
-        self.complementoEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$compleEmp'])\
-                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-        
-        #Socio
-        Label(self.cpsIN, text='Sócio',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.42)
-                
-        self.canvas = Canvas(self.cpsIN, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely=0.455)
-                
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########nome
-
-        Label(self.cpsIN, text='Nome sócio',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.48)
-
-        self.nomeEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsIN, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.48)
-
-        self.ruaEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.53,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsIN, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.48)
-
-        self.numEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.61,rely=0.53,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsIN, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.48)
-
-        self.bairroEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########TODO CEP
-        
-        self.valCEP_Contra = StringVar()
-
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsIN, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepContra'] = self.valCEP_Contra
-
-        ###########TODO RG
-        
-        self.valRG = StringVar()
-
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
-
-        Label(self.cpsIN, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsIN, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.35,rely=0.66,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$rgContra'] = self.valRG
-
-        ###########Org. Emissor
-
-        Label(self.cpsIN, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.9,rely=0.61)
-
-        self.sspEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.cpsIN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
-
-        ###########TODO CPF
-
-        self.valCPF = StringVar()
-
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
-
-        Label(self.cpsIN, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.61)
-        
-
-        Entry(self.cpsIN, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cpfContra'] = self.valCPF
-
-        ###########Estado Civil
-
-        Label(self.cpsIN, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.72)
-
-        self.estadoEntry = StringVar(self.cpsIN)
-
-        self.estadoEntryOpt = ('solteiro(a)', 'casado(a)','divorsiado(a)','viuvo(a)')
-
-        self.estadoEntry.set('solteiro(a)')
-
-        self.popup = OptionMenu(self.cpsIN, self.estadoEntry, *self.estadoEntryOpt)\
-            .place(relx=0.35,rely=0.77,relwidth=0.2,relheight=0.06)
-
-        self.referencias['$estadoCivilContra'] = self.estadoEntry
-
-        ###########Complemento
-
-        Label(self.cpsIN, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.73)
-
-        self.complementoEntry = Entry(self.cpsIN,\
-            textvariable=self.referencias['$compleContra'])\
-                .place(relx=0.61,rely=0.78,relwidth=0.35,relheight=0.05)
-
-        #Contrato
-        Label(self.cpsIN, text='Contrato',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.81)
-                
-        self.canvas = Canvas(self.cpsIN, width=625, height=10,border=-5)
-        self.canvas.place(relx=0.17,rely=0.845)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########TODO Valor pagamento
-
-        self.valPag = StringVar(value='R$ ')
-
-        Label(self.cpsIN, text='Val. Pagamento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.88)
-        
-        self.valEntry = Entry(self.cpsIN, textvariable = self.valPag, )\
-                .place(relx=0.05,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$valPag'] = self.valPag
-
-        ###########TODO Data inicio
-        
-        self.valDT_inic = StringVar()
-
-        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsIN, text='Data início',\
-            background='lightblue', font=(10))\
-                .place(relx=0.25,rely=0.88)
-        
-
-        Entry(self.cpsIN, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.date_validator), '%P'))\
-                .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtInic'] = self.valDT_inic
-
-        ###########TODO Data vencimento
-        
-        self.valDT_venc = StringVar()
-
-        self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsIN, text='Data vencimento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.88)
-        
-
-        Entry(self.cpsIN, textvariable = self.valDT_venc, \
-            validate ='key', validatecommand =(self.cpsIN.register(Validator.date_validator), '%P'))\
-                .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtVenc'] = self.valDT_venc
-
-        #Botão enviar
-        Button(self.cpsIN, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.cpsIN))\
-                .place(relx=0.61,rely=0.865,relwidth=0.35,relheight=0.12)
-
-    def pageLP(self):
-        self.menu.destroy()
-        self.doc = Document('./code/CPS\'s/CPS LUCRO PRESUMIDO.docx')
-
-        self.cpsLP = Frame(self.window, bd=4, bg='lightblue')
-        self.cpsLP.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        #Titulo
-        Label(self.cpsLP, text='Gerador de CPS Lucro Presumido', background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.045)
-            
-        #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
-        
-        self.logo = self.logo.subsample(5,5)
-        
-        Label(self.cpsLP, image=self.logo, background='lightblue')\
-            .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
-
-        #Botão voltar
-        Button(self.cpsLP, text='Voltar ao menu',\
-            command= lambda: (self.cpsLP.destroy, self.pageMenu()))\
-                .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
-
-        self.referencias = {
-            '$nomeEmp' : StringVar(), #strValidator
-            '$ruaEmp' : StringVar(), #strValidator
-            '$numEmp' : StringVar(), #intValidator
-            '$bairroEmp' : StringVar(),  #strValidator
-            '$cepEmp' : StringVar(),  #intValidator
-            '$rgEmp' : StringVar(),  #rgValidator
-            '$sspEmp' : StringVar(),  #sspValidator
-            '$cnpjEmp' : StringVar(),  #cpfValidator
-            '$nomeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$numContra' : StringVar(), #intValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            "$compleEmp" : StringVar(), #strValidator
-            "$compleContra" : StringVar(), #strValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #intValidator
-            "$dtInic" : StringVar()  #dateValidator
-        }
-
-        #Labels e Entrys
-        #Empresa
-        Label(self.cpsLP, text='Empresa',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.115)
-                
-        self.canvas = Canvas(self.cpsLP, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.17,rely=0.15)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-                
-        ###########nome empresa
-
-        Label(self.cpsLP, text='Nome empresa',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.18)
-
-        self.nomeEmpEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$nomeEmp'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsLP, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.18)
-
-        self.ruaEmpEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$ruaEmp'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsLP, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.18)
-
-        self.numEmpEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$numEmp'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: text.isdecimal()), '%S'))\
-                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsLP, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.18)
-
-        self.bairroEmpEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$bairroEmp'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ########### CEP Empre
-
-        self.valCEP_Empre = StringVar()
-
-        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsLP, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsLP, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepEmp'] = self.valCEP_Empre
-
-        ###########TODO CNPJ
-        
-        self.valCNPJ = StringVar()
-
-        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
-            Formater.cnpj_formater(passed, *args) )
-
-        Label(self.cpsLP, text='CNPJ',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsLP, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.cnpj_validator), '%P'))\
-                .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$cnpjEmp'] = self.valCNPJ
-                
-        ###########Complemento
-
-        Label(self.cpsLP, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.31)
-
-        self.complementoEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$compleEmp'])\
-                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-        
-        #Socio
-        Label(self.cpsLP, text='Sócio',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.42)
-                
-        self.canvas = Canvas(self.cpsLP, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely=0.455)
-                
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########nome
-
-        Label(self.cpsLP, text='Nome sócio',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.48)
-
-        self.nomeEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsLP, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.48)
-
-        self.ruaEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.53,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsLP, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.48)
-
-        self.numEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.61,rely=0.53,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsLP, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.48)
-
-        self.bairroEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########TODO CEP
-        
-        self.valCEP_Contra = StringVar()
-
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsLP, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsLP, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepContra'] = self.valCEP_Contra
-
-        ###########TODO RG
-        
-        self.valRG = StringVar()
-
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
-
-        Label(self.cpsLP, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsLP, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.35,rely=0.66,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$rgContra'] = self.valRG
-
-        ###########Org. Emissor
-
-        Label(self.cpsLP, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.9,rely=0.61)
-
-        self.sspEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.cpsLP.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
-
-        ###########TODO CPF
-
-        self.valCPF = StringVar()
-
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
-
-        Label(self.cpsLP, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.61)
-        
-
-        Entry(self.cpsLP, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cpfContra'] = self.valCPF
-
-        ###########Estado Civil
-
-        Label(self.cpsLP, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.72)
-
-        self.estadoEntry = StringVar(self.cpsLP)
-
-        self.estadoEntryOpt = ('solteiro(a)', 'casado(a)','divorsiado(a)','viuvo(a)')
-
-        self.estadoEntry.set('solteiro(a)')
-
-        self.popup = OptionMenu(self.cpsLP, self.estadoEntry, *self.estadoEntryOpt)\
-            .place(relx=0.35,rely=0.77,relwidth=0.2,relheight=0.06)
-
-        self.referencias['$estadoCivilContra'] = self.estadoEntry
-
-        ###########Complemento
-
-        Label(self.cpsLP, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.73)
-
-        self.complementoEntry = Entry(self.cpsLP,\
-            textvariable=self.referencias['$compleContra'])\
-                .place(relx=0.61,rely=0.78,relwidth=0.35,relheight=0.05)
-
-        #Contrato
-        Label(self.cpsLP, text='Contrato',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.81)
-                
-        self.canvas = Canvas(self.cpsLP, width=625, height=10,border=-5)
-        self.canvas.place(relx=0.17,rely=0.845)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########TODO Valor pagamento
-
-        self.valPag = StringVar(value='R$ ')
-
-        Label(self.cpsLP, text='Val. Pagamento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.88)
-        
-        self.valEntry = Entry(self.cpsLP, textvariable = self.valPag, )\
-                .place(relx=0.05,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$valPag'] = self.valPag
-
-        ###########TODO Data inicio
-        
-        self.valDT_inic = StringVar()
-
-        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsLP, text='Data início',\
-            background='lightblue', font=(10))\
-                .place(relx=0.25,rely=0.88)
-        
-
-        Entry(self.cpsLP, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.date_validator), '%P'))\
-                .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtInic'] = self.valDT_inic
-
-        ###########TODO Data vencimento
-        
-        self.valDT_venc = StringVar()
-
-        self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsLP, text='Data vencimento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.88)
-        
-
-        Entry(self.cpsLP, textvariable = self.valDT_venc, \
-            validate ='key', validatecommand =(self.cpsLP.register(Validator.date_validator), '%P'))\
-                .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtVenc'] = self.valDT_venc
-
-        #Botão enviar
-        Button(self.cpsLP, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.cpsLP))\
-                .place(relx=0.61,rely=0.865,relwidth=0.35,relheight=0.12)
-
-    def pageSN(self):
-        self.menu.destroy()
-        self.doc = Document('./code/CPS\'s/CPS SIMPLES NACIONAL.docx')
-
-        self.cpsSN = Frame(self.window, bd=4, bg='lightblue')
-        self.cpsSN.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        #Titulo
-        Label(self.cpsSN, text='Gerador de CPS Simples Nacional', background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.045)
-            
-        #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
-        
-        self.logo = self.logo.subsample(5,5)
-        
-        Label(self.cpsSN, image=self.logo, background='lightblue')\
-            .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
-
-        #Botão voltar
-        Button(self.cpsSN, text='Voltar ao menu',\
-            command= lambda: (self.cpsSN.destroy, self.pageMenu()))\
-                .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
-
-        self.referencias = {
-            '$nomeEmp' : StringVar(), #strValidator
-            '$ruaEmp' : StringVar(), #strValidator
-            '$numEmp' : StringVar(), #intValidator
-            '$bairroEmp' : StringVar(),  #strValidator
-            '$cepEmp' : StringVar(),  #intValidator
-            '$rgEmp' : StringVar(),  #rgValidator
-            '$sspEmp' : StringVar(),  #sspValidator
-            '$cnpjEmp' : StringVar(),  #cpfValidator
-            '$nomeContra' : StringVar(), #strValidator
-            '$ruaContra' : StringVar(), #strValidator
-            '$numContra' : StringVar(), #intValidator
-            '$bairroContra' : StringVar(),  #strValidator
-            '$cepContra' : StringVar(),  #intValidator
-            '$rgContra' : StringVar(),  #rgValidator
-            '$emissorContra' : StringVar(),  #sspValidator
-            '$cpfContra' : StringVar(),  #cpfValidator
-            '$estadoCivilContra' : StringVar(), #strValidator
-            "$compleEmp" : StringVar(), #strValidator
-            "$compleContra" : StringVar(), #strValidator
-            "$dtVenc" : StringVar(),  #dateValidator
-            "$valPag" : StringVar(), #intValidator
-            "$dtInic" : StringVar()  #dateValidator
-        }
-
-        #Labels e Entrys
-        #Empresa
-        Label(self.cpsSN, text='Empresa',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.115)
-                
-        self.canvas = Canvas(self.cpsSN, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.17,rely=0.15)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-                
-        ###########nome empresa
-
-        Label(self.cpsSN, text='Nome empresa',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.18)
-
-        self.nomeEmpEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$nomeEmp'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsSN, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.18)
-
-        self.ruaEmpEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$ruaEmp'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsSN, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.18)
-
-        self.numEmpEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$numEmp'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: text.isdecimal()), '%S'))\
-                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsSN, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.18)
-
-        self.bairroEmpEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$bairroEmp'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ########### CEP Empre
-
-        self.valCEP_Empre = StringVar()
-
-        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsSN, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsSN, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepEmp'] = self.valCEP_Empre
-
-        ###########TODO CNPJ
-        
-        self.valCNPJ = StringVar()
-
-        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
-            Formater.cnpj_formater(passed, *args) )
-
-        Label(self.cpsSN, text='CNPJ',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.cpsSN, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.cnpj_validator), '%P'))\
-                .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$cnpjEmp'] = self.valCNPJ
-                
-        ###########Complemento
-
-        Label(self.cpsSN, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.31)
-
-        self.complementoEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$compleEmp'])\
-                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-        
-        #Socio
-        Label(self.cpsSN, text='Sócio',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.42)
-                
-        self.canvas = Canvas(self.cpsSN, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely=0.455)
-                
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########nome
-
-        Label(self.cpsSN, text='Nome sócio',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.48)
-
-        self.nomeEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$nomeContra'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.cpsSN, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.48)
-
-        self.ruaEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$ruaContra'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.53,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.cpsSN, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.48)
-
-        self.numEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$numContra'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.61,rely=0.53,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.cpsSN, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.48)
-
-        self.bairroEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$bairroContra'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.53,relwidth=0.25,relheight=0.05)
-
-        ###########TODO CEP
-        
-        self.valCEP_Contra = StringVar()
-
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.cpsSN, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsSN, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cepContra'] = self.valCEP_Contra
-
-        ###########TODO RG
-        
-        self.valRG = StringVar()
-
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
-
-        Label(self.cpsSN, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.61)
-        
-
-        self.CEPEntry = Entry(self.cpsSN, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.35,rely=0.66,relwidth=0.2,relheight=0.05)
-
-        self.referencias['$rgContra'] = self.valRG
-
-        ###########Org. Emissor
-
-        Label(self.cpsSN, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.9,rely=0.61)
-
-        self.sspEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$emissorContra'],\
-                validate='key', validatecommand=(self.cpsSN.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.9,rely=0.66,relwidth=0.05,relheight=0.05)
-
-        ###########TODO CPF
-
-        self.valCPF = StringVar()
-
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
-
-        Label(self.cpsSN, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.61)
-        
-
-        Entry(self.cpsSN, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.61,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        self.referencias['$cpfContra'] = self.valCPF
-
-        ###########Estado Civil
-
-        Label(self.cpsSN, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.72)
-
-        self.estadoEntry = StringVar(self.cpsSN)
-
-        self.estadoEntryOpt = ('solteiro(a)', 'casado(a)','divorsiado(a)','viuvo(a)')
-
-        self.estadoEntry.set('solteiro(a)')
-
-        self.popup = OptionMenu(self.cpsSN, self.estadoEntry, *self.estadoEntryOpt)\
-            .place(relx=0.35,rely=0.77,relwidth=0.2,relheight=0.06)
-
-        self.referencias['$estadoCivilContra'] = self.estadoEntry
-
-        ###########Complemento
-
-        Label(self.cpsSN, text='Complemento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.73)
-
-        self.complementoEntry = Entry(self.cpsSN,\
-            textvariable=self.referencias['$compleContra'])\
-                .place(relx=0.61,rely=0.78,relwidth=0.35,relheight=0.05)
-
-        #Contrato
-        Label(self.cpsSN, text='Contrato',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.81)
-                
-        self.canvas = Canvas(self.cpsSN, width=625, height=10,border=-5)
-        self.canvas.place(relx=0.17,rely=0.845)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########TODO Valor pagamento
-
-        self.valPag = StringVar(value='R$ ')
-
-        Label(self.cpsSN, text='Val. Pagamento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.88)
-        
-        self.valEntry = Entry(self.cpsSN, textvariable = self.valPag, )\
-                .place(relx=0.05,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$valPag'] = self.valPag
-
-        ###########TODO Data inicio
-        
-        self.valDT_inic = StringVar()
-
-        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsSN, text='Data início',\
-            background='lightblue', font=(10))\
-                .place(relx=0.25,rely=0.88)
-        
-
-        Entry(self.cpsSN, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.date_validator), '%P'))\
-                .place(relx=0.25,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtInic'] = self.valDT_inic
-
-        ###########TODO Data vencimento
-        
-        self.valDT_venc = StringVar()
-
-        self.valDT_venc.trace_add('write', lambda *args, passed = self.valDT_venc:\
-            Formater.date_formater(passed, *args) )
-
-        Label(self.cpsSN, text='Data vencimento',\
-            background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.88)
-        
-
-        Entry(self.cpsSN, textvariable = self.valDT_venc, \
-            validate ='key', validatecommand =(self.cpsSN.register(Validator.date_validator), '%P'))\
-                .place(relx=0.4,rely=0.93,relwidth=0.1,relheight=0.05)
-
-        self.referencias['$dtVenc'] = self.valDT_venc
-
-        #Botão enviar
-        Button(self.cpsSN, text='Gerar CPS',\
-            command= lambda: self.alterar_doc(frame_ativo=self.cpsSN))\
-                .place(relx=0.61,rely=0.865,relwidth=0.35,relheight=0.12)
 
 App()
