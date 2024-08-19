@@ -4,7 +4,6 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docxtpl import DocxTemplate
-from docx import Document
 import keyboard
 import re
 import os
@@ -131,7 +130,7 @@ class Validator:    #TODO Validators
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'C:/Users/DELTAASUS/Documents/GitHub/CPS_Auto/code/CPS\'s/CPS {nome.upper()}.docx')    
+        self.arquivo = DocxTemplate(f'./code/CPS\'s/CPS {nome.upper()}.docx')    
 
     def alterar(self, referencias):  
         conteudo = {}
@@ -191,10 +190,12 @@ class Pages:
         try:
             # if self.__input_vazio():
             #     raise Exception ('Existem entradas vazias, favor preencher todas')
-            self.referencias['estadoCivilContra'].set(self.__set_estadoCivil())
-            self.referencias['valPag'].set(self.__set_valorPag())
+            conteudoUpdt = self.referencias.copy()
 
-            self.file.alterar(self.referencias)
+            conteudoUpdt['estadoCivilContra'].set(self.__set_estadoCivil())
+            conteudoUpdt['valPag'].set(self.__set_valorPag())
+
+            self.file.alterar(conteudoUpdt)
             self.file.abrir()
 
             self.frame.destroy()
@@ -241,7 +242,7 @@ class Enterprise(Pages):
             .place(relx=0.3,rely=0.045)
             
         #Logo
-        self.logo = PhotoImage(file='C:/Users/DELTAASUS/Documents/GitHub/CPS_Auto/code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -659,7 +660,7 @@ class Person(Pages):
             .place(relx=0.3,rely=0.05)
 
         #Logo
-        self.logo = PhotoImage(file='C:/Users/DELTAASUS/Documents/GitHub/CPS_Auto/code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -955,7 +956,7 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('C:/Users/DELTAASUS/Documents/GitHub/CPS_Auto/code/imgs/delta-icon.ico')
+        self.window.iconbitmap('./code/imgs/delta-icon.ico')
         self.window.title('Gerador de CPS')
 
     def menu(self):
@@ -966,7 +967,7 @@ class App:
         .place(relx=0.15,rely=0.2,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='C:/Users/DELTAASUS/Documents/GitHub/CPS_Auto/code/imgs/deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
         
         Label(self.window, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
