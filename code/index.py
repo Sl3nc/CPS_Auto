@@ -14,8 +14,6 @@ import os
 def enter_press(event):
     if event.keysym == 'Return':
         keyboard.send('tab')
-    elif event.keysym == 'Down' or event.keysym == 'Up':
-        keyboard.send('space')
         
 window = Tk()
 window.bind('<KeyRelease>', enter_press)
@@ -157,6 +155,7 @@ class Pages:
     def __init__(self, titulo):
         self.frame = Frame(window, bd=4, bg='lightblue')
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+        window.bind('<KeyRelease>', self.alter_estado)
 
         self.referencias = {}
         self.titulo = titulo
@@ -207,6 +206,11 @@ class Pages:
         except Exception as e:
             messagebox.showwarning(title='Aviso', message= e)
 
+    def alter_estado(self, event):
+            if event.keysym == 'Down' or event.keysym == 'Up':
+                self.popup.focus()
+                keyboard.send('space')
+
 class Enterprise(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
@@ -242,7 +246,7 @@ class Enterprise(Pages):
         #Titulo
         Label(self.frame, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
             .place(relx=0.3,rely=0.045)
-            
+        
         #Logo
         self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
         
