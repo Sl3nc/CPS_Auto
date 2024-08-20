@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docxtpl import DocxTemplate
+import decimal
 import copy
 import keyboard
 import re
@@ -139,6 +140,11 @@ class File:
     def abrir(self):
         file = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
+        ultima_barra = file.rfind('/')
+         
+        if file[ultima_barra+1:] == '':
+            raise Exception('Operação Cancelada')
+
         self.arquivo.save(file+'.docx')
 
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
@@ -196,6 +202,8 @@ class Pages:
             self.file.alterar(conteudoUpdt)
             self.file.abrir()
 
+        except decimal.InvalidOperation:
+            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
         except Exception as e:
             messagebox.showwarning(title='Aviso', message= e)
 
