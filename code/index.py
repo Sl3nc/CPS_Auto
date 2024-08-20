@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docxtpl import DocxTemplate
+import copy
 import keyboard
 import re
 import os
@@ -90,8 +91,8 @@ class Validator:    #TODO Validators
         if len(text) < 15:
             if len(text) >= 12:
                 return re.match(padrao, text) is not None
-            else:
-                return text.isdecimal()
+            elif len(text) == 0 or text.isdecimal():
+                return True
         return False
         
     def cnpj_validator(text):
@@ -99,8 +100,8 @@ class Validator:    #TODO Validators
         if len(text) < 19:
             if len(text) >= 15:
                 return re.match(padrao, text) is not None
-            else:
-                return text.isdecimal()
+            elif len(text) == 0 or text.isdecimal():
+                return True
         return False
     
     def cep_validator(text):
@@ -108,8 +109,8 @@ class Validator:    #TODO Validators
         if len(text) < 10:
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
-            else:
-                return text.isdecimal()
+            elif len(text) == 0 or text.isdecimal():
+                return True
         return False
     
     def rg_validator(text):
@@ -122,8 +123,8 @@ class Validator:    #TODO Validators
         if len(text) < 11:
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
-            else:
-                return text.isdecimal()
+            elif len(text) == 0 or text.isdecimal():
+                return True
         return False
 
 #Arquivo
@@ -132,11 +133,7 @@ class File:
     def __init__(self, nome):
         self.arquivo = DocxTemplate(f'./code/CPS\'s/CPS {nome.upper()}.docx')    
 
-    def alterar(self, referencias):  
-        conteudo = {}
-        for chave, valor in referencias.items():
-             conteudo.update({chave: valor.get()})
-
+    def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
 
     def abrir(self):
@@ -188,20 +185,19 @@ class Pages:
 
     def executar(self):
         try:
-            # if self.__input_vazio():
-            #     raise Exception ('Existem entradas vazias, favor preencher todas')
-            conteudoUpdt = self.referencias.copy()
+            if self.__input_vazio():
+                raise Exception ('Existem entradas vazias, favor preencher todas')
+            
+            conteudoUpdt = {chave: copy.deepcopy(valor.get()) for chave, valor in self.referencias.items()}
 
-            conteudoUpdt['estadoCivilContra'].set(self.__set_estadoCivil())
-            conteudoUpdt['valPag'].set(self.__set_valorPag())
+            conteudoUpdt['estadoCivilContra'] = self.__set_estadoCivil()
+            conteudoUpdt['valPag'] = self.__set_valorPag()
 
             self.file.alterar(conteudoUpdt)
             self.file.abrir()
 
-            self.frame.destroy()
         except Exception as e:
             messagebox.showwarning(title='Aviso', message= e)
-
 
 class Enterprise(Pages):
     def __init__(self, titulo):
@@ -213,26 +209,24 @@ class Enterprise(Pages):
             'numEmp' : StringVar(), 
             'bairroEmp' : StringVar(),
             'cepEmp' : StringVar(), 
-            'rgEmp' : StringVar(),  
-            'sspEmp' : StringVar(),  
             'cnpjEmp' : StringVar(),  
+            "compleEmp" : StringVar(), 
             'nomeContra' : StringVar(),
+            'rgContra' : StringVar(),  
+            'emissorContra' : StringVar(), 
+            'cpfContra' : StringVar(), 
+            'estadoCivilContra' : StringVar(), 
             'ruaContra' : StringVar(), 
             'numContra' : StringVar(), 
             'bairroContra' : StringVar(),  
             'cepContra' : StringVar(),  
             'cidadeContra' : StringVar(), 
             'estadoContra' : StringVar(), 
-            'rgContra' : StringVar(),  
-            'emissorContra' : StringVar(), 
-            'cpfContra' : StringVar(), 
-            'estadoCivilContra' : StringVar(), 
-            "compleEmp" : StringVar(), 
             "compleContra" : StringVar(),
-            "dtVenc" : StringVar(),
             "valPag" : StringVar(),
             "dtInic" : StringVar(),
             "dtAss" : StringVar(),
+            "dtVenc" : StringVar(),
             "numEmpre" : StringVar()
         }
         
@@ -251,7 +245,7 @@ class Enterprise(Pages):
 
         #Botão voltar
         Button(self.frame, text='Voltar ao menu',\
-            command= lambda: (self.frame.destroy()))\
+            command= lambda: self.frame.destroy())\
                 .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
 
         
@@ -669,7 +663,7 @@ class Person(Pages):
 
         #Botão voltar
         Button(self.frame, text='Voltar ao menu',\
-            command= lambda: (self.frame.destroy()))\
+            command= lambda: self.frame.destroy())\
                 .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
 
         #Labels e Entrys
@@ -969,7 +963,7 @@ class App:
         #Logo
         self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
         
-        Label(self.window, image=self.logo, background='lightblue')\
+        Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
 
         #Pessoa física
