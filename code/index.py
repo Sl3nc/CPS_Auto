@@ -4,11 +4,15 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docxtpl import DocxTemplate
+from datetime import datetime
 import decimal
 import copy
 import keyboard
 import re
 import os
+import locale
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 
 def enter_press(event):
@@ -16,7 +20,7 @@ def enter_press(event):
         keyboard.send('tab')
         
 window = Tk()
-window.bind('<KeyRelease>', enter_press)
+window.bind('<Key>', enter_press)
 
 
 class Formater: #TODO Formaters
@@ -149,6 +153,57 @@ class File:
 
         os.startfile(file+'.docx')
 
+#Conteudo
+class Content:
+    def __init__(self, referencias):
+        self.dictonary = {chave: copy.deepcopy(valor.get()) for chave, valor in referencias.items()}
+        
+        self.SAL_MINIMO = 1412.00
+        self.CUSTO_CORREIO = 0.02
+
+    def update_dict(self):
+
+        for chave, valor in self.dictonary.items():
+            if chave == 'estadoCivilContra':
+                self.dictonary[chave] = self.__set_estadoCivil(valor)
+            elif chave == 'valPag':
+                valorDbl = valor[2:].replace(',','.')
+                self.dictonary[chave] = self.__set_valores(valorDbl)
+            elif chave == 'numEmpre':
+                self.dictonary[chave] = self.__set_valores(valor)
+            elif chave in ['dtAss', 'dtInic']:
+                self.dictonary[chave] = self.__set_data(valor)
+            elif chave in ['nomeEmp','nomeContra']:
+                self.dictonary[chave] = valor.upper()
+            else:
+                self.dictonary[chave] = valor.lower()
+
+        self.dictonary['valPorc'] = self.__calc_porc(valorDbl)
+
+        return self.dictonary
+
+    def __set_estadoCivil(self, estadoCiv):
+        if 'STB' in estadoCiv:
+            estadoCiv = 'Casado em Separação Total de Bens'
+        elif 'CPB' in estadoCiv:
+            estadoCiv = 'Casado em Comunhão Parcial de Bens'
+        elif 'CTB' in estadoCiv:
+            estadoCiv = 'Casado em Comunhão Total de Bens'
+        return estadoCiv
+
+    def __set_valores(self, valor):
+        valorExtenso = num2words(valor,lang='pt_BR', to='currency')\
+            .replace('reais e','reais,')
+        return f'{valor} ({valorExtenso})'
+
+    def __set_data(self, data):
+        data_format = datetime.strptime(data, '%d/%m/%Y')
+        return data_format.strftime("%d de %B de %Y")
+
+    def __calc_porc(self, honorarios):
+        custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
+        return f'{((custo_envio / float(honorarios)) * 100):,.2f}%'
+
 #Páginas
 
 class Pages:
@@ -161,25 +216,28 @@ class Pages:
         self.titulo = titulo
         self.file = File(titulo)
 
-    def __set_estadoCivil(self):
-        estadoCiv = self.referencias['estadoCivilContra']
-        if 'STB' in estadoCiv.get():
-            estado = 'Casado em Separação Total de Bens'
-        elif 'CPB' in estadoCiv.get():
-            estado = 'Casado em Comunhão Parcial de Bens'
-        elif 'CTB' in estadoCiv.get():
-            estado = 'Casado em Comunhão Total de Bens'
-        else:
-            estado = estadoCiv.get()
-        return estado
-    
-    def __set_valorPag(self):
-        valor = self.referencias['valPag'].get()
-        valorDbl = valor[2:].replace(',','.')
-        valorExtenso = num2words(valorDbl,lang='pt_BR', to='currency')\
-            .replace('reais e','reais,')
-        return f'{valor} ({valorExtenso})'
-    
+    def alter_estado(self, event):
+        if event.keysym == 'Down' or event.keysym == 'Up':
+            self.popup.focus()
+            keyboard.send('space')
+
+    def executar(self):
+        try:
+            # if self.__input_vazio():
+            #     raise Exception ('Existem entradas vazias, favor preencher todas')
+            
+            conteudoUpdt = Content(self.referencias).update_dict()
+
+            self.file.alterar(conteudoUpdt)
+            self.file.abrir()
+
+        except decimal.InvalidOperation:
+            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        except ValueError:
+            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except Exception as e:
+            messagebox.showwarning(title='Aviso', message= e)
+
     def __input_vazio(self):
         for chave, valor in self.referencias.items():
             if valor.get() == ''\
@@ -187,29 +245,6 @@ class Pages:
                     and chave != 'compleEmp':
                 return True
         return False
-
-    def executar(self):
-        try:
-            if self.__input_vazio():
-                raise Exception ('Existem entradas vazias, favor preencher todas')
-            
-            conteudoUpdt = {chave: copy.deepcopy(valor.get()) for chave, valor in self.referencias.items()}
-
-            conteudoUpdt['estadoCivilContra'] = self.__set_estadoCivil()
-            conteudoUpdt['valPag'] = self.__set_valorPag()
-
-            self.file.alterar(conteudoUpdt)
-            self.file.abrir()
-
-        except decimal.InvalidOperation:
-            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        except Exception as e:
-            messagebox.showwarning(title='Aviso', message= e)
-
-    def alter_estado(self, event):
-            if event.keysym == 'Down' or event.keysym == 'Up':
-                self.popup.focus()
-                keyboard.send('space')
 
 class Enterprise(Pages):
     def __init__(self, titulo):
