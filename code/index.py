@@ -676,6 +676,24 @@ class Enterprise(Pages):
             command= lambda: self.executar())\
                 .place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
 
+class LucroPresumido(Enterprise):
+    def __init__(self, titulo):
+        super().__init__(titulo)
+        self.referencias['valorCompe'] = StringVar()
+        self.referencias['dtCompe'] = StringVar()
+
+        self.index()
+        self.btn_competencia()
+
+    def btn_competencia(self):
+        #Botão voltar
+        Button(self.frame, text='Preencher Competência',\
+            command= lambda: self.janela_entry())\
+                .place(relx=0.2,rely=0.83,relwidth=0.25,relheight=0.04)
+
+    def janela_entry(self):
+        ...
+
 class Person(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
@@ -1009,7 +1027,7 @@ class App:
         self.menu.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         self.textOrientacao = Label(self.menu, text='Selecione o tipo de CPS que deseja fazer:', background='lightblue', font=('arial',20,'bold'))\
-        .place(relx=0.15,rely=0.2,relheight=0.15)
+        .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
         self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
@@ -1029,7 +1047,7 @@ class App:
 
         #Lucro Presumido
         Button(self.menu, text='CPS Lucros',\
-            command= lambda: Enterprise('Lucro Presumido').index())\
+            command= lambda: LucroPresumido('Lucro Presumido'))\
                 .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Simples Nacional
