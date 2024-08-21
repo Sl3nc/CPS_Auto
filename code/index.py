@@ -168,15 +168,15 @@ class Content:
                 self.dictonary[chave] = self.__set_estadoCivil(valor)
             elif chave == 'valPag':
                 valorDbl = valor[2:].replace(',','.')
-                self.dictonary[chave] = self.__set_valores(valorDbl)
-            elif chave == 'numEmpre':
-                self.dictonary[chave] = self.__set_valores(valor)
+                self.dictonary[chave] = self.__set_valor(valorDbl)
+            elif chave in ['numEmpre','dtVenc']:
+                self.dictonary[chave] = self.__set_num(valor)
             elif chave in ['dtAss', 'dtInic']:
                 self.dictonary[chave] = self.__set_data(valor)
-            elif chave in ['nomeEmp','nomeContra']:
+            elif chave in ['nomeContra','nomeEmp','rgContra','emissorContra']:
                 self.dictonary[chave] = valor.upper()
             else:
-                self.dictonary[chave] = valor.lower()
+                self.dictonary[chave] = valor.capitalize()
 
         self.dictonary['valPorc'] = self.__calc_porc(valorDbl)
 
@@ -191,11 +191,15 @@ class Content:
             estadoCiv = 'Casado em Comunhão Total de Bens'
         return estadoCiv
 
-    def __set_valores(self, valor):
+    def __set_valor(self, valor):
         valorExtenso = num2words(valor,lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
-        return f'{valor} ({valorExtenso})'
-
+        return f'{float(valor):,.2f} ({valorExtenso})'.replace('.',',')
+    
+    def __set_num(self, num):
+        valorExtenso = num2words(num,lang='pt_BR')
+        return f'{num} ({valorExtenso})'
+    
     def __set_data(self, data):
         data_format = datetime.strptime(data, '%d/%m/%Y')
         return data_format.strftime("%d de %B de %Y")
@@ -223,8 +227,8 @@ class Pages:
 
     def executar(self):
         try:
-            # if self.__input_vazio():
-            #     raise Exception ('Existem entradas vazias, favor preencher todas')
+            if self.__input_vazio():
+                raise Exception ('Existem entradas vazias, favor preencher todas')
             
             conteudoUpdt = Content(self.referencias).update_dict()
 
