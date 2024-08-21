@@ -194,7 +194,7 @@ class Content:
     def __set_valor(self, valor):
         valorExtenso = num2words(valor,lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
-        return f'{float(valor):,.2f} ({valorExtenso})'.replace('.',',')
+        return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
     
     def __set_num(self, num):
         valorExtenso = num2words(num,lang='pt_BR')
