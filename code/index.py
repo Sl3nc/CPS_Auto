@@ -134,7 +134,7 @@ class Validator:    #TODO Validators
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'./code/CPS\'s/CPS {nome.upper()}.docx')    
+        self.arquivo = DocxTemplate(f'Z:\\Programas Delta\\code\\CPS\'s\\CPS {nome.upper()}.docx')    
 
     def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
@@ -287,7 +287,7 @@ class Enterprise(Pages):
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely=0.05)
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -694,7 +694,7 @@ class LucroPresumido(Enterprise):
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x100')
-        self.janela.iconbitmap('./code/imgs/delta-icon.ico')
+        self.janela.iconbitmap('Z:\\Programas Delta\\code\\imgs\\delta-icon.ico')
         self.janela.title('Competência REINF')
         self.janela.transient(window)
         self.janela.focus_force()
@@ -776,7 +776,7 @@ class Person(Pages):
                 .place(relx=0.35,rely=0.13)
 
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -1072,7 +1072,7 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('./code/imgs/delta-icon.ico')
+        self.window.iconbitmap('Z:\\Programas Delta\\code\\imgs\\delta-icon.ico')
         self.window.title('Gerador de CPS')
 
     def menu(self):
@@ -1083,7 +1083,7 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice-hori.png').subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)

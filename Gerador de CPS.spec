@@ -5,7 +5,7 @@ a = Analysis(
     ['code\\index.py'],
     pathex=[],
     binaries=[],
-    datas=[("code\\CPS's\\", '.'), ('code\\imgs\\', '.')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
