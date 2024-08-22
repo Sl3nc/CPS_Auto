@@ -691,12 +691,12 @@ class LucroPresumido(Enterprise):
                 .place(relx=0.2,rely=0.83,relwidth=0.25,relheight=0.04)
 
     def janela_entry(self):
-        self.janela = Toplevel(self.frame, bd=4, bg='blue' )
+        self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x100')
         self.janela.iconbitmap('./code/imgs/delta-icon.ico')
         self.janela.title('Competência')
-        self.janela.transient(self.frame)
+        self.janela.transient(window)
         self.janela.focus_force()
         self.janela.grab_set()
 
