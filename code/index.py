@@ -679,20 +679,67 @@ class Enterprise(Pages):
 class LucroPresumido(Enterprise):
     def __init__(self, titulo):
         super().__init__(titulo)
-        self.referencias['valorCompe'] = StringVar()
+        self.referencias['valCompe'] = StringVar()
         self.referencias['dtCompe'] = StringVar()
 
         self.index()
         self.btn_competencia()
 
     def btn_competencia(self):
-        #Botão voltar
-        Button(self.frame, text='Preencher Competência',\
+        Button(self.frame, text='Preencher VLR - EFD REINF',\
             command= lambda: self.janela_entry())\
                 .place(relx=0.2,rely=0.83,relwidth=0.25,relheight=0.04)
 
     def janela_entry(self):
-        ...
+        self.janela = Toplevel(self.frame, bd=4, bg='blue' )
+        self.janela.resizable(False,False)
+        self.janela.geometry('300x100')
+        self.janela.iconbitmap('./code/imgs/delta-icon.ico')
+        self.janela.title('Competência')
+        self.janela.transient(self.frame)
+        self.janela.focus_force()
+        self.janela.grab_set()
+
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        #Botão voltar
+        Button(self.janela_frame, text='Voltar ao menu',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.1,rely=0,relwidth=0.4,relheight=0.2)
+
+        ###########Valor Competência
+        
+        self.valCompe = StringVar(value='R$ ')
+
+        self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
+            Formater.valor_formater(passed, *args) )
+
+        Label(self.janela_frame, text='Valor:',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.3)
+        
+        self.entryVal = Entry(self.janela_frame, textvariable = self.valCompe, )\
+                .place(relx=0.5,rely=0.35,relwidth=0.4,relheight=0.2)
+                
+        self.referencias['valCompe'] = self.valCompe
+
+        ###########Data Competência
+        
+        self.dtCompe = StringVar()
+
+        self.dtCompe.trace_add('write', lambda *args, passed = self.dtCompe:\
+            Formater.date_formater(passed, *args) )
+
+        Label(self.janela_frame, text='Data:',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.6)
+        
+
+        Entry(self.janela_frame, textvariable = self.dtCompe, \
+            validate ='key', validatecommand =(self.janela_frame.register(Validator.date_validator), '%P')).place(relx=0.5,rely=0.65,relwidth=0.4,relheight=0.2)
+
+        self.referencias['dtCompe'] = self.dtCompe
 
 class Person(Pages):
     def __init__(self, titulo):
