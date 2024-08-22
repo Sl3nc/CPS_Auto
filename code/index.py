@@ -9,11 +9,19 @@ import decimal
 import copy
 import keyboard
 import re
+import sys
 import os
 import locale
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def enter_press(event):
     if event.keysym == 'Return':
@@ -66,6 +74,15 @@ class Formater: #TODO Formaters
         valor = text.get()
         if len(valor) == 8:
            valor = valor[:2] + "/" + valor[2:4] + "/" + valor[4:]
+        else:
+            valor = valor.replace('/','')
+        text.set(valor)
+
+    def comp_formater(text, var, index, mode): 
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 6:
+           valor = valor[:2] + "/" + valor[2:]
         else:
             valor = valor.replace('/','')
         text.set(valor)
@@ -129,13 +146,21 @@ class Validator:    #TODO Validators
             elif len(text) == 0 or text.isdecimal():
                 return True
         return False
+    
+    def comp_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 8:
+            if len(text) >= 7:
+                return re.match(padrao, text) is not None
+            elif len(text) == 0 or text.isdecimal():
+                return True
+        return False
 
 #Arquivo
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'./code/CPS\'s/CPS {nome.upper()}.docx')    
-
+        self.arquivo = DocxTemplate(resource_path(f'code\\CPS\'s\\CPS {nome.upper()}.docx'))
     def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
 
@@ -287,7 +312,7 @@ class Enterprise(Pages):
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely=0.05)
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file=resource_path('code\\imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -694,7 +719,7 @@ class LucroPresumido(Enterprise):
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x100')
-        self.janela.iconbitmap('./code/imgs/delta-icon.ico')
+        self.janela.iconbitmap(resource_path('code\\imgs\\delta-icon.ico'))
         self.janela.title('Competência REINF')
         self.janela.transient(window)
         self.janela.focus_force()
@@ -734,7 +759,7 @@ class LucroPresumido(Enterprise):
         self.dtCompe = StringVar()
 
         self.dtCompe.trace_add('write', lambda *args, passed = self.dtCompe:\
-            Formater.date_formater(passed, *args) )
+            Formater.comp_formater(passed, *args) )
 
         Label(self.janela_frame, text='Data:',\
             background='lightblue', font=(10))\
@@ -742,7 +767,7 @@ class LucroPresumido(Enterprise):
         
 
         Entry(self.janela_frame, textvariable = self.dtCompe, \
-            validate ='key', validatecommand =(self.janela_frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
+            validate ='key', validatecommand =(self.janela_frame.register(Validator.comp_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
 
         self.referencias['dtCompe'] = self.dtCompe
 
@@ -776,7 +801,7 @@ class Person(Pages):
                 .place(relx=0.35,rely=0.13)
 
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file= resource_path('code\\imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -1072,7 +1097,7 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('./code/imgs/delta-icon.ico')
+        self.window.iconbitmap(resource_path('code\\imgs\\delta-icon.ico'))
         self.window.title('Gerador de CPS')
 
     def menu(self):
@@ -1083,7 +1108,7 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='./code/imgs/deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file= resource_path('code\\imgs\\deltaprice-hori.png')).subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)

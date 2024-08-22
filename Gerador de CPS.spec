@@ -5,7 +5,7 @@ a = Analysis(
     ['code\\index.py'],
     pathex=[],
     binaries=[],
-    datas=[("code\\CPS's\\", '.'), ('code\\imgs\\', '.')],
+    datas=[("code\\CPS's\\", '.'), ('code\\imgs\\delta-icon.ico', '.'), ('code\\imgs\\deltaprice_logo-slim.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
