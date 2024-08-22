@@ -283,9 +283,9 @@ class Enterprise(Pages):
         
     def index(self):
         #Titulo
-        Label(self.frame, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.045)
-        
+        Label(self.frame, text= self.titulo, background='lightblue',\
+            font=('Times',30,'bold'))\
+                .place(relx=0.325,rely=0.05)
         #Logo
         self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
         
@@ -695,7 +695,7 @@ class LucroPresumido(Enterprise):
         self.janela.resizable(False,False)
         self.janela.geometry('300x100')
         self.janela.iconbitmap('./code/imgs/delta-icon.ico')
-        self.janela.title('Competência')
+        self.janela.title('Competência REINF')
         self.janela.transient(window)
         self.janela.focus_force()
         self.janela.grab_set()
@@ -703,10 +703,15 @@ class LucroPresumido(Enterprise):
         self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
         self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
-        #Botão voltar
-        Button(self.janela_frame, text='Voltar ao menu',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.1,rely=0,relwidth=0.4,relheight=0.2)
+        #Empresa
+        Label(self.janela_frame, text='REINF',\
+            background='lightblue', font=('Times New Roman',12,'bold italic'))\
+                .place(relx=0,rely=-0.1)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.25,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
 
         ###########Valor Competência
         
@@ -720,7 +725,7 @@ class LucroPresumido(Enterprise):
                 .place(relx=0.05,rely=0.3)
         
         self.entryVal = Entry(self.janela_frame, textvariable = self.valCompe, )\
-                .place(relx=0.5,rely=0.35,relwidth=0.4,relheight=0.2)
+                .place(relx=0.3,rely=0.35,relwidth=0.6,relheight=0.2)
                 
         self.referencias['valCompe'] = self.valCompe
 
@@ -737,7 +742,7 @@ class LucroPresumido(Enterprise):
         
 
         Entry(self.janela_frame, textvariable = self.dtCompe, \
-            validate ='key', validatecommand =(self.janela_frame.register(Validator.date_validator), '%P')).place(relx=0.5,rely=0.65,relwidth=0.4,relheight=0.2)
+            validate ='key', validatecommand =(self.janela_frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
 
         self.referencias['dtCompe'] = self.dtCompe
 
@@ -766,8 +771,9 @@ class Person(Pages):
     
     def index(self):
         #Titulo
-        Label(self.frame, text= self.titulo, background='lightblue', font=('arial',17,'bold'))\
-            .place(relx=0.3,rely=0.05)
+        Label(self.frame, text= self.titulo, background='lightblue',\
+            font=('Times',30,'bold'))\
+                .place(relx=0.35,rely=0.13)
 
         #Logo
         self.logo = PhotoImage(file='./code/imgs/deltaprice_logo-slim.png')
