@@ -54,7 +54,7 @@ class Formater: #TODO Formaters
     def cep_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 8:
+        if len(valor) == 8 and '-' not in valor:
            valor = valor[:5] + "-" + valor[5:]
         else:
             valor = valor.replace('-','')
@@ -81,7 +81,7 @@ class Formater: #TODO Formaters
     def comp_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 6:
+        if len(valor) == 6 and '/' not in valor:
            valor = valor[:2] + "/" + valor[2:]
         else:
             valor = valor.replace('/','')
@@ -129,7 +129,7 @@ class Validator:    #TODO Validators
         if len(text) < 10:
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
+            elif len(text) in [0,8] or text.isdecimal():
                 return True
         return False
     
@@ -152,7 +152,7 @@ class Validator:    #TODO Validators
         if len(text) < 8:
             if len(text) >= 7:
                 return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
+            elif len(text) in [0,6] or text.isdecimal():
                 return True
         return False
 
