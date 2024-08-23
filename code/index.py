@@ -156,7 +156,7 @@ class Validator:    #TODO Validators
             elif len(text) in [0,6] or text.isdecimal():
                 return True
         return False
-
+#sdas
 #Arquivo
 
 class File:
