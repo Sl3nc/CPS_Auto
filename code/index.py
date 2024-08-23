@@ -10,11 +10,19 @@ import decimal
 import copy
 import keyboard
 import re
+import sys
 import os
 import locale
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def enter_press(event):
     if event.keysym == 'Return':
@@ -71,6 +79,15 @@ class Formater: #TODO Formaters
             valor = valor.replace('/','')
         text.set(valor)
 
+    def comp_formater(text, var, index, mode): 
+        #Só recebe valor que passa pelo validador
+        valor = text.get()
+        if len(valor) == 6 and '/' not in valor:
+           valor = valor[:2] + "/" + valor[2:]
+        else:
+            valor = valor.replace('/','')
+        text.set(valor)
+
     def valor_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
@@ -113,7 +130,7 @@ class Validator:    #TODO Validators
         if len(text) < 10:
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
-            elif len(text) == 0 or len(text) == 8 or text.isdecimal():
+            elif len(text) in [0,8] or text.isdecimal():
                 return True
         return False
     
@@ -128,6 +145,15 @@ class Validator:    #TODO Validators
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
             elif len(text) == 0 or text.isdecimal():
+                return True
+        return False
+    
+    def comp_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) < 8:
+            if len(text) >= 7:
+                return re.match(padrao, text) is not None
+            elif len(text) in [0,6] or text.isdecimal():
                 return True
         return False
 
@@ -735,7 +761,7 @@ class LucroPresumido(Enterprise):
         self.dtCompe = StringVar()
 
         self.dtCompe.trace_add('write', lambda *args, passed = self.dtCompe:\
-            Formater.date_formater(passed, *args) )
+            Formater.comp_formater(passed, *args) )
 
         Label(self.janela_frame, text='Data:',\
             background='lightblue', font=(10))\
@@ -743,7 +769,7 @@ class LucroPresumido(Enterprise):
         
 
         Entry(self.janela_frame, textvariable = self.dtCompe, \
-            validate ='key', validatecommand =(self.janela_frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
+            validate ='key', validatecommand =(self.janela_frame.register(Validator.comp_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
 
         self.referencias['dtCompe'] = self.dtCompe
 
