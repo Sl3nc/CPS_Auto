@@ -5,6 +5,7 @@ from tkinter.filedialog import asksaveasfilename
 from num2words import num2words
 from docxtpl import DocxTemplate
 from datetime import datetime
+import unicodedata
 import decimal
 import copy
 import keyboard
@@ -46,7 +47,7 @@ class Formater: #TODO Formaters
     def cep_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if len(valor) == 8:
+        if len(valor) == 8 and '-' not in valor:
            valor = valor[:5] + "-" + valor[5:]
         else:
             valor = valor.replace('-','')
@@ -112,7 +113,7 @@ class Validator:    #TODO Validators
         if len(text) < 10:
             if len(text) >= 9:
                 return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
+            elif len(text) == 0 or len(text) == 8 or text.isdecimal():
                 return True
         return False
     
@@ -134,7 +135,7 @@ class Validator:    #TODO Validators
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'Z:\\Programas Delta\\code\\CPS\'s\\CPS {nome.upper()}.docx')    
+        self.arquivo = DocxTemplate(f'Z:\\18 - PROGRAMAS DELTA\\code\\CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx')    
 
     def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
@@ -287,7 +288,7 @@ class Enterprise(Pages):
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely=0.05)
         #Logo
-        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -694,7 +695,7 @@ class LucroPresumido(Enterprise):
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x100')
-        self.janela.iconbitmap('Z:\\Programas Delta\\code\\imgs\\delta-icon.ico')
+        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
         self.janela.title('Competência REINF')
         self.janela.transient(window)
         self.janela.focus_force()
@@ -776,7 +777,7 @@ class Person(Pages):
                 .place(relx=0.35,rely=0.13)
 
         #Logo
-        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
         
         self.logo = self.logo.subsample(5,5)
         
@@ -1072,7 +1073,7 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('Z:\\Programas Delta\\code\\imgs\\delta-icon.ico')
+        self.window.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
         self.window.title('Gerador de CPS')
 
     def menu(self):
@@ -1083,14 +1084,14 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='Z:\\Programas Delta\\code\\imgs\\deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice-hori.png').subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
 
         #Pessoa física
         Button(self.menu, text='CPS Pessoa Física',\
-            command= lambda: Person('Pessoa Fisica').index())\
+            command= lambda: Person('Pessoa Física').index())\
                 .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
 
         #Inatividade
