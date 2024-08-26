@@ -706,7 +706,7 @@ class Enterprise(Pages):
 class LucroPresumido(Enterprise):
     def __init__(self, titulo):
         super().__init__(titulo)
-        self.referencias['valCompe'] = StringVar()
+        self.referencias['valCompe'] = StringVar(value='R$ ')
         self.referencias['dtCompe'] = StringVar()
 
         self.index()
@@ -742,7 +742,7 @@ class LucroPresumido(Enterprise):
 
         ###########Valor Competência
         
-        self.valCompe = StringVar(value='R$ ')
+        self.valCompe = self.referencias['valCompe']
 
         self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
             Formater.valor_formater(passed, *args) )
@@ -758,7 +758,7 @@ class LucroPresumido(Enterprise):
 
         ###########Data Competência
         
-        self.dtCompe = StringVar()
+        self.dtCompe = self.referencias['dtCompe']
 
         self.dtCompe.trace_add('write', lambda *args, passed = self.dtCompe:\
             Formater.comp_formater(passed, *args) )
@@ -767,11 +767,18 @@ class LucroPresumido(Enterprise):
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.6)
         
+        Label(self.janela_frame, text='(MM/YYYY)',\
+            background='lightblue', font=('Times New Roman',8,'bold'))\
+                .place(relx=0.015,rely=0.84)
 
         Entry(self.janela_frame, textvariable = self.dtCompe, \
-            validate ='key', validatecommand =(self.janela_frame.register(Validator.comp_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.6,relheight=0.2)
+            validate ='key', validatecommand =(self.janela_frame.register(Validator.comp_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.35,relheight=0.2)
 
         self.referencias['dtCompe'] = self.dtCompe
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.63,relwidth=0.15,relheight=0.25)
 
 class Person(Pages):
     def __init__(self, titulo):
@@ -1126,7 +1133,7 @@ class App:
                 .place(relx=0.60,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Lucro Presumido
-        Button(self.menu, text='CPS Lucros',\
+        Button(self.menu, text='CPS LP/LS',\
             command= lambda: LucroPresumido('Lucro Presumido'))\
                 .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
 
