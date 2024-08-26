@@ -67,7 +67,7 @@ class Formater: #TODO Formaters
         if len(valor) == 10:
            valor = valor[:2] + "-" + valor[2:4] + "." + valor[4:7] + "." + valor[7:]
         else:
-            valor = valor.replace('.','').replace('-','')
+            valor = valor.replace('.','').replace('-','').replace(' ','')
         text.set(valor)
     
     def date_formater(text, var, index, mode): 
@@ -91,10 +91,6 @@ class Formater: #TODO Formaters
     def valor_formater(text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
-        if valor[0:2] != 'R$':
-            valor = valor.replace('R', '')
-            valor = valor.replace('$', '')
-            valor = 'R$' + valor
         if ',' not in valor:
             valor = valor + ',00'
         
@@ -106,6 +102,13 @@ class Validator:    #TODO Validators
     
     def num_validator(text):
         return text.isdecimal()
+    
+    def valor_validator(text):
+        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
+        if len(text) == 0:
+            return True
+        return re.match(padrao, text) is not None
+
     
     def cpf_validator(text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
@@ -629,7 +632,7 @@ class Enterprise(Pages):
 
         ###########Valor pagamento
         
-        self.valPag = StringVar(value='R$ ')
+        self.valPag = StringVar()
 
         self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
             Formater.valor_formater(passed, *args) )
@@ -638,7 +641,8 @@ class Enterprise(Pages):
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
         
-        self.entryVal = Entry(self.frame, textvariable = self.valPag, )\
+        self.entryVal = Entry(self.frame, textvariable = self.valPag, \
+            validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
                 .place(relx=0.06,rely=0.93,relwidth=0.1,relheight=0.05)
                 
         self.referencias['valPag'] = self.valPag
@@ -1019,7 +1023,7 @@ class Person(Pages):
 
         ###########Valor pagamento
         
-        self.valPag = StringVar(value='R$ ')
+        self.valPag = StringVar()
 
         self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
             Formater.valor_formater(passed, *args) )
@@ -1028,7 +1032,8 @@ class Person(Pages):
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.85)
         
-        self.entryVal = Entry(self.frame, textvariable = self.valPag, )\
+        self.entryVal = Entry(self.frame, textvariable = self.valPag, validate ='key',\
+            validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
                 .place(relx=0.06,rely=0.92,relwidth=0.1,relheight=0.05)
                 
         self.referencias['valPag'] = self.valPag
