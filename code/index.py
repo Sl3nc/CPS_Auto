@@ -1138,8 +1138,8 @@ class App:
                 .place(relx=0.60,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Lucro Presumido
-        Button(self.menu, text='CPS LP/LS',\
-            command= lambda: LucroPresumido('Lucro Presumido'))\
+        Button(self.menu, text='CPS Lucro Presumido / Real',\
+            command= lambda: LucroPresumido('Lucros'))\
                 .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Simples Nacional
