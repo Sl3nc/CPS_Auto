@@ -271,8 +271,8 @@ class Pages:
             "numEmpre" : StringVar()
         }            
 
-        self.referencias['valNacionalidade'].set('Brasileiro(a)')
-        self.referencias['valEmprego'].set('Empresário(a)')
+        self.referencias['valNacionalidade'].set('brasileiro(a)')
+        self.referencias['valEmprego'].set('empresário(a)')
 
         self.titulo = titulo
         self.file = File(titulo)
@@ -579,7 +579,7 @@ class Enterprise(Pages):
             command= lambda: \
                 self.input_janela('Nacionalidade') if nacio_var.get()\
                     else self.referencias['valNacionalidade']\
-                        .set('Brasileiro(a)'))\
+                        .set('brasileiro(a)'))\
                 .place(relx=0.6425,rely=0.53,relwidth=0.142,relheight=0.05)
 
         ###########Emprego
@@ -588,7 +588,7 @@ class Enterprise(Pages):
             command= lambda: \
                 self.input_janela('Emprego') if empreg_var.get() \
                     else self.referencias['valEmprego']\
-                        .set('Empresário(a)'))\
+                        .set('empresário(a)'))\
                 .place(relx=0.8,rely=0.53,relwidth=0.155,relheight=0.05)
 
         ###########rua
