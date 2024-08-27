@@ -201,6 +201,8 @@ class Content:
                 self.dictonary[chave] = self.__set_valor(valorDbl)
             elif chave in ['numEmpre','dtVenc']:
                 self.dictonary[chave] = self.__set_num(valor)
+            elif chave == 'dataComple':
+                self.dictonary[chave] = self.dictonary['dtInic'].get()[2:]
             elif chave in ['dtAss', 'dtInic']:
                 self.dictonary[chave] = self.__set_data(valor)
             elif chave in ['nomeContra','nomeEmp','rgContra','emissorContra']:
@@ -246,7 +248,32 @@ class Pages:
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
         window.bind('<KeyRelease>', self.alter_estado)
 
-        self.referencias = {}
+        #TODO Referencias
+        self.referencias = {
+            'nomeContra' : StringVar(),
+            'rgContra' : StringVar(),  
+            'emissorContra' : StringVar(), 
+            'cpfContra' : StringVar(), 
+            'estadoCivilContra' : StringVar(),
+            'valNacionalidade': StringVar(), 
+            'valEmprego': StringVar(),
+            'ruaContra' : StringVar(), 
+            'numContra' : StringVar(), 
+            'bairroContra' : StringVar(),  
+            'cepContra' : StringVar(),  
+            'cidadeContra' : StringVar(), 
+            'estadoContra' : StringVar(), 
+            "compleContra" : StringVar(),
+            "valPag" : StringVar(),
+            "dtInic" : StringVar(),
+            "dtAss" : StringVar(),
+            "dtVenc" : StringVar(),
+            "numEmpre" : StringVar()
+        }            
+
+        self.referencias['valNacionalidade'].set('Brasileiro(a)')
+        self.referencias['valEmprego'].set('Empresário(a)')
+
         self.titulo = titulo
         self.file = File(titulo)
 
@@ -257,8 +284,8 @@ class Pages:
 
     def executar(self):
         try:
-            if self.__input_vazio():
-                raise Exception ('Existem entradas vazias, favor preencher todas')
+            # if self.__input_vazio():
+            #     raise Exception ('Existem entradas vazias, favor preencher todas')
             
             conteudoUpdt = Content(self.referencias).update_dict()
 
@@ -279,6 +306,48 @@ class Pages:
                     and chave != 'compleEmp':
                 return True
         return False
+    
+    def input_janela(self, tipo):
+        self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.geometry('300x70')
+        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.janela.title(tipo)
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
+
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        #Titulo
+        Label(self.janela_frame, text= tipo,\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0,rely=0)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.55,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+
+        ###########Valor Competência
+        valComp = StringVar()
+
+        self.entryVal = Entry(
+            self.janela_frame, 
+            textvariable = valComp,
+            validate='key', 
+            validatecommand=(
+                self.frame.register(lambda text: not text.isdecimal()), '%S'
+                )
+            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
+                
+        self.referencias[f'val{tipo}'] = valComp
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+                
 
 class Enterprise(Pages):
     def __init__(self, titulo):
@@ -309,8 +378,8 @@ class Enterprise(Pages):
             "dtAss" : StringVar(),
             "dtVenc" : StringVar(),
             "numEmpre" : StringVar()
-        }
-        
+        }            
+
     def index(self):
         #Titulo
         Label(self.frame, text= self.titulo, background='lightblue',\
@@ -402,11 +471,11 @@ class Enterprise(Pages):
 
         self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
             validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.36,relwidth=0.25,relheight=0.05)
+                .place(relx=0.05,rely=0.36,relwidth=0.075,relheight=0.05)
 
         self.referencias['cepEmp'] = self.valCEP_Empre
 
-        ###########TODO CNPJ
+        ########### CNPJ
         
         self.valCNPJ = StringVar()
 
@@ -418,9 +487,9 @@ class Enterprise(Pages):
                 .place(relx=0.35,rely=0.31)
         
 
-        self.CEPEntry = Entry(self.frame, textvariable = self.valCNPJ, \
+        Entry(self.frame, textvariable = self.valCNPJ, \
             validate ='key', validatecommand =(self.frame.register(Validator.cnpj_validator), '%P'))\
-                .place(relx=0.35,rely=0.36,relwidth=0.2,relheight=0.05)
+                .place(relx=0.35,rely=0.36,relwidth=0.135,relheight=0.05)
 
         self.referencias['cnpjEmp'] = self.valCNPJ
                 
@@ -434,7 +503,7 @@ class Enterprise(Pages):
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
         
-        #Socio
+        #TODO Socio
         Label(self.frame, text='Sócio',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely=0.42)
@@ -471,7 +540,7 @@ class Enterprise(Pages):
 
         Entry(self.frame, textvariable = self.valRG, \
             validate ='key', validatecommand =(self.frame.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.33,rely=0.53,relwidth=0.15,relheight=0.05)
+                .place(relx=0.33,rely=0.53,relwidth=0.1,relheight=0.05)
 
         self.referencias['rgContra'] = self.valRG
         
@@ -479,12 +548,12 @@ class Enterprise(Pages):
 
         Label(self.frame, text='Org.',\
             background='lightblue', font=(10))\
-                .place(relx=0.5,rely=0.48)
+                .place(relx=0.45,rely=0.48)
 
         Entry(self.frame,\
             textvariable=self.referencias['emissorContra'],\
                 validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.5,rely=0.53,relwidth=0.05,relheight=0.05)
+                .place(relx=0.45,rely=0.53,relwidth=0.05,relheight=0.05)
 
         ###########CPF
         
@@ -495,45 +564,32 @@ class Enterprise(Pages):
 
         Label(self.frame, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.575,rely=0.48)
+                .place(relx=0.53,rely=0.48)
         
 
         Entry(self.frame, textvariable = self.valCPF, \
             validate ='key', validatecommand =(self.frame.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.575,rely=0.53,relwidth=0.15,relheight=0.05)
+                .place(relx=0.52,rely=0.53,relwidth=0.105,relheight=0.05)
 
         self.referencias['cpfContra'] = self.valCPF
-
-        ###########Estado Civil
         
-        Label(self.frame, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.75,rely=0.48)
+        ###########TODO Nacionalidade
+        nacio_var = BooleanVar()
+        ttk.Checkbutton(self.frame, text='Não é brasileiro?', variable= nacio_var, \
+            command= lambda: \
+                self.input_janela('Nacionalidade') if nacio_var.get()\
+                    else self.referencias['valNacionalidade']\
+                        .set('Brasileiro(a)'))\
+                .place(relx=0.6425,rely=0.53,relwidth=0.142,relheight=0.05)
 
-        self.estadoEntry = StringVar(self.frame)
-
-        self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
-
-        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
-
-        self.menuCasado = self.popup['menu']
-
-        #Casado
-        self.subLista = Menu(self.menuCasado, tearoff=False)
-        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
-        self.subLista.add_command(label='Comunhão Parcial de Bens', \
-            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
-        
-        self.subLista.add_command(label='Comunhão Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
-        
-        self.subLista.add_command(label='Separação Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em STB'))
-
-
-        self.popup.place(relx=0.75,rely=0.53,relwidth=0.2,relheight=0.06)
-
-        self.referencias['estadoCivilContra'] = self.estadoEntry
+        ###########Emprego
+        empreg_var = BooleanVar()
+        ttk.Checkbutton(self.frame, text='Não é empresário?', variable= empreg_var, \
+            command= lambda: \
+                self.input_janela('Emprego') if empreg_var.get() \
+                    else self.referencias['valEmprego']\
+                        .set('Empresário(a)'))\
+                .place(relx=0.8,rely=0.53,relwidth=0.155,relheight=0.05)
 
         ###########rua
 
@@ -561,12 +617,12 @@ class Enterprise(Pages):
 
         Label(self.frame, text='Bairro',\
             background='lightblue', font=(10))\
-                .place(relx=0.415,rely=0.61)
+                .place(relx=0.4,rely=0.61)
 
         Entry(self.frame,\
             textvariable=self.referencias['bairroContra'],\
                 validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.415,rely=0.66,relwidth=0.25,relheight=0.05)
+                .place(relx=0.4,rely=0.66,relwidth=0.2,relheight=0.05)
         
         ###########CEP 
         
@@ -577,14 +633,45 @@ class Enterprise(Pages):
 
         Label(self.frame, text='CEP',\
             background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.61)
+                .place(relx=0.65,rely=0.61)
         
 
         Entry(self.frame, textvariable = self.valCEP_Contra, \
             validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.7,rely=0.66,relwidth=0.25,relheight=0.05)
+                .place(relx=0.65,rely=0.66,relwidth=0.075,relheight=0.05)
 
         self.referencias['cepContra'] = self.valCEP_Contra
+
+        ###########Estado Civil
+        
+        Label(self.frame, text='Estado Civil',\
+            background='lightblue', font=(10))\
+                .place(relx=0.75,rely=0.61)
+
+        self.estadoEntry = StringVar(self.frame)
+
+        self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
+
+        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
+
+        self.menuCasado = self.popup['menu']
+
+        #Casado
+        self.subLista = Menu(self.menuCasado, tearoff=False)
+        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
+        self.subLista.add_command(label='Comunhão Parcial de Bens', \
+            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
+        
+        self.subLista.add_command(label='Comunhão Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
+        
+        self.subLista.add_command(label='Separação Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em STB'))
+
+
+        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
+
+        self.referencias['estadoCivilContra'] = self.estadoEntry
         
         ###########Cidade
 
@@ -641,7 +728,7 @@ class Enterprise(Pages):
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
         
-        self.entryVal = Entry(self.frame, textvariable = self.valPag, \
+        Entry(self.frame, textvariable = self.valPag, \
             validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
                 .place(relx=0.06,rely=0.93,relwidth=0.1,relheight=0.05)
                 
@@ -656,11 +743,11 @@ class Enterprise(Pages):
 
         Label(self.frame, text='Data início',\
             background='lightblue', font=(10))\
-                .place(relx=0.185,rely=0.88)
+                .place(relx=0.182,rely=0.88)
         
 
         Entry(self.frame, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.1,relheight=0.05)
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.08,relheight=0.05)
 
         self.referencias['dtInic'] = self.valDT_inic
 
@@ -677,7 +764,7 @@ class Enterprise(Pages):
         
 
         Entry(self.frame, textvariable = self.valDT_ass, \
-            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.1,relheight=0.05)
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.08,relheight=0.05)
 
         self.referencias['dtAss'] = self.valDT_ass
 
@@ -685,27 +772,28 @@ class Enterprise(Pages):
         
         Label(self.frame, text='Dia Venc.',\
             background='lightblue', font=(10))\
-                .place(relx=0.42,rely=0.88)
+                .place(relx=0.4,rely=0.88)
         
 
-        Entry(self.frame,textvariable=self.referencias['dtVenc'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S')).place(relx=0.42,rely=0.93,relwidth=0.1,relheight=0.05)
+        Entry(self.frame,textvariable=self.referencias['dtVenc'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal() if len(text) < 3 else False), '%P')).place(relx=0.435,rely=0.93,relwidth=0.02,relheight=0.05)
 
 
         ###########Num. Empregados
 
-        Label(self.frame, text='Num. Empreg.',\
+        Label(self.frame, text='Num.Empre.',\
             background='lightblue', font=(10))\
-                .place(relx=0.55,rely=0.88)
+                .place(relx=0.5,rely=0.88)
 
         Entry(self.frame,\
             textvariable=self.referencias['numEmpre'],\
                 validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.58,rely=0.93,relwidth=0.05,relheight=0.05)
+                .place(relx=0.535,rely=0.93,relwidth=0.05,relheight=0.05)
 
         #Botão enviar
-        Button(self.frame, text='Gerar CPS',\
-            command= lambda: self.executar())\
-                .place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
+        self.btnEnviar = Button(self.frame, text='Gerar CPS',\
+            command= lambda: self.executar())
+        self.btnEnviar.place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
+
 
 class LucroPresumido(Enterprise):
     def __init__(self, titulo):
@@ -714,75 +802,28 @@ class LucroPresumido(Enterprise):
         self.referencias['dtCompe'] = StringVar()
 
         self.index()
-        self.btn_competencia()
+        self.add_competencia()
 
-    def btn_competencia(self):
-        Button(self.frame, text='Preencher VLR - EFD REINF',\
-            command= lambda: self.janela_entry())\
-                .place(relx=0.2,rely=0.83,relwidth=0.25,relheight=0.04)
-
-    def janela_entry(self):
-        self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.geometry('300x100')
-        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
-        self.janela.title('Competência REINF')
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-
-        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
-        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        #Empresa
-        Label(self.janela_frame, text='REINF',\
-            background='lightblue', font=('Times New Roman',12,'bold italic'))\
-                .place(relx=0,rely=-0.1)
-                
-        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.25,rely=0.05)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor Competência
+    def add_competencia(self):
+        ###########Valor EFD
         
-        self.valCompe = self.referencias['valCompe']
+        self.valCompe = StringVar()
 
         self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
             Formater.valor_formater(passed, *args) )
 
-        Label(self.janela_frame, text='Valor:',\
+        Label(self.frame, text='Val. EFD-Compe.',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.3)
+                .place(relx=0.62,rely=0.88)
         
-        self.entryVal = Entry(self.janela_frame, textvariable = self.valCompe, )\
-                .place(relx=0.3,rely=0.35,relwidth=0.6,relheight=0.2)
+        Entry(self.frame, textvariable = self.valCompe, \
+            validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
+                .place(relx=0.65,rely=0.93,relwidth=0.1,relheight=0.05)
                 
         self.referencias['valCompe'] = self.valCompe
 
-        ###########Data Competência
-        
-        self.dtCompe = self.referencias['dtCompe']
-
-        self.dtCompe.trace_add('write', lambda *args, passed = self.dtCompe:\
-            Formater.comp_formater(passed, *args) )
-
-        Label(self.janela_frame, text='Data:',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.6)
-        
-        Label(self.janela_frame, text='(MM/YYYY)',\
-            background='lightblue', font=('Times New Roman',8,'bold'))\
-                .place(relx=0.015,rely=0.84)
-
-        Entry(self.janela_frame, textvariable = self.dtCompe, \
-            validate ='key', validatecommand =(self.janela_frame.register(Validator.comp_validator), '%P')).place(relx=0.3,rely=0.65,relwidth=0.35,relheight=0.2)
-
-        self.referencias['dtCompe'] = self.dtCompe
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.75,rely=0.63,relwidth=0.15,relheight=0.25)
+        #btn Enviar
+        self.btnEnviar.place(relx=0.8,rely=0.86,relwidth=0.15,relheight=0.12)
 
 class Person(Pages):
     def __init__(self, titulo):
