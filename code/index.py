@@ -416,12 +416,11 @@ class Content:
         for chave, valor in self.dictonary.items():
             if chave == 'estadoCivilContra':
                 self.dictonary[chave] = self.__set_estadoCivil(valor)
-            elif chave == 'valPag':
-                valorDbl = valor[2:].replace(',','.')
-                self.dictonary[chave] = self.__set_valor(valorDbl)
+            elif chave in ['valPag','valComple']:
+                self.dictonary[chave] = self.__set_valor(valor)
             elif chave in ['numEmpre','dtVenc']:
                 self.dictonary[chave] = self.__set_num(valor)
-            elif chave == 'dataComple':
+            elif chave == 'dtComple':
                 self.dictonary[chave] = self.dictonary['dtInic'].get()[2:]
             elif chave in ['dtAss', 'dtInic']:
                 self.dictonary[chave] = self.__set_data(valor)
@@ -430,7 +429,7 @@ class Content:
             else:
                 self.dictonary[chave] = valor.capitalize()
 
-        self.dictonary['valPorc'] = self.__calc_porc(valorDbl)
+        self.dictonary['valPorc'] = self.__calc_porc(self.dictonary['valPag'])
 
         return self.dictonary
 
@@ -444,6 +443,7 @@ class Content:
         return estadoCiv
 
     def __set_valor(self, valor):
+        valor = valor.replace(',','.')
         valorExtenso = num2words(valor,lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
         return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
@@ -457,6 +457,7 @@ class Content:
         return data_format.strftime("%d de %B de %Y")
 
     def __calc_porc(self, honorarios):
+        honorarios = honorarios.replace(',','.')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(honorarios)) * 100):,.2f}%'
 
@@ -682,33 +683,8 @@ class Pages:
 class Enterprise(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
-        
-        self.referencias = {
-            'nomeEmp' : StringVar(),
-            'ruaEmp' : StringVar(), 
-            'numEmp' : StringVar(), 
-            'bairroEmp' : StringVar(),
-            'cepEmp' : StringVar(), 
-            'cnpjEmp' : StringVar(),  
-            "compleEmp" : StringVar(), 
-            'nomeContra' : StringVar(),
-            'rgContra' : StringVar(),  
-            'emissorContra' : StringVar(), 
-            'cpfContra' : StringVar(), 
-            'estadoCivilContra' : StringVar(), 
-            'ruaContra' : StringVar(), 
-            'numContra' : StringVar(), 
-            'bairroContra' : StringVar(),  
-            'cepContra' : StringVar(),  
-            'cidadeContra' : StringVar(), 
-            'estadoContra' : StringVar(), 
-            "compleContra" : StringVar(),
-            "valPag" : StringVar(),
-            "dtInic" : StringVar(),
-            "dtAss" : StringVar(),
-            "dtVenc" : StringVar(),
-            "numEmpre" : StringVar()
-        }            
+        for i in ['nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp']:
+            self.referencias[i] = StringVar()
 
     def index(self):
         self.cabecalho()
