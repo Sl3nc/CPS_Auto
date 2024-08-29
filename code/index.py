@@ -199,6 +199,8 @@ class Socios:
     def exibir_input(self):
         if self.qnt == 1:
             self.input1()
+        elif self.qnt == 2:
+            self.input2()
 
     def input1(self):
         #TODO Socio
@@ -403,6 +405,10 @@ class Socios:
             textvariable=self.referencias['compleContra'])\
                 .place(relx=0.61,rely=0.77,relwidth=0.34,relheight=0.05)
 
+    def input2(self):
+        Label(self.frame, text='2 Sócios',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely=0.42)
 #Conteudo
 class Content:
     def __init__(self, referencias):
@@ -792,6 +798,23 @@ class Enterprise(Pages):
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
         
         #TODO Inp-Soc
+
+        ###########Estado Civil
+        
+        Label(self.frame, text='Mais de um sócio?',\
+            background='lightblue', font=(10))\
+                .place(relx=0.75,rely=0.61)
+
+        self.estadoEntry = StringVar(self.frame)
+
+        self.estadoEntryOpt = (1,2)
+
+        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
+
+        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
+
+        self.referencias['estadoCivilContra'] = self.estadoEntry
+
         self.socio.exibir_input()
 
         self.contrato()
