@@ -197,7 +197,7 @@ class Content:
             if chave == 'estadoCivilContra':
                 self.dictonary[chave] = self.__set_estadoCivil(valor)
             elif chave == 'valPag':
-                valorDbl = valor[2:].replace(',','.')
+                valorDbl = valor.replace(',','.')
                 self.dictonary[chave] = self.__set_valor(valorDbl)
             elif chave in ['numEmpre','dtVenc']:
                 self.dictonary[chave] = self.__set_num(valor)
@@ -1152,8 +1152,15 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.window.iconbitmap(self.resource_path('imgs\\cps-icon.ico'))
         self.window.title('Gerador de CPS')
+
+    def resource_path(self,relative_path):
+        base_path = getattr(
+            sys,
+            '_MEIPASS',
+            os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
 
     def menu(self):
         self.menu = Frame(self.window, bd=4, bg='lightblue')
@@ -1163,7 +1170,7 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file=self.resource_path('imgs\\deltaprice-hori.png')).subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)

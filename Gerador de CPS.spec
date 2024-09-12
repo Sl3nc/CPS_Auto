@@ -5,7 +5,7 @@ a = Analysis(
     ['code\\index.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[("code\\CPS's\\", '.'), ('code\\imgs\\', 'imgs')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['code\\imgs\\delta-icon.ico'],
+    icon=['code\\imgs\\cps-icon.ico'],
 )
