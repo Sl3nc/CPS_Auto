@@ -242,6 +242,14 @@ class Content:
         valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
         return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
+    
+    def __set_num(self, num):
+        valorExtenso = num2words(num,lang='pt_BR')
+        return f'{num} ({valorExtenso})'
+
+    def __set_data(self, data):
+        data_format = datetime.strptime(data, '%d/%m/%Y')
+        return data_format.strftime("%d de %B de %Y")
         
     def __calc_porc(self):
         valor = self.dictonary['valPag'].replace(',','.')
