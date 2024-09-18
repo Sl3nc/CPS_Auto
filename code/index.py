@@ -17,11 +17,10 @@ import locale
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
+    base_path = getattr(
+        sys,
+        '_MEIPASS',
+        os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 def enter_press(event):
@@ -164,7 +163,7 @@ class Validator:    #TODO Validators
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'Z:\\18 - PROGRAMAS DELTA\\code\\CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx')    
+        self.arquivo = DocxTemplate(resource_path(f'CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx'))
 
     def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
@@ -193,38 +192,47 @@ class Content:
 
     def update_dict(self):
 
-        for chave, valor in self.dictonary.items():
-            if chave == 'estadoCivilContra':
-                self.dictonary[chave] = self.__set_estadoCivil(valor)
-            elif chave == 'valPag':
-                valorDbl = valor.replace(',','.')
-                self.dictonary[chave] = self.__set_valor(valorDbl)
-            elif chave in ['numEmpre','dtVenc']:
-                self.dictonary[chave] = self.__set_num(valor)
-            elif chave == 'dataComple':
-                self.dictonary[chave] = self.dictonary['dtInic'].get()[2:]
-            elif chave in ['dtAss', 'dtInic']:
-                self.dictonary[chave] = self.__set_data(valor)
-            elif chave in ['nomeContra','nomeEmp','rgContra','emissorContra']:
-                self.dictonary[chave] = valor.upper()
-            else:
-                self.dictonary[chave] = valor.capitalize()
+        ref = {
+            'estadoCivilContra': self.__set_estadoCivil(),
+            'valPag': self.__set_valor(),
+            'numEmpre': self.__set_num(self.dictonary['numEmpre']),
+            'dtVenc': self.__set_num(self.dictonary['dtVenc']),
+            'dataComple': lambda: self.dictonary['dtInic'].get()[2:],
+            'dtAss': self.__set_data(self.dictonary['dtAss']),
+            'dtInic': self.__set_data(self.dictonary['dtInic']),
+            'nomeContra': self.dictonary['nomeContra'].upper(),
+            'nomeEmp': self.dictonary['nomeEmp'].upper(),
+            'rgContra': self.dictonary['rgContra'].upper(),
+            'emissorContra': self.dictonary['emissorContra'].upper(),
+        }
 
-        self.dictonary['valPorc'] = self.__calc_porc(valorDbl)
+        
+        for key, func in ref.items():
+            self.dictonary[key] = func
+
+        for keyDict in self.dictonary.keys():
+            if keyDict not in ref.keys():
+                self.dictonary[keyDict] = self.dictonary[keyDict].title()
+
+        self.dictonary['valPorc'] = self.__calc_porc()
+        self.dictonary['nomeEmp'] = self.__valid_nome_emp()
 
         return self.dictonary
 
-    def __set_estadoCivil(self, estadoCiv):
-        if 'STB' in estadoCiv:
-            estadoCiv = 'Casado em Separação Total de Bens'
-        elif 'CPB' in estadoCiv:
-            estadoCiv = 'Casado em Comunhão Parcial de Bens'
-        elif 'CTB' in estadoCiv:
-            estadoCiv = 'Casado em Comunhão Total de Bens'
-        return estadoCiv
+    def __set_estadoCivil(self):
+        ref = {
+            'STB': 'Casado em Separação Total de Bens',
+            'CPB': 'Casado em Comunhão Parcial de Bens',
+            'CTB': 'Casado em Comunhão Total de Bens'
+        }
+        
+        for key, value in ref.items():
+            if key in self.dictonary['estadoCivilContra']:
+                return value
 
-    def __set_valor(self, valor):
-        valorExtenso = num2words(valor,lang='pt_BR', to='currency')\
+    def __set_valor(self):
+        valor = self.dictonary['valPag'].replace(',','.')
+        valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
         return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
     
@@ -236,9 +244,14 @@ class Content:
         data_format = datetime.strptime(data, '%d/%m/%Y')
         return data_format.strftime("%d de %B de %Y")
 
-    def __calc_porc(self, honorarios):
+    def __calc_porc(self):
+        valor = self.dictonary['valPag'].replace(',','.')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
-        return f'{((custo_envio / float(honorarios)) * 100):,.2f}%'
+        return f'{((custo_envio / float(valor)) * 100):,.2f}%'
+    
+    def __valid_nome_emp(self):
+        if "LMTDA" in self.dictonary['nomeEmp'].upper():
+            self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('lmtda','LMTDA.')
 
 #Páginas
 
@@ -284,8 +297,8 @@ class Pages:
 
     def executar(self):
         try:
-            # if self.__input_vazio():
-            #     raise Exception ('Existem entradas vazias, favor preencher todas')
+            if self.__input_vazio():
+                raise Exception ('Existem entradas vazias, favor preencher todas')
             
             conteudoUpdt = Content(self.referencias).update_dict()
 
@@ -1152,15 +1165,8 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap(self.resource_path('imgs\\cps-icon.ico'))
+        self.window.iconbitmap(resource_path('imgs\\cps-icon.ico'))
         self.window.title('Gerador de CPS')
-
-    def resource_path(self,relative_path):
-        base_path = getattr(
-            sys,
-            '_MEIPASS',
-            os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(base_path, relative_path)
 
     def menu(self):
         self.menu = Frame(self.window, bd=4, bg='lightblue')
@@ -1170,7 +1176,7 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file=self.resource_path('imgs\\deltaprice-hori.png')).subsample(4,4)
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice-hori.png')).subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
