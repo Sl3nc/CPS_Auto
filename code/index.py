@@ -17,11 +17,10 @@ import locale
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
+    base_path = getattr(
+        sys,
+        '_MEIPASS',
+        os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 def enter_press(event):
@@ -164,7 +163,7 @@ class Validator:    #TODO Validators
 
 class File:
     def __init__(self, nome):
-        self.arquivo = DocxTemplate(f'Z:\\18 - PROGRAMAS DELTA\\code\\CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx')    
+        self.arquivo = DocxTemplate(resource_path(f'CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx'))
 
     def alterar(self, conteudo):  
         self.arquivo.render(conteudo)
@@ -189,7 +188,70 @@ class Socios:
         self.frame = frame
         self.qnt = qnt
         self.referencias = ref
+
+#Conteudo
+class Content:
+    def __init__(self, referencias):
+        self.dictonary = {chave: copy.deepcopy(valor.get()) for chave, valor in referencias.items()}
+        
+        self.SAL_MINIMO = 1412.00
+        self.CUSTO_CORREIO = 0.02
+
+    def update_dict(self):
+
+        ref = {
+            'estadoCivilContra': self.__set_estadoCivil(),
+            'valPag': self.__set_valor(),
+            'numEmpre': self.__set_num(self.dictonary['numEmpre']),
+            'dtVenc': self.__set_num(self.dictonary['dtVenc']),
+            'dataComple': lambda: self.dictonary['dtInic'].get()[2:],
+            'dtAss': self.__set_data(self.dictonary['dtAss']),
+            'dtInic': self.__set_data(self.dictonary['dtInic']),
+            'nomeContra': self.dictonary['nomeContra'].upper(),
+            'nomeEmp': self.dictonary['nomeEmp'].upper(),
+            'rgContra': self.dictonary['rgContra'].upper(),
+            'emissorContra': self.dictonary['emissorContra'].upper(),
+        }
+
+        
+        for key, func in ref.items():
+            self.dictonary[key] = func
+
+        for keyDict in self.dictonary.keys():
+            if keyDict not in ref.keys():
+                self.dictonary[keyDict] = self.dictonary[keyDict].title()
+
+        self.dictonary['valPorc'] = self.__calc_porc()
+        self.dictonary['nomeEmp'] = self.__valid_nome_emp()
+
+        return self.dictonary
+
+    def __set_estadoCivil(self):
+        ref = {
+            'STB': 'Casado em Separação Total de Bens',
+            'CPB': 'Casado em Comunhão Parcial de Bens',
+            'CTB': 'Casado em Comunhão Total de Bens'
+        }
+        
+        for key, value in ref.items():
+            if key in self.dictonary['estadoCivilContra']:
+                return value
+
+    def __set_valor(self):
+        valor = self.dictonary['valPag'].replace(',','.')
+        valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
+            .replace('reais e','reais,')
+        return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
+        
+    def __calc_porc(self):
+        valor = self.dictonary['valPag'].replace(',','.')
+        custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
+        return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
+    def __valid_nome_emp(self):
+        if "LMTDA" in self.dictonary['nomeEmp'].upper():
+            self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('lmtda','LMTDA.')
+
     def set_qnt(self, valor):
         if valor < 5 and valor > 0:
             self.qnt = valor
@@ -203,6 +265,271 @@ class Socios:
             self.input2()
 
     def input1(self):
+        ...
+
+#Páginas
+
+class Pages:
+    def __init__(self, titulo):
+        self.frame = Frame(window, bd=4, bg='lightblue')
+        self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+        window.bind('<KeyRelease>', self.alter_estado)
+
+        #TODO Referencias
+        self.referencias = {
+            'nomeContra' : StringVar(),
+            'rgContra' : StringVar(),  
+            'emissorContra' : StringVar(), 
+            'cpfContra' : StringVar(), 
+            'estadoCivilContra' : StringVar(),
+            'valNacionalidade': StringVar(), 
+            'valEmprego': StringVar(),
+            'ruaContra' : StringVar(), 
+            'numContra' : StringVar(), 
+            'bairroContra' : StringVar(),  
+            'cepContra' : StringVar(),  
+            'cidadeContra' : StringVar(), 
+            'estadoContra' : StringVar(), 
+            "compleContra" : StringVar(),
+            "valPag" : StringVar(),
+            "dtInic" : StringVar(),
+            "dtAss" : StringVar(),
+            "dtVenc" : StringVar(),
+            "numEmpre" : StringVar()
+        }            
+
+        self.referencias['valNacionalidade'].set('brasileiro(a)')
+        self.referencias['valEmprego'].set('empresário(a)')
+
+        self.titulo = titulo
+        self.file = File(titulo)
+
+    def alter_estado(self, event):
+        if event.keysym == 'Down' or event.keysym == 'Up':
+            self.popup.focus()
+            keyboard.send('space')
+
+    def executar(self):
+        try:
+            if self.__input_vazio():
+                raise Exception ('Existem entradas vazias, favor preencher todas')
+            
+            conteudoUpdt = Content(self.referencias).update_dict()
+
+            self.file.alterar(conteudoUpdt)
+            self.file.abrir()
+
+        except decimal.InvalidOperation:
+            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        except ValueError:
+            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except Exception as e:
+            messagebox.showwarning(title='Aviso', message= e)
+
+    def __input_vazio(self):
+        for chave, valor in self.referencias.items():
+            if valor.get() == ''\
+                and chave != 'compleContra' \
+                    and chave != 'compleEmp':
+                return True
+        return False
+    
+    def input_janela(self, tipo):
+        self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.geometry('300x70')
+        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.janela.title(tipo)
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
+
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        #Titulo
+        Label(self.janela_frame, text= tipo,\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0,rely=0)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.55,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+
+        ###########Valor Competência
+        valComp = StringVar()
+
+        self.entryVal = Entry(
+            self.janela_frame, 
+            textvariable = valComp,
+            validate='key', 
+            validatecommand=(
+                self.frame.register(lambda text: not text.isdecimal()), '%S'
+                )
+            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
+                
+        self.referencias[f'val{tipo}'] = valComp
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+                
+
+class Enterprise(Pages):
+    def __init__(self, titulo):
+        super().__init__(titulo)
+        
+        self.referencias = {
+            'nomeEmp' : StringVar(),
+            'ruaEmp' : StringVar(), 
+            'numEmp' : StringVar(), 
+            'bairroEmp' : StringVar(),
+            'cepEmp' : StringVar(), 
+            'cnpjEmp' : StringVar(),  
+            "compleEmp" : StringVar(), 
+            'nomeContra' : StringVar(),
+            'rgContra' : StringVar(),  
+            'emissorContra' : StringVar(), 
+            'cpfContra' : StringVar(), 
+            'estadoCivilContra' : StringVar(), 
+            'ruaContra' : StringVar(), 
+            'numContra' : StringVar(), 
+            'bairroContra' : StringVar(),  
+            'cepContra' : StringVar(),  
+            'cidadeContra' : StringVar(), 
+            'estadoContra' : StringVar(), 
+            "compleContra" : StringVar(),
+            "valPag" : StringVar(),
+            "dtInic" : StringVar(),
+            "dtAss" : StringVar(),
+            "dtVenc" : StringVar(),
+            "numEmpre" : StringVar()
+        }            
+
+    def index(self):
+        #Titulo
+        Label(self.frame, text= self.titulo, background='lightblue',\
+            font=('Times',30,'bold'))\
+                .place(relx=0.325,rely=0.05)
+        #Logo
+        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
+        
+        self.logo = self.logo.subsample(5,5)
+        
+        Label(self.frame, image=self.logo, background='lightblue')\
+            .place(relx=0.75,rely=0.01,relwidth=0.12,relheight=0.15)
+
+        #Botão voltar
+        Button(self.frame, text='Voltar ao menu',\
+            command= lambda: self.frame.destroy())\
+                .place(relx=0,rely=0,relwidth=0.25,relheight=0.06)
+
+        
+
+        #Labels e Entrys
+        #Empresa
+        Label(self.frame, text='Empresa',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely=0.115)
+                
+        self.canvas = Canvas(self.frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.17,rely=0.15)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
+                
+        ###########nome empresa
+
+        Label(self.frame, text='Nome',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.18)
+
+        self.nomeEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['nomeEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
+
+        ###########rua
+
+        Label(self.frame, text='Rua',\
+            background='lightblue', font=(10))\
+                .place(relx=0.35,rely=0.18)
+
+        self.ruaEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['ruaEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
+
+        ###########Num
+
+        Label(self.frame, text='Num.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.6,rely=0.18)
+
+        self.numEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['numEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
+                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
+
+        ###########bairro
+
+        Label(self.frame, text='Bairro',\
+            background='lightblue', font=(10))\
+                .place(relx=0.7,rely=0.18)
+
+        self.bairroEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['bairroEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
+
+        ########### CEP Empre
+
+        self.valCEP_Empre = StringVar()
+
+        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
+            Formater.cep_formater(passed, *args) )
+
+        Label(self.frame, text='CEP',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.31)
+        
+
+        self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
+                .place(relx=0.05,rely=0.36,relwidth=0.075,relheight=0.05)
+
+        self.referencias['cepEmp'] = self.valCEP_Empre
+
+        ########### CNPJ
+        
+        self.valCNPJ = StringVar()
+
+        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
+            Formater.cnpj_formater(passed, *args) )
+
+        Label(self.frame, text='CNPJ',\
+            background='lightblue', font=(10))\
+                .place(relx=0.35,rely=0.31)
+        
+
+        Entry(self.frame, textvariable = self.valCNPJ, \
+            validate ='key', validatecommand =(self.frame.register(Validator.cnpj_validator), '%P'))\
+                .place(relx=0.35,rely=0.36,relwidth=0.135,relheight=0.05)
+
+        self.referencias['cnpjEmp'] = self.valCNPJ
+                
+        ###########Complemento
+
+        Label(self.frame, text='Complemento (opcional)',\
+            background='lightblue', font=(10))\
+                .place(relx=0.6,rely=0.31)
+
+        self.complementoEntry = Entry(self.frame,\
+            textvariable=self.referencias['compleEmp'])\
+                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
+        
         #TODO Socio
         Label(self.frame, text='Sócio',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
@@ -872,7 +1199,7 @@ class App:
         self.window.configure(background='darkblue')
         self.window.resizable(False,False)
         self.window.geometry('880x500')
-        self.window.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.window.iconbitmap(resource_path('imgs\\cps-icon.ico'))
         self.window.title('Gerador de CPS')
 
     def menu(self):
@@ -883,7 +1210,7 @@ class App:
         .place(relx=0.15,rely=0.23,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice-hori.png').subsample(4,4)
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice-hori.png')).subsample(4,4)
         
         Label(self.menu, image=self.logo, background='lightblue')\
             .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
