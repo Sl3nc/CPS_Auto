@@ -182,13 +182,6 @@ class File:
 
         os.startfile(file+'.docx')
 
-#Socios
-class Socios:
-    def __init__(self, qnt = 1, *, frame, ref):
-        self.frame = frame
-        self.qnt = qnt
-        self.referencias = ref
-
 #Conteudo
 class Content:
     def __init__(self, referencias):
@@ -266,14 +259,33 @@ class Content:
         else:
             raise Exception('Valor indisponível')
 
-    def exibir_input(self):
-        if self.qnt == 1:
-            self.input1()
-        elif self.qnt == 2:
-            self.input2()
+#Socios
+class Socios:
+    def __init__(self, qnt = 1, *, frame, ref):
+        self.frame_mae = frame
+        self.qnt = qnt
+        self.referencias = ref
 
-    def input1(self):
-        ...
+    def alterar_qnt(self, quantidade):
+        self.frame_ativo.destroy()
+        print(quantidade)
+        self.qnt = quantidade
+        self.exibir()
+
+    def exibir(self):
+        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='lightblue')
+        self.frame_ativo.place(relx=0.05,rely=0.05,relwidth=0.3,relheight=0.3)
+
+        if self.qnt == 1:
+            self.layout1()
+        elif self.qnt == 2:
+            self.layout2()
+
+    def layout1(self):
+        Label(self.frame_ativo, text='oi').place(relx=0.325,rely=0.05)
+
+    def layout2(self):
+        Label(self.frame_ativo, text='SLKDASÇHLIFJDASIPOJDF').place(relx=0.325,rely=0.35)
 
 #Páginas
 
@@ -346,7 +358,7 @@ class Pages:
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x70')
-        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.janela.iconbitmap(resource_path('imgs\\delta-icon.ico'))
         self.janela.title(tipo)
         self.janela.transient(window)
         self.janela.focus_force()
@@ -421,7 +433,7 @@ class Enterprise(Pages):
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely=0.05)
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -740,10 +752,6 @@ class Enterprise(Pages):
             textvariable=self.referencias['compleContra'])\
                 .place(relx=0.61,rely=0.77,relwidth=0.34,relheight=0.05)
 
-    def input2(self):
-        Label(self.frame, text='2 Sócios',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.42)
 #Conteudo
 class Content:
     def __init__(self, referencias):
@@ -852,7 +860,7 @@ class Pages:
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely= y + 0.05)
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -983,7 +991,7 @@ class Pages:
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x70')
-        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.janela.iconbitmap(resource_path('imgs\\delta-icon.ico'))
         self.janela.title(tipo)
         self.janela.transient(window)
         self.janela.focus_force()
@@ -1132,25 +1140,21 @@ class Enterprise(Pages):
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
         
-        #TODO Inp-Soc
-
-        ###########Estado Civil
+        ###########TODO Inp-Soc
         
-        Label(self.frame, text='Mais de um sócio?',\
+        Label(self.frame, text='Quantos sócios?',\
             background='lightblue', font=(10))\
                 .place(relx=0.75,rely=0.61)
 
-        self.estadoEntry = StringVar(self.frame)
+        self.estadoEntry = IntVar()
 
         self.estadoEntryOpt = (1,2)
 
-        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
+        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt, command= lambda val: self.socio.alterar_qnt(self.estadoEntry.get()))
 
         self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
 
-        self.referencias['estadoCivilContra'] = self.estadoEntry
-
-        self.socio.exibir_input()
+        self.socio.exibir()
 
         self.contrato()
 
