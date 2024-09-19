@@ -534,7 +534,7 @@ class Socios (ISociavel):
             background='lightblue', font=('Arial',12,'bold italic'))\
                 .place(relx=0.52,rely= y + 0.42)
 
-        self.num_socios = IntVar()
+        self.num_socios = IntVar(value=1)
 
         self.popup = ttk.OptionMenu(self.frame_mae, self.num_socios,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_socios.get()))
 
@@ -542,12 +542,11 @@ class Socios (ISociavel):
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
-        print(quantidade)
         self.qnt = quantidade
         self.exibir()
 
     def exibir(self):
-        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='red')
+        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='lightblue')
         self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
 
         if self.qnt == 1:
