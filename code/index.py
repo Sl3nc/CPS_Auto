@@ -260,105 +260,9 @@ class Content:
         else:
             raise Exception('Valor indisponível')
 
-class Janela():
-    def __init__(self, frame, ref):
-        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.geometry('300x70')
-        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-
-        self.referencias = ref
-
-class Opcionais(Janela):
-    def __init__(self, frame, ref):
-        super().__init__(frame, ref)
-
-        self.janela.title('Complemento')
-        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
-        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-    def exibir(self, title):
-        #Titulo
-        Label(self.janela_frame, text= title,\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0,rely=0)
-                
-        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.55,rely=0.05)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor Competência
-        valComp = StringVar()
-
-        self.entryVal = Entry(
-            self.janela_frame, 
-            textvariable = valComp,
-            validate='key', 
-            validatecommand=(
-                self.janela.register(lambda text: not text.isdecimal()), '%S'
-                )
-            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
-                
-        self.referencias[f'val{title}'] = valComp
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
-
-
-#Socios
-class Socios:
-    def __init__(self, frame, ref):
-        self.frame_mae = frame
-        self.qnt = 1
-        self.referencias = ref
-        self.opcoes_disp = (1,2)
-
-    def cabecalho_mae(self, y = 0):
-        #TODO Socio
-        Label(self.frame_mae, text='Sócio',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely= y + 0.42)
-                
-        self.canvas = Canvas(self.frame_mae, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely= y + 0.455)
-                
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
-
-        ###########TODO Inp-Soc
-        
-        Label(self.frame_mae, text='Quantidade de sócios:',\
-            background='lightblue', font=('Arial',12,'bold italic'))\
-                .place(relx=0.52,rely= y + 0.42)
-
-        self.num_socios = IntVar()
-
-        self.popup = ttk.OptionMenu(self.frame_mae, self.num_socios,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_socios.get()))
-
-        self.popup.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
-
-    def alterar_qnt(self, quantidade):
-        self.frame_ativo.destroy()
-        print(quantidade)
-        self.qnt = quantidade
-        self.exibir()
-
-    def exibir(self):
-        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='red')
-        self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
-
-        if self.qnt == 1:
-            self.layout1()
-        elif self.qnt == 2:
-            self.layout2()
-
-    def layout1(self):
-        ###########nome
-
+class ISociavel:
+    def base_socio(self, id):
+    ###########nome
         Label(self.frame_ativo, text='Nome',\
             background='lightblue', font=(10))\
                 .place(relx=0,rely=0)
@@ -543,8 +447,121 @@ class Socios:
             textvariable=self.referencias['compleContra'])\
                 .place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
 
+
+class Janela():
+    def __init__(self, frame, ref):
+        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
+
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        self.referencias = ref
+
+class Opcionais(Janela):
+    def __init__(self, frame, ref):
+        super().__init__(frame, ref)
+
+        self.janela.geometry('300x70')
+        self.janela.title('Complemento')
+        
+
+    def exibir(self, title):
+        #Titulo
+        Label(self.janela_frame, text= title,\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0,rely=0)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.55,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+
+        ###########Valor Competência
+        valComp = StringVar()
+
+        self.entryVal = Entry(
+            self.janela_frame, 
+            textvariable = valComp,
+            validate='key', 
+            validatecommand=(
+                self.janela.register(lambda text: not text.isdecimal()), '%S'
+                )
+            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
+                
+        self.referencias[f'val{title}'] = valComp
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+        
+class Social (Janela, ISociavel):
+    def __init__(self, frame, ref, id):
+        super().__init__(frame, ref)
+
+        self.frame_ativo = self.janela_frame
+        self.janela.geometry('880x190')
+        self.janela.title(f'Entrada Sócio {id}')
+
+        self.base_socio(id)
+
+#Socios
+class Socios (ISociavel):
+    def __init__(self, frame, ref):
+        self.frame_mae = frame
+        self.qnt = 1
+        self.referencias = ref
+        self.opcoes_disp = (1,2)
+
+    def cabecalho_mae(self, y = 0):
+        #TODO Socio
+        Label(self.frame_mae, text='Sócio',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely= y + 0.42)
+                
+        self.canvas = Canvas(self.frame_mae, width=655, height=10,border=-5)
+        self.canvas.place(relx=0.13,rely= y + 0.455)
+                
+        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
+
+        ###########TODO Inp-Soc
+        
+        Label(self.frame_mae, text='Quantidade de sócios:',\
+            background='lightblue', font=('Arial',12,'bold italic'))\
+                .place(relx=0.52,rely= y + 0.42)
+
+        self.num_socios = IntVar()
+
+        self.popup = ttk.OptionMenu(self.frame_mae, self.num_socios,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_socios.get()))
+
+        self.popup.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
+
+    def alterar_qnt(self, quantidade):
+        self.frame_ativo.destroy()
+        print(quantidade)
+        self.qnt = quantidade
+        self.exibir()
+
+    def exibir(self):
+        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='red')
+        self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
+
+        if self.qnt == 1:
+            self.layout1()
+        elif self.qnt == 2:
+            self.layout2()
+
+    def layout1(self):
+        self.base_socio(1)
+
     def layout2(self):
-        Label(self.frame_ativo, text='SLKDASÇHLIFJDASIPOJDF').place(relx=0.325,rely=0.35)
+        Button(self.frame_ativo, text= 'oi1', command= lambda: Social(self.frame_ativo, self.referencias, 1)).place(relx=0.325,rely=0.35)
+
+        Button(self.frame_ativo, text= 'oi2', command= lambda: Social(self.frame_ativo, self.referencias, 2)).place(relx=0.625,rely=0.35)
 
 #Páginas
 
