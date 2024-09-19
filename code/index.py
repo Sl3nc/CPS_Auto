@@ -267,6 +267,47 @@ class Socios:
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
+    def input_janela(self, tipo):
+        self.janela = Toplevel(self.frame_mae, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.geometry('300x70')
+        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        self.janela.title(tipo)
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
+
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        #Titulo
+        Label(self.janela_frame, text= tipo,\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0,rely=0)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.55,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+
+        ###########Valor Competência
+        valComp = StringVar()
+
+        self.entryVal = Entry(
+            self.janela_frame, 
+            textvariable = valComp,
+            validate='key', 
+            validatecommand=(
+                self.janela.register(lambda text: not text.isdecimal()), '%S'
+                )
+            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
+                
+        self.referencias[f'val{tipo}'] = valComp
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+
     def cabecalho_mae(self, y = 0):
         #TODO Socio
         Label(self.frame_mae, text='Sócio',\
@@ -280,9 +321,9 @@ class Socios:
 
         ###########TODO Inp-Soc
         
-        Label(self.frame_mae, text='Quantos sócios?',\
-            background='lightblue', font=(10))\
-                .place(relx=0.75,rely= y + 0.42)
+        Label(self.frame_mae, text='Quantidade de sócios:',\
+            background='lightblue', font=('Arial',12,'bold italic'))\
+                .place(relx=0.52,rely= y + 0.42)
 
         self.num_socios = IntVar()
 
@@ -565,47 +606,6 @@ class Pages:
                     and chave != 'compleEmp':
                 return True
         return False
-    
-    def input_janela(self, tipo):
-        self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.geometry('300x70')
-        self.janela.iconbitmap(resource_path('imgs\\delta-icon.ico'))
-        self.janela.title(tipo)
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-
-        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
-        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        #Titulo
-        Label(self.janela_frame, text= tipo,\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0,rely=0)
-                
-        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.55,rely=0.05)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor Competência
-        valComp = StringVar()
-
-        self.entryVal = Entry(
-            self.janela_frame, 
-            textvariable = valComp,
-            validate='key', 
-            validatecommand=(
-                self.frame.register(lambda text: not text.isdecimal()), '%S'
-                )
-            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
-                
-        self.referencias[f'val{tipo}'] = valComp
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
                 
 
 class Enterprise(Pages):
