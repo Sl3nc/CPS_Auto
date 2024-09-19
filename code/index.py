@@ -282,13 +282,13 @@ class Socios:
         
         Label(self.frame_mae, text='Quantos sócios?',\
             background='lightblue', font=(10))\
-                .place(relx=0.75,rely= y + 0.61)
+                .place(relx=0.75,rely= y + 0.42)
 
-        self.estadoEntry = IntVar()
+        self.num_socios = IntVar()
 
-        self.popup = ttk.OptionMenu(self.frame_mae, self.estadoEntry,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.estadoEntry.get()))
+        self.popup = ttk.OptionMenu(self.frame_mae, self.num_socios,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_socios.get()))
 
-        self.popup.place(relx=0.75,rely= y + 0.66,relwidth=0.2,relheight=0.06)
+        self.popup.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
@@ -310,12 +310,12 @@ class Socios:
 
         Label(self.frame_ativo, text='Nome',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.48)
+                .place(relx=0,rely=0)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['nomeContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
+                .place(relx=0,rely=0.15,relwidth=0.25,relheight=0.15)
         
          ###########RG
         
@@ -326,12 +326,12 @@ class Socios:
 
         Label(self.frame_ativo, text='RG',\
             background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.48)
+                .place(relx=0.33,rely=0)
         
 
         Entry(self.frame_ativo, textvariable = self.valRG, \
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.33,rely=0.53,relwidth=0.1,relheight=0.05)
+                .place(relx=0.33,rely=0.15,relwidth=0.1,relheight=0.15)
 
         self.referencias['rgContra'] = self.valRG
         
@@ -339,12 +339,12 @@ class Socios:
 
         Label(self.frame_ativo, text='Org.',\
             background='lightblue', font=(10))\
-                .place(relx=0.45,rely=0.48)
+                .place(relx=0.45,rely=0)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['emissorContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.45,rely=0.53,relwidth=0.05,relheight=0.05)
+                .place(relx=0.45,rely=0.15,relwidth=0.05,relheight=0.15)
 
         ###########CPF
         
@@ -355,12 +355,12 @@ class Socios:
 
         Label(self.frame_ativo, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.53,rely=0.48)
+                .place(relx=0.53,rely=0)
         
 
         Entry(self.frame_ativo, textvariable = self.valCPF, \
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.52,rely=0.53,relwidth=0.105,relheight=0.05)
+                .place(relx=0.52,rely=0.15,relwidth=0.105,relheight=0.15)
 
         self.referencias['cpfContra'] = self.valCPF
         
@@ -371,7 +371,7 @@ class Socios:
                 self.input_janela('Nacionalidade') if nacio_var.get()\
                     else self.referencias['valNacionalidade']\
                         .set('brasileiro(a)'))\
-                .place(relx=0.6425,rely=0.53,relwidth=0.142,relheight=0.05)
+                .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
@@ -380,40 +380,40 @@ class Socios:
                 self.input_janela('Emprego') if empreg_var.get() \
                     else self.referencias['valEmprego']\
                         .set('empresário(a)'))\
-                .place(relx=0.8,rely=0.53,relwidth=0.155,relheight=0.05)
+                .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
 
         ###########rua
 
         Label(self.frame_ativo, text='Rua',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.61)
+                .place(relx=0,rely=0.35)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['ruaContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
+                .place(relx=0,rely=0.5,relwidth=0.25,relheight=0.15)
 
         ###########Num
 
         Label(self.frame_ativo, text='Num.',\
             background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.61)
+                .place(relx=0.33,rely=0.35)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['numContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.66,relwidth=0.05,relheight=0.05)
+                .place(relx=0.33,rely=0.5,relwidth=0.05,relheight=0.15)
 
         ###########bairro
 
         Label(self.frame_ativo, text='Bairro',\
             background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.61)
+                .place(relx=0.4,rely=0.35)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['bairroContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.4,rely=0.66,relwidth=0.2,relheight=0.05)
+                .place(relx=0.4,rely=0.5,relwidth=0.2,relheight=0.15)
         
         ###########CEP 
         
@@ -424,12 +424,12 @@ class Socios:
 
         Label(self.frame_ativo, text='CEP',\
             background='lightblue', font=(10))\
-                .place(relx=0.65,rely=0.61)
+                .place(relx=0.65,rely=0.35)
         
 
         Entry(self.frame_ativo, textvariable = self.valCEP_Contra, \
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.65,rely=0.66,relwidth=0.075,relheight=0.05)
+                .place(relx=0.65,rely=0.5,relwidth=0.075,relheight=0.15)
 
         self.referencias['cepContra'] = self.valCEP_Contra
 
@@ -437,7 +437,7 @@ class Socios:
         
         Label(self.frame_ativo, text='Estado Civil',\
             background='lightblue', font=(10))\
-                .place(relx=0.75,rely=0.61)
+                .place(relx=0.8,rely=0.35)
 
         self.estadoEntry = StringVar(self.frame_ativo)
 
@@ -460,7 +460,7 @@ class Socios:
             command= lambda: self.estadoEntry.set('casado(a) em STB'))
 
 
-        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
+        self.popup.place(relx=0.8,rely=0.5,relwidth=0.2,relheight=0.16)
 
         self.referencias['estadoCivilContra'] = self.estadoEntry
         
@@ -468,33 +468,33 @@ class Socios:
 
         Label(self.frame_ativo, text='Cidade',\
             background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.72)
+                .place(relx=0,rely=0.7)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['cidadeContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.77,relwidth=0.25,relheight=0.05)
+                .place(relx=0,rely=0.85,relwidth=0.25,relheight=0.15)
         
         ###########Estado
 
         Label(self.frame_ativo, text='Estado',\
             background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.72)
+                .place(relx=0.33,rely=0.7)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['estadoContra'],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.77,relwidth=0.25,relheight=0.05)
+                .place(relx=0.33,rely=0.85,relwidth=0.25,relheight=0.15)
 
         ###########Complemento
 
         Label(self.frame_ativo, text='Complemento (opcional)',\
             background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.72)
+                .place(relx=0.65,rely=0.7)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['compleContra'])\
-                .place(relx=0.61,rely=0.77,relwidth=0.34,relheight=0.05)
+                .place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
 
     def layout2(self):
         Label(self.frame_ativo, text='SLKDASÇHLIFJDASIPOJDF').place(relx=0.325,rely=0.35)
@@ -1150,6 +1150,7 @@ class Enterprise(Pages):
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
 
+        self.socio.cabecalho_mae()
         self.socio.exibir()
 
         self.contrato()
