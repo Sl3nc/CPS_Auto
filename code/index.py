@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
+from abc import ABCMeta, abstractmethod
 from num2words import num2words
 from docxtpl import DocxTemplate
 from datetime import datetime
@@ -259,29 +260,29 @@ class Content:
         else:
             raise Exception('Valor indisponível')
 
-#Socios
-class Socios:
+class Janela():
     def __init__(self, frame, ref):
-        self.frame_mae = frame
-        self.qnt = 1
-        self.referencias = ref
-        self.opcoes_disp = (1,2)
-
-    def input_janela(self, tipo):
-        self.janela = Toplevel(self.frame_mae, bd=4, bg='darkblue' )
+        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x70')
         self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.janela.title(tipo)
         self.janela.transient(window)
         self.janela.focus_force()
         self.janela.grab_set()
 
+        self.referencias = ref
+
+class Opcionais(Janela):
+    def __init__(self, frame, ref):
+        super().__init__(frame, ref)
+
+        self.janela.title('Complemento')
         self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
         self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
+    def exibir(self, title):
         #Titulo
-        Label(self.janela_frame, text= tipo,\
+        Label(self.janela_frame, text= title,\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0,rely=0)
                 
@@ -302,11 +303,20 @@ class Socios:
                 )
             ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
                 
-        self.referencias[f'val{tipo}'] = valComp
+        self.referencias[f'val{title}'] = valComp
 
         Button(self.janela_frame, text='OK',\
             command= lambda: self.janela.destroy())\
                 .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+
+
+#Socios
+class Socios:
+    def __init__(self, frame, ref):
+        self.frame_mae = frame
+        self.qnt = 1
+        self.referencias = ref
+        self.opcoes_disp = (1,2)
 
     def cabecalho_mae(self, y = 0):
         #TODO Socio
@@ -409,19 +419,15 @@ class Socios:
         nacio_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
             command= lambda: \
-                self.input_janela('Nacionalidade') if nacio_var.get()\
-                    else self.referencias['valNacionalidade']\
-                        .set('brasileiro(a)'))\
-                .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
+                Opcionais(self.frame_ativo, self.referencias).exibir('Nacionalidade') if nacio_var.get() else self.referencias['valNacionalidade'].set('brasileiro(a)'))\
+                    .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
-            command= lambda: \
-                self.input_janela('Emprego') if empreg_var.get() \
-                    else self.referencias['valEmprego']\
-                        .set('empresário(a)'))\
-                .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
+            command= lambda:\
+                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valNacionalidade'].set('brasileiro(a)'))\
+                    .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
 
         ###########rua
 
