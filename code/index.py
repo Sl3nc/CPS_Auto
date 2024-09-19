@@ -261,10 +261,34 @@ class Content:
 
 #Socios
 class Socios:
-    def __init__(self, qnt = 1, *, frame, ref):
+    def __init__(self, frame, ref):
         self.frame_mae = frame
-        self.qnt = qnt
+        self.qnt = 1
         self.referencias = ref
+        self.opcoes_disp = (1,2)
+
+    def cabecalho_mae(self, y = 0):
+        #TODO Socio
+        Label(self.frame_mae, text='Sócio',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely= y + 0.42)
+                
+        self.canvas = Canvas(self.frame_mae, width=655, height=10,border=-5)
+        self.canvas.place(relx=0.13,rely= y + 0.455)
+                
+        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
+
+        ###########TODO Inp-Soc
+        
+        Label(self.frame_mae, text='Quantos sócios?',\
+            background='lightblue', font=(10))\
+                .place(relx=0.75,rely= y + 0.61)
+
+        self.estadoEntry = IntVar()
+
+        self.popup = ttk.OptionMenu(self.frame_mae, self.estadoEntry,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.estadoEntry.get()))
+
+        self.popup.place(relx=0.75,rely= y + 0.66,relwidth=0.2,relheight=0.06)
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
@@ -273,8 +297,8 @@ class Socios:
         self.exibir()
 
     def exibir(self):
-        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='lightblue')
-        self.frame_ativo.place(relx=0.05,rely=0.05,relwidth=0.3,relheight=0.3)
+        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='red')
+        self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
 
         if self.qnt == 1:
             self.layout1()
@@ -282,7 +306,195 @@ class Socios:
             self.layout2()
 
     def layout1(self):
-        Label(self.frame_ativo, text='oi').place(relx=0.325,rely=0.05)
+        ###########nome
+
+        Label(self.frame_ativo, text='Nome',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.48)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['nomeContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
+        
+         ###########RG
+        
+        self.valRG = StringVar()
+
+        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
+            Formater.rg_formater(passed, *args) )
+
+        Label(self.frame_ativo, text='RG',\
+            background='lightblue', font=(10))\
+                .place(relx=0.33,rely=0.48)
+        
+
+        Entry(self.frame_ativo, textvariable = self.valRG, \
+            validate ='key', validatecommand =(self.frame_ativo.register(Validator.rg_validator), '%P'))\
+                .place(relx=0.33,rely=0.53,relwidth=0.1,relheight=0.05)
+
+        self.referencias['rgContra'] = self.valRG
+        
+        ###########Org. Emissor
+
+        Label(self.frame_ativo, text='Org.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.45,rely=0.48)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['emissorContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.45,rely=0.53,relwidth=0.05,relheight=0.05)
+
+        ###########CPF
+        
+        self.valCPF = StringVar()
+
+        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
+            Formater.cpf_formater(passed, *args) )
+
+        Label(self.frame_ativo, text='CPF',\
+            background='lightblue', font=(10))\
+                .place(relx=0.53,rely=0.48)
+        
+
+        Entry(self.frame_ativo, textvariable = self.valCPF, \
+            validate ='key', validatecommand =(self.frame_ativo.register(Validator.cpf_validator), '%P'))\
+                .place(relx=0.52,rely=0.53,relwidth=0.105,relheight=0.05)
+
+        self.referencias['cpfContra'] = self.valCPF
+        
+        ###########TODO Nacionalidade
+        nacio_var = BooleanVar()
+        ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
+            command= lambda: \
+                self.input_janela('Nacionalidade') if nacio_var.get()\
+                    else self.referencias['valNacionalidade']\
+                        .set('brasileiro(a)'))\
+                .place(relx=0.6425,rely=0.53,relwidth=0.142,relheight=0.05)
+
+        ###########Emprego
+        empreg_var = BooleanVar()
+        ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
+            command= lambda: \
+                self.input_janela('Emprego') if empreg_var.get() \
+                    else self.referencias['valEmprego']\
+                        .set('empresário(a)'))\
+                .place(relx=0.8,rely=0.53,relwidth=0.155,relheight=0.05)
+
+        ###########rua
+
+        Label(self.frame_ativo, text='Rua',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.61)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['ruaContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
+
+        ###########Num
+
+        Label(self.frame_ativo, text='Num.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.33,rely=0.61)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['numContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: text.isdecimal()), '%S'))\
+                .place(relx=0.33,rely=0.66,relwidth=0.05,relheight=0.05)
+
+        ###########bairro
+
+        Label(self.frame_ativo, text='Bairro',\
+            background='lightblue', font=(10))\
+                .place(relx=0.4,rely=0.61)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['bairroContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.4,rely=0.66,relwidth=0.2,relheight=0.05)
+        
+        ###########CEP 
+        
+        self.valCEP_Contra = StringVar()
+
+        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
+            Formater.cep_formater(passed, *args) )
+
+        Label(self.frame_ativo, text='CEP',\
+            background='lightblue', font=(10))\
+                .place(relx=0.65,rely=0.61)
+        
+
+        Entry(self.frame_ativo, textvariable = self.valCEP_Contra, \
+            validate ='key', validatecommand =(self.frame_ativo.register(Validator.cep_validator), '%P'))\
+                .place(relx=0.65,rely=0.66,relwidth=0.075,relheight=0.05)
+
+        self.referencias['cepContra'] = self.valCEP_Contra
+
+        ###########Estado Civil
+        
+        Label(self.frame_ativo, text='Estado Civil',\
+            background='lightblue', font=(10))\
+                .place(relx=0.75,rely=0.61)
+
+        self.estadoEntry = StringVar(self.frame_ativo)
+
+        self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
+
+        self.popup = ttk.OptionMenu(self.frame_ativo, self.estadoEntry,'', *self.estadoEntryOpt)
+
+        self.menuCasado = self.popup['menu']
+
+        #Casado
+        self.subLista = Menu(self.menuCasado, tearoff=False)
+        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
+        self.subLista.add_command(label='Comunhão Parcial de Bens', \
+            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
+        
+        self.subLista.add_command(label='Comunhão Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
+        
+        self.subLista.add_command(label='Separação Total de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em STB'))
+
+
+        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
+
+        self.referencias['estadoCivilContra'] = self.estadoEntry
+        
+        ###########Cidade
+
+        Label(self.frame_ativo, text='Cidade',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.72)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['cidadeContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.05,rely=0.77,relwidth=0.25,relheight=0.05)
+        
+        ###########Estado
+
+        Label(self.frame_ativo, text='Estado',\
+            background='lightblue', font=(10))\
+                .place(relx=0.33,rely=0.72)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['estadoContra'],\
+                validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.33,rely=0.77,relwidth=0.25,relheight=0.05)
+
+        ###########Complemento
+
+        Label(self.frame_ativo, text='Complemento (opcional)',\
+            background='lightblue', font=(10))\
+                .place(relx=0.6,rely=0.72)
+
+        Entry(self.frame_ativo,\
+            textvariable=self.referencias['compleContra'])\
+                .place(relx=0.61,rely=0.77,relwidth=0.34,relheight=0.05)
 
     def layout2(self):
         Label(self.frame_ativo, text='SLKDASÇHLIFJDASIPOJDF').place(relx=0.325,rely=0.35)
@@ -549,208 +761,6 @@ class Enterprise(Pages):
         self.complementoEntry = Entry(self.frame,\
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-        
-        #TODO Socio
-        Label(self.frame, text='Sócio',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.42)
-                
-        self.canvas = Canvas(self.frame, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely=0.455)
-                
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-
-        ###########nome
-
-        Label(self.frame, text='Nome',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.48)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['nomeContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.53,relwidth=0.25,relheight=0.05)
-        
-         ###########RG
-        
-        self.valRG = StringVar()
-
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
-
-        Label(self.frame, text='RG',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.48)
-        
-
-        Entry(self.frame, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.frame.register(Validator.rg_validator), '%P'))\
-                .place(relx=0.33,rely=0.53,relwidth=0.1,relheight=0.05)
-
-        self.referencias['rgContra'] = self.valRG
-        
-        ###########Org. Emissor
-
-        Label(self.frame, text='Org.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.45,rely=0.48)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['emissorContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.45,rely=0.53,relwidth=0.05,relheight=0.05)
-
-        ###########CPF
-        
-        self.valCPF = StringVar()
-
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
-
-        Label(self.frame, text='CPF',\
-            background='lightblue', font=(10))\
-                .place(relx=0.53,rely=0.48)
-        
-
-        Entry(self.frame, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.frame.register(Validator.cpf_validator), '%P'))\
-                .place(relx=0.52,rely=0.53,relwidth=0.105,relheight=0.05)
-
-        self.referencias['cpfContra'] = self.valCPF
-        
-        ###########TODO Nacionalidade
-        nacio_var = BooleanVar()
-        ttk.Checkbutton(self.frame, text='Não é brasileiro?', variable= nacio_var, \
-            command= lambda: \
-                self.input_janela('Nacionalidade') if nacio_var.get()\
-                    else self.referencias['valNacionalidade']\
-                        .set('brasileiro(a)'))\
-                .place(relx=0.6425,rely=0.53,relwidth=0.142,relheight=0.05)
-
-        ###########Emprego
-        empreg_var = BooleanVar()
-        ttk.Checkbutton(self.frame, text='Não é empresário?', variable= empreg_var, \
-            command= lambda: \
-                self.input_janela('Emprego') if empreg_var.get() \
-                    else self.referencias['valEmprego']\
-                        .set('empresário(a)'))\
-                .place(relx=0.8,rely=0.53,relwidth=0.155,relheight=0.05)
-
-        ###########rua
-
-        Label(self.frame, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.61)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['ruaContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.66,relwidth=0.25,relheight=0.05)
-
-        ###########Num
-
-        Label(self.frame, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.61)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['numContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.66,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.frame, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.4,rely=0.61)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['bairroContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.4,rely=0.66,relwidth=0.2,relheight=0.05)
-        
-        ###########CEP 
-        
-        self.valCEP_Contra = StringVar()
-
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
-
-        Label(self.frame, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.65,rely=0.61)
-        
-
-        Entry(self.frame, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
-                .place(relx=0.65,rely=0.66,relwidth=0.075,relheight=0.05)
-
-        self.referencias['cepContra'] = self.valCEP_Contra
-
-        ###########Estado Civil
-        
-        Label(self.frame, text='Estado Civil',\
-            background='lightblue', font=(10))\
-                .place(relx=0.75,rely=0.61)
-
-        self.estadoEntry = StringVar(self.frame)
-
-        self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
-
-        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt)
-
-        self.menuCasado = self.popup['menu']
-
-        #Casado
-        self.subLista = Menu(self.menuCasado, tearoff=False)
-        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
-        self.subLista.add_command(label='Comunhão Parcial de Bens', \
-            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
-        
-        self.subLista.add_command(label='Comunhão Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
-        
-        self.subLista.add_command(label='Separação Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em STB'))
-
-
-        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
-
-        self.referencias['estadoCivilContra'] = self.estadoEntry
-        
-        ###########Cidade
-
-        Label(self.frame, text='Cidade',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.72)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['cidadeContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.77,relwidth=0.25,relheight=0.05)
-        
-        ###########Estado
-
-        Label(self.frame, text='Estado',\
-            background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0.72)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['estadoContra'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.33,rely=0.77,relwidth=0.25,relheight=0.05)
-
-        ###########Complemento
-
-        Label(self.frame, text='Complemento (opcional)',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.72)
-
-        Entry(self.frame,\
-            textvariable=self.referencias['compleContra'])\
-                .place(relx=0.61,rely=0.77,relwidth=0.34,relheight=0.05)
 
 #Conteudo
 class Content:
@@ -1139,20 +1149,6 @@ class Enterprise(Pages):
         self.complementoEntry = Entry(self.frame,\
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-        
-        ###########TODO Inp-Soc
-        
-        Label(self.frame, text='Quantos sócios?',\
-            background='lightblue', font=(10))\
-                .place(relx=0.75,rely=0.61)
-
-        self.estadoEntry = IntVar()
-
-        self.estadoEntryOpt = (1,2)
-
-        self.popup = ttk.OptionMenu(self.frame, self.estadoEntry,'', *self.estadoEntryOpt, command= lambda val: self.socio.alterar_qnt(self.estadoEntry.get()))
-
-        self.popup.place(relx=0.75,rely=0.66,relwidth=0.2,relheight=0.06)
 
         self.socio.exibir()
 
@@ -1195,7 +1191,8 @@ class Person(Pages):
     
     def index(self):
         self.cabecalho(0.08)
-        self.socio.exibir_input()
+        self.socio.cabecalho_mae()
+        self.socio.exibir()
         self.contrato()
 
 #Aplicação
