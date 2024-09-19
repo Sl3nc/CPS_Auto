@@ -324,7 +324,7 @@ class Pages:
         self.janela = Toplevel(self.frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.geometry('300x70')
-        self.janela.iconbitmap('Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\delta-icon.ico')
+        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
         self.janela.title(tipo)
         self.janela.transient(window)
         self.janela.focus_force()
@@ -399,7 +399,7 @@ class Enterprise(Pages):
             font=('Times',30,'bold'))\
                 .place(relx=0.325,rely=0.05)
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -868,7 +868,7 @@ class Person(Pages):
                 .place(relx=0.35,rely=0.13)
 
         #Logo
-        self.logo = PhotoImage(file='Z:\\18 - PROGRAMAS DELTA\\code\\imgs\\deltaprice_logo-slim.png')
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
         
         self.logo = self.logo.subsample(5,5)
         
