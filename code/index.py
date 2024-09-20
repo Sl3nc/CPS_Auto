@@ -404,8 +404,8 @@ class ISociavel:
         self.subLista.add_command(label='Comunhão Parcial de Bens', \
             command= lambda: self.estadoEntry.set('casado(a) em CPB'))
         
-        self.subLista.add_command(label='Comunhão Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em CTB'))
+        self.subLista.add_command(label='Comunhão Universal de Bens',\
+            command= lambda: self.estadoEntry.set('casado(a) em CUB'))
         
         self.subLista.add_command(label='Separação Total de Bens',\
             command= lambda: self.estadoEntry.set('casado(a) em STB'))
@@ -819,8 +819,8 @@ class Content:
             estadoCiv = 'Casado em Separação Total de Bens'
         elif 'CPB' in estadoCiv:
             estadoCiv = 'Casado em Comunhão Parcial de Bens'
-        elif 'CTB' in estadoCiv:
-            estadoCiv = 'Casado em Comunhão Total de Bens'
+        elif 'CUB' in estadoCiv:
+            estadoCiv = 'Casado em Comunhão Universal de Bens'
         return estadoCiv
 
     def __set_valor(self, valor):
