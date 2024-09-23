@@ -166,22 +166,26 @@ class File:
     def __init__(self, nome):
         self.arquivo = DocxTemplate(resource_path(f'CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx'))
 
-    def alterar(self, conteudo):  
-        self.arquivo.render(conteudo)
+    def alterar(self, conteudo_base, conteudo_updt):  
+        for conteudo in [conteudo_base, conteudo_updt]:
+            if conteudo == conteudo_updt:
+                self.arquivo = DocxTemplate(self.caminho+'.docx')
+            self.arquivo.render(conteudo)
+            self.arquivo.save(self.caminho+'.docx')
 
-    def abrir(self):
-        file = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
+    def salvar(self):
+        self.caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
-        ultima_barra = file.rfind('/')
+        ultima_barra = self.caminho.rfind('/')
          
-        if file[ultima_barra+1:] == '':
+        if self.caminho[ultima_barra+1:] == '':
             raise Exception('Operação Cancelada')
-
-        self.arquivo.save(file+'.docx')
-
+        
+    
+    def abrir(self):
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
 
-        os.startfile(file+'.docx')
+        os.startfile(self.caminho+'.docx')
 
 #Conteudo
 class Content:
@@ -194,19 +198,16 @@ class Content:
     def update_dict(self):
 
         ref = {
-            'estadoCivilContra': self.__set_estadoCivil(),
             'valPag': self.__set_valor(),
             'numEmpre': self.__set_num(self.dictonary['numEmpre']),
             'diaVenc': self.__set_num(self.dictonary['dtVenc']),
             'dataComple': lambda: self.dictonary['dtInic'].get()[2:],
             'dtAss': self.__set_data(self.dictonary['dtAss']),
             'dtInic': self.__set_data(self.dictonary['dtInic']),
-            'nomeContra': self.dictonary['nomeContra'].upper(),
-            'nomeEmp': self.dictonary['nomeEmp'].upper(),
-            'rgContra': self.dictonary['rgContra'].upper(),
-            'emissorContra': self.dictonary['emissorContra'].upper(),
+            # 'nomeEmp': self.dictonary['nomeEmp'].upper(),
         }
 
+        self.dictonary['valPorc'] = self.__calc_porc()
         
         for key, func in ref.items():
             self.dictonary[key] = func
@@ -215,21 +216,9 @@ class Content:
             if keyDict not in ref.keys():
                 self.dictonary[keyDict] = self.dictonary[keyDict].title()
 
-        self.dictonary['valPorc'] = self.__calc_porc()
-        self.dictonary['nomeEmp'] = self.__valid_nome_emp()
+        # self.dictonary['nomeEmp'] = self.__valid_nome_emp()
 
         return self.dictonary
-
-    def __set_estadoCivil(self):
-        ref = {
-            'STB': 'Casado em Separação Total de Bens',
-            'CPB': 'Casado em Comunhão Parcial de Bens',
-            'CTB': 'Casado em Comunhão Total de Bens'
-        }
-        
-        for key, value in ref.items():
-            if key in self.dictonary['estadoCivilContra']:
-                return value
 
     def __set_valor(self):
         valor = self.dictonary['valPag'].replace(',','.')
@@ -511,6 +500,23 @@ class Representante (ISociavel):
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
+    def update_dict(self):
+        ref_estado = {
+            'STB': 'Casado em Separação Total de Bens',
+            'CPB': 'Casado em Comunhão Parcial de Bens',
+            'CUB': 'Casado em Comunhão Universal de Bens'
+        }
+        
+        ref_var = ['nomeContra','rgContra','emissorContra']
+
+        for i in range(1, self.qnt):
+            regime = self.referencias['estadoCivilContra' + i]
+            if regime in ref_estado:
+                self.referencias['estadoCivilContra' + i] = ref_estado[regime]
+
+            for j in ref_var:
+                self.referencias[j + i] = self.referencias[j + i].upper(),
+
     def titulo_divisor(self, y = 0):
         #TODO repre
         Label(self.frame_mae, text='Sócio',\
@@ -572,7 +578,6 @@ class Representante (ISociavel):
         self.referencias['valNacionalidade1'].set('brasileiro(a)')
         self.referencias['valEmprego1'].set('empresário(a)')
 
-            
         self.base_repre('1')
 
     def layout2(self):
@@ -581,10 +586,7 @@ class Representante (ISociavel):
         Button(self.frame_ativo, text= 'oi2', command= lambda: Social(self.frame_ativo, self.referencias, 2)).place(relx=0.625,rely=0.35)
 
     def conteudo_base(self):
-        ref = {
-            'cabecalho' : '',
-            'assinatura' : ''
-        }
+        ref = {}
 
         conteudo = {
             1: [
@@ -633,21 +635,25 @@ class Pages:
             keyboard.send('space')
 
     def executar(self):
-        try:
-            if self.__input_vazio():
-                raise Exception ('Existem entradas vazias, favor preencher todas')
+        # try:
+            # if self.__input_vazio():
+            #     raise Exception ('Existem entradas vazias, favor preencher todas')
             
-            conteudoUpdt = Content(self.referencias).update_dict()
+            conteudo_base = self.repre.conteudo_base()
 
-            self.file.alterar(conteudoUpdt)
+            self.repre.update_dict()
+            conteudo_updt = Content(self.referencias).update_dict()
+
+            self.file.salvar()
+            self.file.alterar(conteudo_base, conteudo_updt)
             self.file.abrir()
 
         # except decimal.InvalidOperation:
         #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
         # except ValueError:
         #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        except Exception as e:
-            messagebox.showwarning(title='Aviso', message= e)
+        # except Exception as e:
+        #     messagebox.showwarning(title='Aviso', message= e)
 
     def __input_vazio(self):
         for chave, valor in self.referencias.items():
