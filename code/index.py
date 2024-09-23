@@ -262,7 +262,7 @@ class ISociavel:
                 .place(relx=0,rely=0)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['nomeContra'],\
+            textvariable=self.referencias['nomeContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0,rely=0.15,relwidth=0.25,relheight=0.15)
         
@@ -282,7 +282,7 @@ class ISociavel:
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.rg_validator), '%P'))\
                 .place(relx=0.33,rely=0.15,relwidth=0.1,relheight=0.15)
 
-        self.referencias['rgContra'] = self.valRG
+        self.referencias['rgContra' + id] = self.valRG
         
         ###########Org. Emissor
 
@@ -291,7 +291,7 @@ class ISociavel:
                 .place(relx=0.45,rely=0)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['emissorContra'],\
+            textvariable=self.referencias['emissorContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.45,rely=0.15,relwidth=0.05,relheight=0.15)
 
@@ -311,20 +311,20 @@ class ISociavel:
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.cpf_validator), '%P'))\
                 .place(relx=0.52,rely=0.15,relwidth=0.105,relheight=0.15)
 
-        self.referencias['cpfContra'] = self.valCPF
+        self.referencias['cpfContra' + id] = self.valCPF
         
         ###########TODO Nacionalidade
         nacio_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
             command= lambda: \
-                Opcionais(self.frame_ativo, self.referencias).exibir('Nacionalidade') if nacio_var.get() else self.referencias['valNacionalidade'].set('brasileiro(a)'))\
+                Opcionais(self.frame_ativo, self.referencias).exibir('Nacionalidade') if nacio_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
                     .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
             command= lambda:\
-                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valNacionalidade'].set('brasileiro(a)'))\
+                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
                     .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
 
         ###########rua
@@ -334,7 +334,7 @@ class ISociavel:
                 .place(relx=0,rely=0.35)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['ruaContra'],\
+            textvariable=self.referencias['ruaContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0,rely=0.5,relwidth=0.25,relheight=0.15)
 
@@ -345,7 +345,7 @@ class ISociavel:
                 .place(relx=0.33,rely=0.35)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['numContra'],\
+            textvariable=self.referencias['numContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.33,rely=0.5,relwidth=0.05,relheight=0.15)
 
@@ -356,7 +356,7 @@ class ISociavel:
                 .place(relx=0.4,rely=0.35)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['bairroContra'],\
+            textvariable=self.referencias['bairroContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.4,rely=0.5,relwidth=0.2,relheight=0.15)
         
@@ -376,7 +376,7 @@ class ISociavel:
             validate ='key', validatecommand =(self.frame_ativo.register(Validator.cep_validator), '%P'))\
                 .place(relx=0.65,rely=0.5,relwidth=0.075,relheight=0.15)
 
-        self.referencias['cepContra'] = self.valCEP_Contra
+        self.referencias['cepContra' + id] = self.valCEP_Contra
 
         ###########Estado Civil
         
@@ -407,7 +407,7 @@ class ISociavel:
 
         self.popup.place(relx=0.8,rely=0.5,relwidth=0.2,relheight=0.16)
 
-        self.referencias['estadoCivilContra'] = self.estadoEntry
+        self.referencias['estadoCivilContra' + id] = self.estadoEntry
         
         ###########Cidade
 
@@ -416,7 +416,7 @@ class ISociavel:
                 .place(relx=0,rely=0.7)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['cidadeContra'],\
+            textvariable=self.referencias['cidadeContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0,rely=0.85,relwidth=0.25,relheight=0.15)
         
@@ -427,7 +427,7 @@ class ISociavel:
                 .place(relx=0.33,rely=0.7)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['estadoContra'],\
+            textvariable=self.referencias['estadoContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
                 .place(relx=0.33,rely=0.85,relwidth=0.25,relheight=0.15)
 
@@ -438,7 +438,7 @@ class ISociavel:
                 .place(relx=0.65,rely=0.7)
 
         Entry(self.frame_ativo,\
-            textvariable=self.referencias['compleContra'])\
+            textvariable=self.referencias['compleContra' + id])\
                 .place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
 
 
@@ -511,33 +511,6 @@ class Representante (ISociavel):
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
-    def conteudo_base(self):
-        ref = {
-            'cabecalho' : '',
-            'assinatura' : ''
-        }
-
-        conteudo = {
-            1: [
-                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
-                '''],
-
-            2: [
-                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
-                ''']
-        }
-
-        ref['cabecalho'] = conteudo[self.qnt][0]
-        ref['assinatura'] = conteudo[self.qnt][1]
-
-        return ref
-
     def titulo_divisor(self, y = 0):
         #TODO repre
         Label(self.frame_mae, text='Sócio',\
@@ -576,12 +549,62 @@ class Representante (ISociavel):
             self.layout2()
 
     def layout1(self):
-        self.base_repre(1)
+        att_repre = [
+            'nomeContra1',
+            'rgContra1',  
+            'emissorContra1', 
+            'cpfContra1', 
+            'estadoCivilContra1',
+            'valNacionalidade1', 
+            'valEmprego1',
+            'ruaContra1', 
+            'numContra1', 
+            'bairroContra1',  
+            'cepContra1',  
+            'cidadeContra1', 
+            'estadoContra1', 
+            'compleContra1'
+            ]
+
+        for i in att_repre:
+            self.referencias[i] = StringVar()
+
+        self.referencias['valNacionalidade1'].set('brasileiro(a)')
+        self.referencias['valEmprego1'].set('empresário(a)')
+
+            
+        self.base_repre('1')
 
     def layout2(self):
         Button(self.frame_ativo, text= 'oi1', command= lambda: Social(self.frame_ativo, self.referencias, 1)).place(relx=0.325,rely=0.35)
 
         Button(self.frame_ativo, text= 'oi2', command= lambda: Social(self.frame_ativo, self.referencias, 2)).place(relx=0.625,rely=0.35)
+
+    def conteudo_base(self):
+        ref = {
+            'cabecalho' : '',
+            'assinatura' : ''
+        }
+
+        conteudo = {
+            1: [
+                '{{ nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                '''],
+            2: [
+                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                ''']
+        }
+
+        ref['cabecalho'] = conteudo[self.qnt][0]
+        ref['assinatura'] = conteudo[self.qnt][1]
+
+        return ref
 
 #Páginas
 
@@ -593,20 +616,6 @@ class Pages:
 
         #TODO Referencias
         self.referencias = {
-            'nomeContra' : StringVar(),
-            'rgContra' : StringVar(),  
-            'emissorContra' : StringVar(), 
-            'cpfContra' : StringVar(), 
-            'estadoCivilContra' : StringVar(),
-            'valNacionalidade': StringVar(), 
-            'valEmprego': StringVar(),
-            'ruaContra' : StringVar(), 
-            'numContra' : StringVar(), 
-            'bairroContra' : StringVar(),  
-            'cepContra' : StringVar(),  
-            'cidadeContra' : StringVar(), 
-            'estadoContra' : StringVar(), 
-            "compleContra" : StringVar(),
             "valPag" : StringVar(),
             "dtInic" : StringVar(),
             "dtAss" : StringVar(),
@@ -614,11 +623,9 @@ class Pages:
             "numEmpre" : StringVar()
         }            
 
-        self.referencias['valNacionalidade'].set('brasileiro(a)')
-        self.referencias['valEmprego'].set('empresário(a)')
-
         self.titulo = titulo
         self.file = File(titulo)
+        self.repre = Representante(frame = self.frame, ref=self.referencias)
 
     def alter_estado(self, event):
         if event.keysym == 'Down' or event.keysym == 'Up':
@@ -650,6 +657,97 @@ class Pages:
                 return True
         return False
                     
+    def cabecalho(self, y = 0):
+        #Titulo
+        Label(self.frame, text= self.titulo, background='lightblue',\
+            font=('Times',30,'bold'))\
+                .place(relx=0.325,rely= y + 0.05)
+        
+        #Logo
+        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
+        
+        self.logo = self.logo.subsample(5,5)
+        
+        Label(self.frame, image=self.logo, background='lightblue')\
+            .place(relx=0.75,rely= y + 0.01,relwidth=0.12,relheight=0.15)
+        
+        #Botão voltar
+        Button(self.frame, text='Voltar ao menu',\
+            command= lambda: self.frame.destroy())\
+                .place(relx=0,rely= 0,relwidth=0.25,relheight=0.06)
+        
+    def contrato(self):
+        #Contrato
+        Label(self.frame, text='Contrato',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely=0.82)
+                
+        self.canvas = Canvas(self.frame, width=625, height=10,border=-5)
+        self.canvas.place(relx=0.17,rely=0.845)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
+
+        ###########Valor pagamento
+        self.valPag = StringVar()
+        self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
+            Formater.valor_formater(passed, *args) )
+        Label(self.frame, text='Val. Contrato.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.88)
+        
+        Entry(self.frame, textvariable = self.valPag, \
+            validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
+                .place(relx=0.06,rely=0.93,relwidth=0.1,relheight=0.05)
+                
+        self.referencias['valPag'] = self.valPag
+
+        ###########Data inicio
+        self.valDT_inic = StringVar()
+        self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
+            Formater.date_formater(passed, *args) )
+        Label(self.frame, text='Data início',\
+            background='lightblue', font=(10))\
+                .place(relx=0.182,rely=0.88)
+        
+        Entry(self.frame, textvariable = self.valDT_inic, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.08,relheight=0.05)
+        self.referencias['dtInic'] = self.valDT_inic
+
+        ###########Data Assinatura
+        self.valDT_ass = StringVar()
+        self.valDT_ass.trace_add('write', lambda *args, passed = self.valDT_ass:\
+            Formater.date_formater(passed, *args) )
+        Label(self.frame, text='Data Ass.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.3,rely=0.88)
+        
+        Entry(self.frame, textvariable = self.valDT_ass, \
+            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.08,relheight=0.05)
+        self.referencias['dtAss'] = self.valDT_ass
+
+        ###########Dia vencimento
+        Label(self.frame, text='Dia Venc.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.4,rely=0.88)
+        
+        Entry(self.frame,textvariable=self.referencias['dtVenc'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal() if len(text) < 3 else False), '%P')).place(relx=0.435,rely=0.93,relwidth=0.02,relheight=0.05)
+
+        ###########Num. Empregados
+        Label(self.frame, text='Num.Empre.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.5,rely=0.88)
+        Entry(self.frame,\
+            textvariable=self.referencias['numEmpre'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
+                .place(relx=0.535,rely=0.93,relwidth=0.05,relheight=0.05)
+        
+        #Botão enviar
+        self.btnEnviar = Button(self.frame, text='Gerar CPS',\
+            command= lambda: self.executar())
+        self.btnEnviar.place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
+    
 class Enterprise(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
