@@ -4,7 +4,7 @@ from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from abc import ABCMeta, abstractmethod
 from num2words import num2words
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, RichText
 from datetime import datetime
 import unicodedata
 import decimal
@@ -211,10 +211,6 @@ class Content:
         for key, func in ref.items():
             self.dictonary[key] = func
 
-        for keyDict in self.dictonary.keys():
-            if keyDict not in ref.keys():
-                self.dictonary[keyDict] = self.dictonary[keyDict].title()
-
         self.__set_enterprise()
         self.__update_repre(qnt_repre)
 
@@ -226,24 +222,44 @@ class Content:
             'CPB': 'Casado em Comunhão Parcial de Bens',
             'CUB': 'Casado em Comunhão Universal de Bens'
         }
-        
-        ref_var = ['nomeContra','rgContra','emissorContra']
 
-        for i in range(1, qnt_repre):
-            regime = self.referencias['estadoCivilContra' + i]
+        for i in range(1, qnt_repre + 1):
+            i = str(i)
+            ref = {
+                'nomeContra': RichText()\
+                    .add(self.dictonary['nomeContra' + i].upper(), bold = True),
+                'ruaContra': self.dictonary['ruaContra'+ i].title(), 
+                'bairroContra':self.dictonary['bairroContra'+ i].title(),
+                'cpfContra' : RichText()\
+                    .add(self.dictonary['cpfContra'+ i].upper(), bold = True),
+                'compleContra': self.dictonary['compleContra'+ i].title()
+            }
+
+            regime = self.dictonary['estadoCivilContra' + i]
             if regime in ref_estado:
-                self.referencias['estadoCivilContra' + i] = ref_estado[regime]
+                self.dictonary['estadoCivilContra' + i] = ref_estado[regime]
 
-            for j in ref_var:
-                self.referencias[j + i] = self.referencias[j + i].upper(),
+            for index, value in ref.items():
+                self.dictonary[index + i] = value
+                print(f'{index + i} - {value}')
+
 
     def __set_enterprise(self):
         if 'nomeEmp' in self.dictonary:
-            self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].upper()
 
-            if "LTDA" in self.dictonary['nomeEmp']:
-                self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
+            ref = {
+                'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
+                'ruaEmp': self.dictonary['ruaEmp'].title(), 
+                'bairroEmp':self.dictonary['bairroEmp'].title(),
+                'cnpjEmp' : RichText(self.dictonary['cnpjEmp'].upper(), bold = True),
+                'compleEmp': self.dictonary['bairroEmp'].title()
+            }
 
+            for index, value in ref.items():
+                self.dictonary[index] = value
+
+            # if "LTDA" in self.dictonary['nomeEmp']:
+            #     self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
 
     def __set_valor(self):
         valor = self.dictonary['valPag'].replace(',','.')
@@ -266,7 +282,13 @@ class Content:
     
 
 class ISociavel:
+    def alter_estado(self, event):
+        if event.keysym == 'Down' or event.keysym == 'Up':
+            self.popup.focus()
+            keyboard.send('space')
+
     def base_repre(self, id):
+        self.frame_ativo.bind('<KeyRelease>', self.alter_estado)
     ###########nome
         Label(self.frame_ativo, text='Nome',\
             background='lightblue', font=(10))\
@@ -544,9 +566,9 @@ class Representante (ISociavel):
 
         self.num_repres = IntVar(value=1)
 
-        self.popup = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
+        self.popup_repre = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
 
-        self.popup.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
+        self.popup_repre.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
@@ -622,7 +644,6 @@ class Pages:
     def __init__(self, titulo):
         self.frame = Frame(window, bd=4, bg='lightblue')
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-        window.bind('<KeyRelease>', self.alter_estado)
 
         #TODO Referencias
         self.referencias = {
@@ -636,11 +657,6 @@ class Pages:
         self.titulo = titulo
         self.file = File(titulo)
         self.repre = Representante(frame = self.frame, ref=self.referencias)
-
-    def alter_estado(self, event):
-        if event.keysym == 'Down' or event.keysym == 'Up':
-            self.popup.focus()
-            keyboard.send('space')
 
     def executar(self):
         # try:
