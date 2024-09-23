@@ -195,7 +195,7 @@ class Content:
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
 
-    def update_dict(self):
+    def update_dict(self, qnt_repre):
 
         ref = {
             'valPag': self.__set_valor(),
@@ -204,7 +204,6 @@ class Content:
             'dataComple': lambda: self.dictonary['dtInic'].get()[2:],
             'dtAss': self.__set_data(self.dictonary['dtAss']),
             'dtInic': self.__set_data(self.dictonary['dtInic']),
-            # 'nomeEmp': self.dictonary['nomeEmp'].upper(),
         }
 
         self.dictonary['valPorc'] = self.__calc_porc()
@@ -216,9 +215,35 @@ class Content:
             if keyDict not in ref.keys():
                 self.dictonary[keyDict] = self.dictonary[keyDict].title()
 
-        # self.dictonary['nomeEmp'] = self.__valid_nome_emp()
+        self.__set_enterprise()
+        self.__update_repre(qnt_repre)
 
         return self.dictonary
+    
+    def __update_repre(self, qnt_repre):
+        ref_estado = {
+            'STB': 'Casado em Separação Total de Bens',
+            'CPB': 'Casado em Comunhão Parcial de Bens',
+            'CUB': 'Casado em Comunhão Universal de Bens'
+        }
+        
+        ref_var = ['nomeContra','rgContra','emissorContra']
+
+        for i in range(1, qnt_repre):
+            regime = self.referencias['estadoCivilContra' + i]
+            if regime in ref_estado:
+                self.referencias['estadoCivilContra' + i] = ref_estado[regime]
+
+            for j in ref_var:
+                self.referencias[j + i] = self.referencias[j + i].upper(),
+
+    def __set_enterprise(self):
+        if 'nomeEmp' in self.dictonary:
+            self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].upper()
+
+            if "LTDA" in self.dictonary['nomeEmp']:
+                self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
+
 
     def __set_valor(self):
         valor = self.dictonary['valPag'].replace(',','.')
@@ -239,9 +264,6 @@ class Content:
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
-    def __valid_nome_emp(self):
-        if "LMTDA" in self.dictonary['nomeEmp'].upper():
-            self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('lmtda','LMTDA.')
 
 class ISociavel:
     def base_repre(self, id):
@@ -500,22 +522,8 @@ class Representante (ISociavel):
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
-    def update_dict(self):
-        ref_estado = {
-            'STB': 'Casado em Separação Total de Bens',
-            'CPB': 'Casado em Comunhão Parcial de Bens',
-            'CUB': 'Casado em Comunhão Universal de Bens'
-        }
-        
-        ref_var = ['nomeContra','rgContra','emissorContra']
-
-        for i in range(1, self.qnt):
-            regime = self.referencias['estadoCivilContra' + i]
-            if regime in ref_estado:
-                self.referencias['estadoCivilContra' + i] = ref_estado[regime]
-
-            for j in ref_var:
-                self.referencias[j + i] = self.referencias[j + i].upper(),
+    def get_qnt(self):
+        return self.qnt
 
     def titulo_divisor(self, y = 0):
         #TODO repre
@@ -581,9 +589,9 @@ class Representante (ISociavel):
         self.base_repre('1')
 
     def layout2(self):
-        Button(self.frame_ativo, text= 'oi1', command= lambda: Social(self.frame_ativo, self.referencias, 1)).place(relx=0.325,rely=0.35)
+        Button(self.frame_ativo, text= 'Representante 1', command= lambda: Social(self.frame_ativo, self.referencias, '1')).place(relx=0.325,rely=0.35)
 
-        Button(self.frame_ativo, text= 'oi2', command= lambda: Social(self.frame_ativo, self.referencias, 2)).place(relx=0.625,rely=0.35)
+        Button(self.frame_ativo, text= 'Representante 2', command= lambda: Social(self.frame_ativo, self.referencias, '2')).place(relx=0.625,rely=0.35)
 
     def conteudo_base(self):
         ref = {}
@@ -641,8 +649,7 @@ class Pages:
             
             conteudo_base = self.repre.conteudo_base()
 
-            self.repre.update_dict()
-            conteudo_updt = Content(self.referencias).update_dict()
+            conteudo_updt = Content(self.referencias).update_dict(self.repre.get_qnt())
 
             self.file.salvar()
             self.file.alterar(conteudo_base, conteudo_updt)
