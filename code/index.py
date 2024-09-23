@@ -261,7 +261,7 @@ class Content:
             raise Exception('Valor indisponível')
 
 class ISociavel:
-    def base_socio(self, id):
+    def base_repre(self, id):
     ###########nome
         Label(self.frame_ativo, text='Nome',\
             background='lightblue', font=(10))\
@@ -507,18 +507,45 @@ class Social (Janela, ISociavel):
         self.janela.geometry('880x190')
         self.janela.title(f'Entrada Sócio {id}')
 
-        self.base_socio(id)
+        self.base_repre(id)
 
-#Socios
-class Socios (ISociavel):
+#Representante
+class Representante (ISociavel):
     def __init__(self, frame, ref):
         self.frame_mae = frame
         self.qnt = 1
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
-    def cabecalho_mae(self, y = 0):
-        #TODO Socio
+    def conteudo_base(self):
+        ref = {
+            'cabecalho' : '',
+            'assinatura' : ''
+        }
+
+        conteudo = {
+            1: [
+                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                '''],
+
+            2: [
+                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                ''']
+        }
+
+        ref['cabecalho'] = conteudo[self.qnt][0]
+        ref['assinatura'] = conteudo[self.qnt][1]
+
+        return ref
+
+    def titulo_divisor(self, y = 0):
+        #TODO repre
         Label(self.frame_mae, text='Sócio',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely= y + 0.42)
@@ -534,9 +561,9 @@ class Socios (ISociavel):
             background='lightblue', font=('Arial',12,'bold italic'))\
                 .place(relx=0.52,rely= y + 0.42)
 
-        self.num_socios = IntVar(value=1)
+        self.num_repres = IntVar(value=1)
 
-        self.popup = ttk.OptionMenu(self.frame_mae, self.num_socios,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_socios.get()))
+        self.popup = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
 
         self.popup.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
 
@@ -555,7 +582,7 @@ class Socios (ISociavel):
             self.layout2()
 
     def layout1(self):
-        self.base_socio(1)
+        self.base_repre(1)
 
     def layout2(self):
         Button(self.frame_ativo, text= 'oi1', command= lambda: Social(self.frame_ativo, self.referencias, 1)).place(relx=0.325,rely=0.35)
@@ -629,7 +656,6 @@ class Pages:
                 return True
         return False
                 
-
 class Enterprise(Pages):
     def __init__(self, titulo):
         super().__init__(titulo)
@@ -876,7 +902,7 @@ class Pages:
         self.referencias['valNacionalidade'].set('brasileiro(a)')
         self.referencias['valEmprego'].set('empresário(a)')
 
-        self.socio = Socios(frame = self.frame, ref=self.referencias)
+        self.repre = Representante(frame = self.frame, ref=self.referencias)
 
         self.titulo = titulo
         self.file = File(titulo)
@@ -1130,8 +1156,8 @@ class Enterprise(Pages):
             textvariable=self.referencias['compleEmp'])\
                 .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
 
-        self.socio.cabecalho_mae()
-        self.socio.exibir()
+        self.repre.titulo_divisor()
+        self.repre.exibir()
 
         self.contrato()
 
@@ -1172,8 +1198,8 @@ class Person(Pages):
     
     def index(self):
         self.cabecalho(0.08)
-        self.socio.cabecalho_mae()
-        self.socio.exibir()
+        self.repre.titulo_divisor()
+        self.repre.exibir()
         self.contrato()
 
 #Aplicação
