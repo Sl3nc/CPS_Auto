@@ -32,8 +32,8 @@ window = Tk()
 window.bind('<Key>', enter_press)
 
 
-class Formater: #TODO Formaters
-    def cpf_formater(text, var, index, mode):
+class IFormater: #TODO Formaters
+    def cpf_formater(self, text, var, index, mode):
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 11:
@@ -42,7 +42,7 @@ class Formater: #TODO Formaters
             valor = valor.replace('.','').replace('-','')
         text.set(valor)
 
-    def cnpj_formater(text, var, index, mode): 
+    def cnpj_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 14:
@@ -52,7 +52,7 @@ class Formater: #TODO Formaters
         text.set(valor)
     
 
-    def cep_formater(text, var, index, mode): 
+    def cep_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 8 and '-' not in valor:
@@ -61,7 +61,7 @@ class Formater: #TODO Formaters
             valor = valor.replace('-','')
         text.set(valor)
 
-    def rg_formater(text, var, index, mode): 
+    def rg_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 10:
@@ -70,7 +70,7 @@ class Formater: #TODO Formaters
             valor = valor.replace('.','').replace('-','').replace(' ','')
         text.set(valor)
     
-    def date_formater(text, var, index, mode): 
+    def date_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 8:
@@ -79,7 +79,7 @@ class Formater: #TODO Formaters
             valor = valor.replace('/','')
         text.set(valor)
 
-    def comp_formater(text, var, index, mode): 
+    def comp_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if len(valor) == 6 and '/' not in valor:
@@ -88,7 +88,7 @@ class Formater: #TODO Formaters
             valor = valor.replace('/','')
         text.set(valor)
 
-    def valor_formater(text, var, index, mode): 
+    def valor_formater(self, text, var, index, mode): 
         #Só recebe valor que passa pelo validador
         valor = text.get()
         if ',' not in valor:
@@ -96,21 +96,21 @@ class Formater: #TODO Formaters
         
         text.set(valor)      
 
-class Validator:    #TODO Validators
-    def str_validator(text):
+class IValidator:    #TODO Validators
+    def str_validator(self, text):
         return not text.isdecimal()
     
-    def num_validator(text):
+    def num_validator(self, text):
         return text.isdecimal()
     
-    def valor_validator(text):
+    def valor_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) == 0:
             return True
         return re.match(padrao, text) is not None
 
     
-    def cpf_validator(text):
+    def cpf_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 15:
             if len(text) >= 12:
@@ -119,7 +119,7 @@ class Validator:    #TODO Validators
                 return True
         return False
         
-    def cnpj_validator(text):
+    def cnpj_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 19:
             if len(text) >= 15:
@@ -128,7 +128,7 @@ class Validator:    #TODO Validators
                 return True
         return False
     
-    def cep_validator(text):
+    def cep_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 10:
             if len(text) >= 9:
@@ -137,12 +137,12 @@ class Validator:    #TODO Validators
                 return True
         return False
     
-    def rg_validator(text):
+    def rg_validator(self, text):
         if len(text) < 14:
             return True
         return False
     
-    def date_validator(text):
+    def date_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 11:
             if len(text) >= 9:
@@ -151,7 +151,7 @@ class Validator:    #TODO Validators
                 return True
         return False
     
-    def comp_validator(text):
+    def comp_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 8:
             if len(text) >= 7:
@@ -281,7 +281,7 @@ class Content:
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
 
-class ISociavel:
+class ISociavel (IValidator, IFormater):
     def alter_estado(self, event):
         if event.keysym == 'Down' or event.keysym == 'Up':
             self.popup.focus()
@@ -304,7 +304,7 @@ class ISociavel:
         self.valRG = StringVar()
 
         self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
-            Formater.rg_formater(passed, *args) )
+            self.rg_formater(passed, *args) )
 
         Label(self.frame_ativo, text='RG',\
             background='lightblue', font=(10))\
@@ -312,7 +312,7 @@ class ISociavel:
         
 
         Entry(self.frame_ativo, textvariable = self.valRG, \
-            validate ='key', validatecommand =(self.frame_ativo.register(Validator.rg_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame_ativo.register(self.rg_validator), '%P'))\
                 .place(relx=0.33,rely=0.15,relwidth=0.1,relheight=0.15)
 
         self.referencias['rgContra' + id] = self.valRG
@@ -333,7 +333,7 @@ class ISociavel:
         self.valCPF = StringVar()
 
         self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
-            Formater.cpf_formater(passed, *args) )
+            self.cpf_formater(passed, *args) )
 
         Label(self.frame_ativo, text='CPF',\
             background='lightblue', font=(10))\
@@ -341,7 +341,7 @@ class ISociavel:
         
 
         Entry(self.frame_ativo, textvariable = self.valCPF, \
-            validate ='key', validatecommand =(self.frame_ativo.register(Validator.cpf_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame_ativo.register(self.cpf_validator), '%P'))\
                 .place(relx=0.52,rely=0.15,relwidth=0.105,relheight=0.15)
 
         self.referencias['cpfContra' + id] = self.valCPF
@@ -398,7 +398,7 @@ class ISociavel:
         self.valCEP_Contra = StringVar()
 
         self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
-            Formater.cep_formater(passed, *args) )
+            self.cep_formater(passed, *args) )
 
         Label(self.frame_ativo, text='CEP',\
             background='lightblue', font=(10))\
@@ -406,7 +406,7 @@ class ISociavel:
         
 
         Entry(self.frame_ativo, textvariable = self.valCEP_Contra, \
-            validate ='key', validatecommand =(self.frame_ativo.register(Validator.cep_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame_ativo.register(self.cep_validator), '%P'))\
                 .place(relx=0.65,rely=0.5,relwidth=0.075,relheight=0.15)
 
         self.referencias['cepContra' + id] = self.valCEP_Contra
@@ -640,7 +640,7 @@ class Representante (ISociavel):
 
 #Páginas
 
-class Pages:
+class Pages (IValidator, IFormater):
     def __init__(self, titulo):
         self.frame = Frame(window, bd=4, bg='lightblue')
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
@@ -721,13 +721,13 @@ class Pages:
         ###########Valor pagamento
         self.valPag = StringVar()
         self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
-            Formater.valor_formater(passed, *args) )
+            self.valor_formater(passed, *args) )
         Label(self.frame, text='Val. Contrato.',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
         
         Entry(self.frame, textvariable = self.valPag, \
-            validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame.register(self.valor_validator), '%P'))\
                 .place(relx=0.06,rely=0.93,relwidth=0.1,relheight=0.05)
                 
         self.referencias['valPag'] = self.valPag
@@ -735,25 +735,25 @@ class Pages:
         ###########Data inicio
         self.valDT_inic = StringVar()
         self.valDT_inic.trace_add('write', lambda *args, passed = self.valDT_inic:\
-            Formater.date_formater(passed, *args) )
+            self.date_formater(passed, *args) )
         Label(self.frame, text='Data início',\
             background='lightblue', font=(10))\
                 .place(relx=0.182,rely=0.88)
         
         Entry(self.frame, textvariable = self.valDT_inic, \
-            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.08,relheight=0.05)
+            validate ='key', validatecommand =(self.frame.register(self.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.08,relheight=0.05)
         self.referencias['dtInic'] = self.valDT_inic
 
         ###########Data Assinatura
         self.valDT_ass = StringVar()
         self.valDT_ass.trace_add('write', lambda *args, passed = self.valDT_ass:\
-            Formater.date_formater(passed, *args) )
+            self.date_formater(passed, *args) )
         Label(self.frame, text='Data Ass.',\
             background='lightblue', font=(10))\
                 .place(relx=0.3,rely=0.88)
         
         Entry(self.frame, textvariable = self.valDT_ass, \
-            validate ='key', validatecommand =(self.frame.register(Validator.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.08,relheight=0.05)
+            validate ='key', validatecommand =(self.frame.register(self.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.08,relheight=0.05)
         self.referencias['dtAss'] = self.valDT_ass
 
         ###########Dia vencimento
@@ -847,7 +847,7 @@ class Enterprise(Pages):
         self.valCEP_Empre = StringVar()
 
         self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
-            Formater.cep_formater(passed, *args) )
+            self.cep_formater(passed, *args) )
 
         Label(self.frame, text='CEP',\
             background='lightblue', font=(10))\
@@ -855,7 +855,7 @@ class Enterprise(Pages):
         
 
         self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.frame.register(Validator.cep_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame.register(self.cep_validator), '%P'))\
                 .place(relx=0.05,rely=0.36,relwidth=0.075,relheight=0.05)
 
         self.referencias['cepEmp'] = self.valCEP_Empre
@@ -865,7 +865,7 @@ class Enterprise(Pages):
         self.valCNPJ = StringVar()
 
         self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
-            Formater.cnpj_formater(passed, *args) )
+            self.cnpj_formater(passed, *args) )
 
         Label(self.frame, text='CNPJ',\
             background='lightblue', font=(10))\
@@ -873,7 +873,7 @@ class Enterprise(Pages):
         
 
         Entry(self.frame, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.frame.register(Validator.cnpj_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame.register(self.cnpj_validator), '%P'))\
                 .place(relx=0.35,rely=0.36,relwidth=0.135,relheight=0.05)
 
         self.referencias['cnpjEmp'] = self.valCNPJ
@@ -909,14 +909,14 @@ class LucroPresumido(Enterprise):
         self.valCompe = StringVar()
 
         self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
-            Formater.valor_formater(passed, *args) )
+            self.valor_formater(passed, *args) )
 
         Label(self.frame, text='Val. EFD-Compe.',\
             background='lightblue', font=(10))\
                 .place(relx=0.62,rely=0.88)
         
         Entry(self.frame, textvariable = self.valCompe, \
-            validate ='key', validatecommand =(self.frame.register(Validator.valor_validator), '%P'))\
+            validate ='key', validatecommand =(self.frame.register(self.valor_validator), '%P'))\
                 .place(relx=0.65,rely=0.93,relwidth=0.1,relheight=0.05)
                 
         self.referencias['valCompe'] = self.valCompe
