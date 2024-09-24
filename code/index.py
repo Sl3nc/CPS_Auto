@@ -166,26 +166,25 @@ class File:
     def __init__(self, nome):
         self.arquivo = DocxTemplate(resource_path(f'CPS\'s\\CPS {unicodedata.normalize('NFKD', nome.upper()).encode('ascii', 'ignore').decode('ascii')}.docx'))
 
-    def alterar(self, conteudo_base, conteudo_updt):  
-        for conteudo in [conteudo_base, conteudo_updt]:
-            if conteudo == conteudo_updt:
-                self.arquivo = DocxTemplate(self.caminho+'.docx')
-            self.arquivo.render(conteudo)
-            self.arquivo.save(self.caminho+'.docx')
+    def alterar(self, base, updt):  
+        self.arquivo.render(base)
+        self.arquivo.save(self.caminho)
+        self.arquivo = DocxTemplate(self.caminho)
+        self.arquivo.render(updt)
+        self.arquivo.save(self.caminho)
 
     def salvar(self):
         self.caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
-        ultima_barra = self.caminho.rfind('/')
-         
-        if self.caminho[ultima_barra+1:] == '':
+        if self.caminho[self.caminho.rfind('/') + 1:] == '':
             raise Exception('Operação Cancelada')
+        
+        self.caminho = self.caminho + '.docx'
         
     
     def abrir(self):
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
-
-        os.startfile(self.caminho+'.docx')
+        os.startfile(self.caminho)
 
 #Conteudo
 class Content:
@@ -226,12 +225,10 @@ class Content:
         for i in range(1, qnt_repre + 1):
             i = str(i)
             ref = {
-                'nomeContra': RichText()\
-                    .add(self.dictonary['nomeContra' + i].upper(), bold = True),
+                'nomeContra': RichText(self.dictonary['nomeContra' + i].upper(), bold = True),
                 'ruaContra': self.dictonary['ruaContra'+ i].title(), 
                 'bairroContra':self.dictonary['bairroContra'+ i].title(),
-                'cpfContra' : RichText()\
-                    .add(self.dictonary['cpfContra'+ i].upper(), bold = True),
+                'cpfContra' : RichText(self.dictonary['cpfContra'+ i].upper(), bold = True),
                 'compleContra': self.dictonary['compleContra'+ i].title()
             }
 
@@ -620,16 +617,16 @@ class Representante (ISociavel):
 
         conteudo = {
             1: [
-                '{{ nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
+                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
 
                 '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                 '''],
             2: [
-                '{{ nomeContra }}, brasileiro(a), empresário(a), {{ estadoCivilContra }}, residente e domiciliado(a) na rua {{ ruaContra }}, nº {{ numContra }}, {{ compleContra }} bairro {{ bairroContra }} , CEP {{ cepContra }}, {{ cidadeContra }}, {{ estadoContra }}, portador(a) do documento de identidade sob o nº {{ rgContra }} {{ emissorContra }}, CPF {{ cpfContra }}, denominado(a) daqui por diante de Contratante;',
+                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{ cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
                 '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra }}
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra1 }}
                 ''']
         }
 
@@ -659,6 +656,7 @@ class Pages (IValidator, IFormater):
         self.repre = Representante(frame = self.frame, ref=self.referencias)
 
     def executar(self):
+            #TODO EXECUTAR
         # try:
             # if self.__input_vazio():
             #     raise Exception ('Existem entradas vazias, favor preencher todas')
