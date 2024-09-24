@@ -238,8 +238,6 @@ class Content:
 
             for index, value in ref.items():
                 self.dictonary[index + i] = value
-                print(f'{index + i} - {value}')
-
 
     def __set_enterprise(self):
         if 'nomeEmp' in self.dictonary:
@@ -547,6 +545,38 @@ class Representante (ISociavel):
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
+        self.conteudo = {
+            1: [
+                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                '''],
+            2: [
+                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                ''']
+        }
+
+        self.itens_dict = [
+            'nomeContra',
+            'rgContra',  
+            'emissorContra', 
+            'cpfContra', 
+            'estadoCivilContra',
+            'valNacionalidade', 
+            'valEmprego',
+            'ruaContra', 
+            'numContra', 
+            'bairroContra',  
+            'cepContra',  
+            'cidadeContra', 
+            'estadoContra', 
+            'compleContra'
+            ]
+
     def get_qnt(self):
         return self.qnt
 
@@ -588,76 +618,23 @@ class Representante (ISociavel):
             self.layout2()
 
     def layout1(self):
-        att_repre = [
-            'nomeContra1',
-            'rgContra1',  
-            'emissorContra1', 
-            'cpfContra1', 
-            'estadoCivilContra1',
-            'valNacionalidade1', 
-            'valEmprego1',
-            'ruaContra1', 
-            'numContra1', 
-            'bairroContra1',  
-            'cepContra1',  
-            'cidadeContra1', 
-            'estadoContra1', 
-            'compleContra1'
-            ]
-
-        for i in att_repre:
-            self.referencias[i] = StringVar()
-
-        self.referencias['valNacionalidade1'].set('brasileiro(a)')
-        self.referencias['valEmprego1'].set('empresário(a)')
+        for i in self.itens_dict:
+            self.referencias[i + '1'] = StringVar(self.referencias[i + '1'])
 
         self.base_repre('1')
 
     def layout2(self):
-        att_repre = [
-            'nomeContra2',
-            'rgContra2',  
-            'emissorContra2', 
-            'cpfContra2', 
-            'estadoCivilContra2',
-            'valNacionalidade2', 
-            'valEmprego2',
-            'ruaContra2', 
-            'numContra2', 
-            'bairroContra2',  
-            'cepContra2',  
-            'cidadeContra2', 
-            'estadoContra2', 
-            'compleContra2'
-            ]
+        for i in self.itens_dict:
+            self.referencias[i + '2'] = StringVar(self.referencias[i + '2'])
 
-        for i in att_repre:
-            self.referencias[i] = StringVar()
-            
         Button(self.frame_ativo, text= 'Representante 1', command= lambda: Social(self.frame_ativo, self.referencias, '1')).place(relx=0.325,rely=0.35)
 
         Button(self.frame_ativo, text= 'Representante 2', command= lambda: Social(self.frame_ativo, self.referencias, '2')).place(relx=0.625,rely=0.35)
 
     def conteudo_base(self):
         ref = {}
-
-        conteudo = {
-            1: [
-                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                '''],
-            2: [
-                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{ cpfContra2 }} denominados(a) daqui por diante de Contratante;',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{ nomeContra1 }}
-                ''']
-        }
-
-        ref['cabecalho'] = conteudo[self.qnt][0]
-        ref['assinatura'] = conteudo[self.qnt][1]
+        ref['cabecalho'] = self.conteudo[self.qnt][0]
+        ref['assinatura'] = self.conteudo[self.qnt][1]
 
         return ref
 
