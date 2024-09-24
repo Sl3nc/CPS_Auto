@@ -467,9 +467,9 @@ class ISociavel (IValidator, IFormater):
             background='lightblue', font=(10))\
                 .place(relx=0.65,rely=0.7)
 
-        Entry(self.frame_ativo,\
-            textvariable=self.referencias['compleContra' + id])\
-                .place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
+        self.compleEntry = Entry(self.frame_ativo,\
+            textvariable=self.referencias['compleContra' + id])
+        self.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
 
 
 class Janela():
@@ -532,6 +532,12 @@ class Social (Janela, ISociavel):
         self.janela.title(f'Entrada Sócio {id}')
 
         self.base_repre(id)
+
+        self.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.225,relheight=0.15)
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.9,rely=0.75,relwidth=0.1,relheight=0.25)
 
 #Representante
 class Representante (ISociavel):
@@ -608,6 +614,26 @@ class Representante (ISociavel):
         self.base_repre('1')
 
     def layout2(self):
+        att_repre = [
+            'nomeContra2',
+            'rgContra2',  
+            'emissorContra2', 
+            'cpfContra2', 
+            'estadoCivilContra2',
+            'valNacionalidade2', 
+            'valEmprego2',
+            'ruaContra2', 
+            'numContra2', 
+            'bairroContra2',  
+            'cepContra2',  
+            'cidadeContra2', 
+            'estadoContra2', 
+            'compleContra2'
+            ]
+
+        for i in att_repre:
+            self.referencias[i] = StringVar()
+            
         Button(self.frame_ativo, text= 'Representante 1', command= lambda: Social(self.frame_ativo, self.referencias, '1')).place(relx=0.325,rely=0.35)
 
         Button(self.frame_ativo, text= 'Representante 2', command= lambda: Social(self.frame_ativo, self.referencias, '2')).place(relx=0.625,rely=0.35)
