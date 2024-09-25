@@ -522,21 +522,29 @@ class Opcionais(Janela):
                 .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
         
 class Social (Janela, ISociavel):
-    def __init__(self, frame, ref, id):
+    def __init__(self, frame, ref, id, obj):
         super().__init__(frame, ref)
 
         self.frame_ativo = self.janela_frame
         self.janela.geometry('880x190')
         self.janela.title(f'Entrada Sócio {id}')
+        self.janela.protocol("WM_DELETE_WINDOW", self.disable_event)
 
         self.base_repre(id)
 
         self.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.225,relheight=0.15)
 
         Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
+            command= lambda: self.fechar_janela(obj))\
                 .place(relx=0.9,rely=0.75,relwidth=0.1,relheight=0.25)
+        
+    def fechar_janela(self, obj):
+        self.janela.destroy()
+        obj.exibir()
 
+    def disable_event(self):
+        pass
+        
 #Representante
 class Representante (ISociavel):
     def __init__(self, frame, ref):
@@ -576,7 +584,11 @@ class Representante (ISociavel):
             'estadoContra', 
             'compleContra'
             ]
-
+        
+        for index in range(1, 3):
+            for i in self.itens_dict:
+                self.referencias[i + str(index)] = StringVar()
+        
     def get_qnt(self):
         return self.qnt
 
@@ -618,19 +630,35 @@ class Representante (ISociavel):
             self.layout2()
 
     def layout1(self):
-        for i in self.itens_dict:
-            self.referencias[i + '1'] = StringVar(self.referencias[i + '1'])
-
         self.base_repre('1')
 
     def layout2(self):
-        for i in self.itens_dict:
-            self.referencias[i + '2'] = StringVar(self.referencias[i + '2'])
+        #Botão 1
+        Button(self.frame_ativo, text= 'Representante 1', font=('Times',20,'bold'), command= lambda : Social(self.frame_ativo, self.referencias, '1', self)).place(relx=0,rely=0, relwidth=0.5,relheight=0.4)
 
-        Button(self.frame_ativo, text= 'Representante 1', command= lambda: Social(self.frame_ativo, self.referencias, '1')).place(relx=0.325,rely=0.35)
+        ###Nome
+        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.45)
 
-        Button(self.frame_ativo, text= 'Representante 2', command= lambda: Social(self.frame_ativo, self.referencias, '2')).place(relx=0.625,rely=0.35)
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.1,rely=0.45)
 
+        ###CPF
+        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.75)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.08,rely=0.75)
+
+        #Botão 2
+        Button(self.frame_ativo, text= 'Representante 2', font=('Times',20,'bold'), command= lambda: Social(self.frame_ativo, self.referencias, '2', self)).place(relx=0.5,rely=0, relwidth=0.5,relheight=0.4)
+
+        ###Nome
+        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.45)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.6,rely=0.45)
+
+        ###CPF
+        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.75)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.58,rely=0.75)
+    
     def conteudo_base(self):
         ref = {}
         ref['cabecalho'] = self.conteudo[self.qnt][0]
