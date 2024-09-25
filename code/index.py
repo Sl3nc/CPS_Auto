@@ -553,13 +553,16 @@ class Representante (ISociavel):
         self.referencias = ref
         self.opcoes_disp = (1,2)
 
+        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
+
         self.conteudo = {
             1: [
-                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, denominado(a) daqui por diante de Contratante;',
+                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                '''],
+                '''
+                ],
             2: [
                 '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
@@ -661,7 +664,8 @@ class Representante (ISociavel):
     
     def conteudo_base(self):
         ref = {}
-        ref['cabecalho'] = self.conteudo[self.qnt][0]
+        ref['cabecalho_emp'] = self.cabecalho[0]
+        ref['honorarios'] = self.conteudo[self.qnt][0]
         ref['assinatura'] = self.conteudo[self.qnt][1]
 
         return ref
@@ -674,13 +678,10 @@ class Pages (IValidator, IFormater):
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         #TODO Referencias
-        self.referencias = {
-            "valPag" : StringVar(),
-            "dtInic" : StringVar(),
-            "dtAss" : StringVar(),
-            "dtVenc" : StringVar(),
-            "numEmpre" : StringVar()
-        }            
+        self.referencias = {}
+
+        for i in ['valPag', 'dtInic', 'dtAss', 'dtVenc','numEmpre']:
+            self.referencias[i] = StringVar()   
 
         self.titulo = titulo
         self.file = File(titulo)
@@ -688,7 +689,7 @@ class Pages (IValidator, IFormater):
 
     def executar(self):
             #TODO EXECUTAR
-        # try:
+        try:
             # if self.__input_vazio():
             #     raise Exception ('Existem entradas vazias, favor preencher todas')
             
@@ -700,12 +701,12 @@ class Pages (IValidator, IFormater):
             self.file.alterar(conteudo_base, conteudo_updt)
             self.file.abrir()
 
-        # except decimal.InvalidOperation:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        # except ValueError:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        # except Exception as e:
-        #     messagebox.showwarning(title='Aviso', message= e)
+        except decimal.InvalidOperation:
+            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        except ValueError:
+            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except Exception as e:
+            messagebox.showwarning(title='Aviso', message= e)
 
     def __input_vazio(self):
         for chave, valor in self.referencias.items():
