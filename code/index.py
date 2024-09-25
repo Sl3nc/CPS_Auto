@@ -927,8 +927,7 @@ class Enterprise(Pages):
 class LucroPresumido(Enterprise):
     def __init__(self, titulo):
         super().__init__(titulo)
-        self.referencias['valCompe'] = StringVar(value='R$ ')
-        self.referencias['dtCompe'] = StringVar()
+        self.referencias['valCompe'] = StringVar()
 
         self.index()
         self.add_competencia()
