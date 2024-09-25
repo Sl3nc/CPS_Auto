@@ -296,7 +296,7 @@ class ISociavel (IValidator, IFormater):
         
          ###########RG
         
-        self.valRG = StringVar()
+        self.valRG = StringVar(value= self.referencias['rgContra' + id].get())
 
         self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
             self.rg_formater(passed, *args) )
@@ -325,7 +325,7 @@ class ISociavel (IValidator, IFormater):
 
         ###########CPF
         
-        self.valCPF = StringVar()
+        self.valCPF = StringVar(value= self.referencias['cpfContra' + id].get())
 
         self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
             self.cpf_formater(passed, *args) )
@@ -352,7 +352,7 @@ class ISociavel (IValidator, IFormater):
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
             command= lambda:\
-                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
+                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valEmprego' + id].set('empresário(a)'))\
                     .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
 
         ###########rua
@@ -390,7 +390,7 @@ class ISociavel (IValidator, IFormater):
         
         ###########CEP 
         
-        self.valCEP_Contra = StringVar()
+        self.valCEP_Contra = StringVar(value= self.referencias['cepContra' + id].get())
 
         self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
             self.cep_formater(passed, *args) )
@@ -412,7 +412,7 @@ class ISociavel (IValidator, IFormater):
             background='lightblue', font=(10))\
                 .place(relx=0.8,rely=0.35)
 
-        self.estadoEntry = StringVar(self.frame_ativo)
+        self.estadoEntry = StringVar(value= self.referencias['estadoCivilContra' + id].get())
 
         self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
 
