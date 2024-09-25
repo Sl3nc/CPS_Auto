@@ -597,7 +597,7 @@ class Representante (ISociavel):
 
     def titulo_divisor(self, y = 0):
         #TODO repre
-        Label(self.frame_mae, text='Sócio',\
+        Label(self.frame_mae, text='Representante',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely= y + 0.42)
                 
@@ -608,7 +608,7 @@ class Representante (ISociavel):
 
         ###########TODO Inp-Soc
         
-        Label(self.frame_mae, text='Quantidade de sócios:',\
+        Label(self.frame_mae, text='Quantidade:',\
             background='lightblue', font=('Arial',12,'bold italic'))\
                 .place(relx=0.52,rely= y + 0.42)
 
