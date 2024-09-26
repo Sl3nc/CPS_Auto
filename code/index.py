@@ -27,6 +27,11 @@ def resource_path(relative_path):
 def enter_press(event):
     if event.keysym == 'Return':
         keyboard.send('tab')
+
+def alter_estado(self, event):
+    if event.keysym == 'Down' or event.keysym == 'Up':
+        self.popup.focus()
+        keyboard.send('space')
         
 window = Tk()
 window.bind('<Key>', enter_press)
@@ -276,14 +281,185 @@ class Content:
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
 
-class ISociavel (IValidator, IFormater):
-    def alter_estado(self, event):
-        if event.keysym == 'Down' or event.keysym == 'Up':
-            self.popup.focus()
-            keyboard.send('space')
+class Janela():
+    def __init__(self, frame, ref):
+        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
 
-    def base_repre(self, id):
-        self.frame_ativo.bind('<KeyRelease>', self.alter_estado)
+        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
+        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        self.referencias = ref
+
+class Opcionais(Janela):
+    def __init__(self, frame, ref):
+        super().__init__(frame, ref)
+
+        self.janela.geometry('300x70')
+        self.janela.title('Complemento')
+        
+
+    def exibir(self, title):
+        #Titulo
+        Label(self.janela_frame, text= title,\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0,rely=0)
+                
+        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.55,rely=0.05)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+
+        ###########Valor Competência
+        valComp = StringVar()
+
+        self.entryVal = Entry(
+            self.janela_frame, 
+            textvariable = valComp,
+            validate='key', 
+            validatecommand=(
+                self.janela.register(lambda text: not text.isdecimal()), '%S'
+                )
+            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
+                
+        self.referencias[f'val{title}'] = valComp
+
+        Button(self.janela_frame, text='OK',\
+            command= lambda: self.janela.destroy())\
+                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+        
+class Layout():
+    def __init__(self) -> None:
+        pass
+
+    def  janela(self, obj, id, frame):
+        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
+        self.janela.resizable(False,False)
+        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        self.janela.transient(window)
+        self.janela.focus_force()
+        self.janela.grab_set()
+        self.janela.geometry('880x190')
+        self.janela.title(f'Entrada Sócio {id}')
+        self.janela.protocol("WM_DELETE_WINDOW", self.__disable_x)
+
+        obj.frame_ativo = Frame(self.janela, bd=4, bg='lightblue')
+        obj.frame_ativo.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        obj.base(id)
+
+        obj.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.225,relheight=0.15)
+
+        Button(obj.frame_ativo, text='OK',\
+            command= lambda: self.__fechar_janela(obj))\
+                .place(relx=0.9,rely=0.75,relwidth=0.1,relheight=0.25)
+        
+    def __fechar_janela(self, obj):
+        self.janela.destroy()
+        obj.exibir()
+
+    def __disable_x(self):
+        pass
+        
+#Representante
+class Representante (IValidator, IFormater):
+    def __init__(self, frame, ref):
+        self.frame_mae = frame
+        self.referencias = ref
+        self.qnt = 1
+        self.opcoes_disp = (1,2)
+
+        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
+
+        self.conteudo = {
+            1: [
+                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                '''
+                ],
+            2: [
+                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                ''']
+        }
+
+    def get_qnt(self):
+        return self.qnt
+
+    def titulo_divisor(self, y = 0):
+        #TODO repre
+        Label(self.frame_mae, text='Representante',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely= y + 0.42)
+                
+        self.canvas = Canvas(self.frame_mae, width=455, height=10,border=-5)
+        self.canvas.place(relx=0.23,rely= y + 0.455)
+                
+        self.canvas.create_line(-5,0,455,0, fill="darkblue", width=10)
+
+        ###########TODO Inp-Soc
+        
+        Label(self.frame_mae, text='Quantidade:',\
+            background='lightblue', font=('Arial',12,'bold italic'))\
+                .place(relx=0.6,rely= y + 0.42)
+
+        self.num_repres = IntVar(value=1)
+
+        self.popup_repre = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
+
+        self.popup_repre.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
+
+    def alterar_qnt(self, quantidade):
+        self.frame_ativo.destroy()
+        self.qnt = quantidade
+        self.exibir()
+
+    def exibir(self):
+        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='lightblue')
+        self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
+
+        if self.qnt == 1:
+            self.base('1')
+        elif self.qnt == 2:
+            self.__dois()
+
+    def __dois(self):
+        #Botão 1
+        Button(self.frame_ativo, text= 'Representante 1', font=('Times',20,'bold'), command= lambda : Layout().janela(self, '1', self.frame_ativo)).place(relx=0,rely=0, relwidth=0.5,relheight=0.4)
+
+        ###Nome
+        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.45)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.1,rely=0.45)
+
+        ###CPF
+        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.75)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.08,rely=0.75)
+
+        #Botão 2
+        Button(self.frame_ativo, text= 'Representante 2', font=('Times',20,'bold'), command= lambda: Layout().janela(self, '2', self.frame_ativo)).place(relx=0.5,rely=0, relwidth=0.5,relheight=0.4)
+
+        ###Nome
+        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.45)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.6,rely=0.45)
+
+        ###CPF
+        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.75)
+
+        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.58,rely=0.75)
+
+    def base(self, id):
+        self.frame_ativo.bind('<KeyRelease>', alter_estado)
     ###########nome
         Label(self.frame_ativo, text='Nome',\
             background='lightblue', font=(10))\
@@ -469,206 +645,12 @@ class ISociavel (IValidator, IFormater):
             textvariable=self.referencias['compleContra' + id])
         self.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.35,relheight=0.15)
 
-
-class Janela():
-    def __init__(self, frame, ref):
-        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-
-        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
-        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        self.referencias = ref
-
-class Opcionais(Janela):
-    def __init__(self, frame, ref):
-        super().__init__(frame, ref)
-
-        self.janela.geometry('300x70')
-        self.janela.title('Complemento')
-        
-
-    def exibir(self, title):
-        #Titulo
-        Label(self.janela_frame, text= title,\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0,rely=0)
-                
-        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.55,rely=0.05)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor Competência
-        valComp = StringVar()
-
-        self.entryVal = Entry(
-            self.janela_frame, 
-            textvariable = valComp,
-            validate='key', 
-            validatecommand=(
-                self.janela.register(lambda text: not text.isdecimal()), '%S'
-                )
-            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
-                
-        self.referencias[f'val{title}'] = valComp
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
-        
-class Social (Janela, ISociavel):
-    def __init__(self, frame, ref, id, obj):
-        super().__init__(frame, ref)
-
-        self.frame_ativo = self.janela_frame
-        self.janela.geometry('880x190')
-        self.janela.title(f'Entrada Sócio {id}')
-        self.janela.protocol("WM_DELETE_WINDOW", self.disable_event)
-
-        self.base_repre(id)
-
-        self.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.225,relheight=0.15)
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.fechar_janela(obj))\
-                .place(relx=0.9,rely=0.75,relwidth=0.1,relheight=0.25)
-        
-    def fechar_janela(self, obj):
-        self.janela.destroy()
-        obj.exibir()
-
-    def disable_event(self):
-        pass
-        
-#Representante
-class Representante (ISociavel):
-    def __init__(self, frame, ref):
-        self.frame_mae = frame
-        self.qnt = 1
-        self.referencias = ref
-        self.opcoes_disp = (1,2)
-
-        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
-
-        self.conteudo = {
-            1: [
-                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                '''
-                ],
-            2: [
-                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
-
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                ''']
-        }
-
-        self.itens_dict = [
-            'nomeContra',
-            'rgContra',  
-            'emissorContra', 
-            'cpfContra', 
-            'estadoCivilContra',
-            'valNacionalidade', 
-            'valEmprego',
-            'ruaContra', 
-            'numContra', 
-            'bairroContra',  
-            'cepContra',  
-            'cidadeContra', 
-            'estadoContra', 
-            'compleContra'
-            ]
-        
-        for index in range(1, 3):
-            for i in self.itens_dict:
-                self.referencias[i + str(index)] = StringVar()
-        
-    def get_qnt(self):
-        return self.qnt
-
-    def titulo_divisor(self, y = 0):
-        #TODO repre
-        Label(self.frame_mae, text='Representante',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely= y + 0.42)
-                
-        self.canvas = Canvas(self.frame_mae, width=455, height=10,border=-5)
-        self.canvas.place(relx=0.23,rely= y + 0.455)
-                
-        self.canvas.create_line(-5,0,455,0, fill="darkblue", width=10)
-
-        ###########TODO Inp-Soc
-        
-        Label(self.frame_mae, text='Quantidade:',\
-            background='lightblue', font=('Arial',12,'bold italic'))\
-                .place(relx=0.6,rely= y + 0.42)
-
-        self.num_repres = IntVar(value=1)
-
-        self.popup_repre = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
-
-        self.popup_repre.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
-
-    def alterar_qnt(self, quantidade):
-        self.frame_ativo.destroy()
-        self.qnt = quantidade
-        self.exibir()
-
-    def exibir(self):
-        self.frame_ativo = Frame(self.frame_mae, bd=4, bg='lightblue')
-        self.frame_ativo.place(relx=0.05,rely=0.48,relwidth=0.9,relheight=0.34)
-
-        if self.qnt == 1:
-            self.layout1()
-        elif self.qnt == 2:
-            self.layout2()
-
-    def layout1(self):
-        self.base_repre('1')
-
-    def layout2(self):
-        #Botão 1
-        Button(self.frame_ativo, text= 'Representante 1', font=('Times',20,'bold'), command= lambda : Social(self.frame_ativo, self.referencias, '1', self)).place(relx=0,rely=0, relwidth=0.5,relheight=0.4)
-
-        ###Nome
-        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.45)
-
-        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.1,rely=0.45)
-
-        ###CPF
-        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0,rely=0.75)
-
-        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra1'].get(), font=('Calibri', 12, 'italic')).place(relx=0.08,rely=0.75)
-
-        #Botão 2
-        Button(self.frame_ativo, text= 'Representante 2', font=('Times',20,'bold'), command= lambda: Social(self.frame_ativo, self.referencias, '2', self)).place(relx=0.5,rely=0, relwidth=0.5,relheight=0.4)
-
-        ###Nome
-        Label(self.frame_ativo, text= 'Nome:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.45)
-
-        Label(self.frame_ativo, background='lightblue', text= self.referencias['nomeContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.6,rely=0.45)
-
-        ###CPF
-        Label(self.frame_ativo, text= 'CPF:', font=('Arial', 15, 'bold italic')).place(relx=0.5,rely=0.75)
-
-        Label(self.frame_ativo, background='lightblue', text= self.referencias['cpfContra2'].get(), font=('Calibri', 12, 'italic')).place(relx=0.58,rely=0.75)
-    
     def conteudo_base(self):
-        ref = {}
-        ref['cabecalho_emp'] = self.cabecalho[0]
-        ref['honorarios'] = self.conteudo[self.qnt][0]
-        ref['assinatura'] = self.conteudo[self.qnt][1]
-
-        return ref
+        return {
+            'cabecalho_emp' : self.cabecalho[0],
+            'honorarios' : self.conteudo[self.qnt][0],
+            'assinatura' : self.conteudo[self.qnt][1]
+        }
 
 class IPages(metaclass=ABCMeta):
     @abstractmethod
@@ -834,6 +816,27 @@ class Form (IValidator, IFormater):
         
         for i in valores_ref:
             self.referencias[i] = StringVar()  
+
+        self.itens_dict = [
+            'nomeContra',
+            'rgContra',  
+            'emissorContra', 
+            'cpfContra', 
+            'estadoCivilContra',
+            'valNacionalidade', 
+            'valEmprego',
+            'ruaContra', 
+            'numContra', 
+            'bairroContra',  
+            'cepContra',  
+            'cidadeContra', 
+            'estadoContra', 
+            'compleContra'
+            ]
+        
+        for index in range(1, 3):
+            for i in self.itens_dict:
+                self.referencias[i + str(index)] = StringVar()
 
         self.titulo = titulo
         self.file = File(titulo)
