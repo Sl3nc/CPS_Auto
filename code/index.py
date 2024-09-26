@@ -288,12 +288,15 @@ class Opcionais:
         self.janela.transient(window)
         self.janela.focus_force()
         self.janela.grab_set()
+        self.janela.protocol("WM_DELETE_WINDOW", self.__disable_x)
 
         self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
         self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
         self.janela.geometry('300x70')
         self.janela.title('Complemento')
         
+    def __disable_x(self):
+        pass
 
     def exibir(self, title, ref):
         #Titulo
@@ -392,22 +395,22 @@ class Representante (IValidator, IFormater):
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely= y + 0.42)
                 
-        self.canvas = Canvas(self.frame_mae, width=455, height=10,border=-5)
+        self.canvas = Canvas(self.frame_mae, width=555, height=10,border=-5)
         self.canvas.place(relx=0.23,rely= y + 0.455)
                 
-        self.canvas.create_line(-5,0,455,0, fill="darkblue", width=10)
+        self.canvas.create_line(-5,0,555,0, fill="darkblue", width=10)
 
         ###########TODO Inp-Soc
         
         Label(self.frame_mae, text='Quantidade:',\
             background='lightblue', font=('Arial',12,'bold italic'))\
-                .place(relx=0.6,rely= y + 0.42)
+                .place(relx=0.7,rely= y + 0.42)
 
         self.num_repres = IntVar(value=1)
 
         self.popup_repre = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
 
-        self.popup_repre.place(relx=0.75,rely= y + 0.42,relwidth=0.2,relheight=0.06)
+        self.popup_repre.place(relx=0.85,rely= y + 0.42,relwidth=0.1,relheight=0.06)
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
@@ -471,12 +474,12 @@ class Representante (IValidator, IFormater):
 
         Label(self.frame_ativo, text='RG',\
             background='lightblue', font=(10))\
-                .place(relx=0.33,rely=0)
+                .place(relx=0.28,rely=0)
         
 
         Entry(self.frame_ativo, textvariable = self.valRG, \
             validate ='key', validatecommand =(self.frame_ativo.register(self.rg_validator), '%P'))\
-                .place(relx=0.33,rely=0.15,relwidth=0.1,relheight=0.15)
+                .place(relx=0.28,rely=0.15,relwidth=0.1,relheight=0.15)
 
         self.referencias['rgContra' + id] = self.valRG
         
@@ -484,12 +487,12 @@ class Representante (IValidator, IFormater):
 
         Label(self.frame_ativo, text='Org.',\
             background='lightblue', font=(10))\
-                .place(relx=0.45,rely=0)
+                .place(relx=0.4,rely=0)
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['emissorContra' + id],\
                 validate='key', validatecommand=(self.frame_ativo.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.45,rely=0.15,relwidth=0.05,relheight=0.15)
+                .place(relx=0.4,rely=0.15,relwidth=0.05,relheight=0.15)
 
         ###########CPF
         
@@ -500,12 +503,12 @@ class Representante (IValidator, IFormater):
 
         Label(self.frame_ativo, text='CPF',\
             background='lightblue', font=(10))\
-                .place(relx=0.53,rely=0)
+                .place(relx=0.47,rely=0)
         
 
         Entry(self.frame_ativo, textvariable = self.valCPF, \
             validate ='key', validatecommand =(self.frame_ativo.register(self.cpf_validator), '%P'))\
-                .place(relx=0.52,rely=0.15,relwidth=0.105,relheight=0.15)
+                .place(relx=0.47,rely=0.15,relwidth=0.13,relheight=0.15)
 
         self.referencias['cpfContra' + id] = self.valCPF
         
@@ -514,20 +517,45 @@ class Representante (IValidator, IFormater):
         ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
             command= lambda: \
                 Opcionais(self.frame_ativo).exibir('Nacionalidade', self.referencias) if nacio_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
-                    .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
+                    .place(relx=0.644,rely=0,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
             command= lambda:\
                 Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['valEmprego' + id].set('empresário(a)'))\
-                    .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
+                    .place(relx=0.637,rely=0.18,relwidth=0.175,relheight=0.15)
+
+        ###########Tipo
+        
+        Label(self.frame_ativo, text='Tipo',\
+            background='lightblue', font=(10))\
+                .place(relx=0.84,rely=0)
+
+        self.tipoRepreEntry = StringVar(value= self.referencias['tipoRepre' + id].get())
+
+        self.tipoRepreEntryOpt = ('Sócio', 'Administrador', 'Procurador')
+
+        self.popup = ttk.OptionMenu(self.frame_ativo, self.tipoRepreEntry,'', *self.tipoRepreEntryOpt)
+
+        self.menuCasado = self.popup['menu']
+
+        self.popup.place(relx=0.84,rely=0.15,relwidth=0.16,relheight=0.16)
+
+        self.referencias['tipoRepre' + id] = self.tipoRepreEntry
 
         ###########rua
+        
+        self.tipoRuaEntry = StringVar(value= self.referencias['tipoRua' + id].get())
 
-        Label(self.frame_ativo, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0,rely=0.35)
+        self.tipoRuaEntryOpt = ('Rua', 'Avenida', 'Logadouro')
+
+        self.popup = OptionMenu(self.frame_ativo, self.tipoRuaEntry,'', *self.tipoRuaEntryOpt)
+        self.popup.config(indicatoron = False, font=('Arial',10), justify='left')
+
+        self.popup.place(relx=0,rely=0.35,relwidth=0.1,relheight=0.16)
+
+        self.referencias['tipoRepre' + id] = self.tipoRuaEntry
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['ruaContra' + id],\
@@ -654,7 +682,7 @@ class IFisica(IPages):
         self.cabecalho(0.08)
         self.repre.titulo_divisor()
         self.repre.exibir()
-        self.contrato()
+        self.contrato(True)
 
 class IJuridica(IPages):
     def index(self):
@@ -803,13 +831,12 @@ class Form (IValidator, IFormater):
         self.referencias = {}
 
         valores_ref = [
-            'valPag', 'dtInic', 'dtAss', 'dtVenc','numEmpre','nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp','valCompe'
-            ]
+            'valPag', 'dtInic', 'dtAss', 'dtVenc'
+            ] 
         
-        for i in valores_ref:
-            self.referencias[i] = StringVar()  
+        self.itens_juri = ['numEmpre','nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp','valCompe']
 
-        self.itens_dict = [
+        self.itens_repre = [
             'nomeContra',
             'rgContra',  
             'emissorContra', 
@@ -817,6 +844,8 @@ class Form (IValidator, IFormater):
             'estadoCivilContra',
             'valNacionalidade', 
             'valEmprego',
+            'tipoRua',
+            'tipoRepre',
             'ruaContra', 
             'numContra', 
             'bairroContra',  
@@ -826,9 +855,21 @@ class Form (IValidator, IFormater):
             'compleContra'
             ]
         
+        values_padroes = {
+            'tipoRua': 'Rua',
+            'tipoRepre': 'Sócio'
+        }
+        
+        for i in valores_ref + self.itens_juri:
+            self.referencias[i] = StringVar() 
+        
         for index in range(1, 3):
-            for i in self.itens_dict:
+            for i in self.itens_repre:
                 self.referencias[i + str(index)] = StringVar()
+
+        for index in range(1, 3):
+            for key, valor in values_padroes.items():
+                self.referencias[key + str(index)].set(valor)
 
         self.titulo = titulo
         self.file = File(titulo)
@@ -837,11 +878,11 @@ class Form (IValidator, IFormater):
     def exibir_page(self):
         self.tipo.index(self)
 
-    def executar(self):
+    def executar(self, fisi):
             #TODO EXECUTAR
         try:
-            # if self.__input_vazio():
-            #     raise Exception ('Existem entradas vazias, favor preencher todas')
+            if self.__input_vazio(fisi):
+                raise Exception ('Existem entradas vazias, favor preencher todas')
             
             conteudo_base = self.repre.conteudo_base()
 
@@ -858,13 +899,28 @@ class Form (IValidator, IFormater):
         except Exception as e:
             messagebox.showwarning(title='Aviso', message= e)
 
-    def __input_vazio(self):
-        for chave, valor in self.referencias.items():
-            if valor.get() == ''\
-                and chave != 'compleContra' \
-                    and chave != 'compleEmp':
+    def __input_vazio(self, fisi):
+        ref_base = copy.deepcopy(self.referencias)
+
+        if fisi == True:
+            self.filt_juri(ref_base)
+        self.filt_repre(ref_base)
+
+        for valor in ref_base.values():
+            if valor.get() == '':
                 return True
         return False
+    
+    def filt_juri(self, ref):
+        for i in self.itens_juri:
+            ref.pop(i,None)
+
+    def filt_repre(self, ref):
+        if self.repre.get_qnt() > 1:
+            for i in range(2, 3):
+                ref.pop('emissorContra' + str(i))
+                for j in self.itens_repre:
+                    ref.pop(j + str(i),None)
                     
     def cabecalho(self, y = 0):
         #Titulo
@@ -885,7 +941,7 @@ class Form (IValidator, IFormater):
             command= lambda: self.frame.destroy())\
                 .place(relx=0,rely= 0,relwidth=0.25,relheight=0.06)
         
-    def contrato(self):
+    def contrato(self, fisi = False):
         #Contrato
         Label(self.frame, text='Contrato',\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
@@ -954,7 +1010,7 @@ class Form (IValidator, IFormater):
         
         #Botão enviar
         self.btnEnviar = Button(self.frame, text='Gerar CPS',\
-            command= lambda: self.executar())
+            command= lambda: self.executar(fisi))
         self.btnEnviar.place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
 
 class App:
