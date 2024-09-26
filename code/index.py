@@ -210,7 +210,7 @@ class Content:
         for key, func in ref.items():
             self.dictonary[key] = func
 
-        self.__set_enterprise()
+        self.__set_IJuridica()
         self.__update_repre(qnt_repre)
 
         return self.dictonary
@@ -239,7 +239,7 @@ class Content:
             for index, value in ref.items():
                 self.dictonary[index + i] = value
 
-    def __set_enterprise(self):
+    def __set_IJuridica(self):
         if 'nomeEmp' in self.dictonary:
 
             ref = {
@@ -601,16 +601,16 @@ class Representante (ISociavel):
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely= y + 0.42)
                 
-        self.canvas = Canvas(self.frame_mae, width=655, height=10,border=-5)
-        self.canvas.place(relx=0.13,rely= y + 0.455)
+        self.canvas = Canvas(self.frame_mae, width=455, height=10,border=-5)
+        self.canvas.place(relx=0.23,rely= y + 0.455)
                 
-        self.canvas.create_line(-5,0,655,0, fill="darkblue", width=10)
+        self.canvas.create_line(-5,0,455,0, fill="darkblue", width=10)
 
         ###########TODO Inp-Soc
         
         Label(self.frame_mae, text='Quantidade:',\
             background='lightblue', font=('Arial',12,'bold italic'))\
-                .place(relx=0.52,rely= y + 0.42)
+                .place(relx=0.6,rely= y + 0.42)
 
         self.num_repres = IntVar(value=1)
 
@@ -670,22 +670,177 @@ class Representante (ISociavel):
 
         return ref
 
-#Páginas
+class IPages(metaclass=ABCMeta):
+    @abstractmethod
+    def index(self):
+        pass
 
-class Pages (IValidator, IFormater):
-    def __init__(self, titulo):
+class IFisica(IPages):
+    def index(self):
+        self.cabecalho(0.08)
+        self.repre.titulo_divisor()
+        self.repre.exibir()
+        self.contrato()
+
+class IJuridica(IPages):
+    def index(self):
+        self.cabecalho()
+
+        #Empresa
+        Label(self.frame, text='Empresa',\
+            background='lightblue', font=('Times New Roman',15,'bold italic'))\
+                .place(relx=0.05,rely=0.115)
+                
+        self.canvas = Canvas(self.frame, width=625, height=10, background='darkblue',border=-5)
+        self.canvas.place(relx=0.17,rely=0.15)
+                
+        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
+        
+        # x,angulo x , y, angulo y
+                
+        ###########nome empresa
+
+        Label(self.frame, text='Nome',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.18)
+
+        self.nomeEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['nomeEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
+
+        ###########rua
+
+        Label(self.frame, text='Rua',\
+            background='lightblue', font=(10))\
+                .place(relx=0.35,rely=0.18)
+
+        self.ruaEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['ruaEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
+
+        ###########Num
+
+        Label(self.frame, text='Num.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.6,rely=0.18)
+
+        self.numEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['numEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
+                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
+
+        ###########bairro
+
+        Label(self.frame, text='Bairro',\
+            background='lightblue', font=(10))\
+                .place(relx=0.7,rely=0.18)
+
+        self.bairroEmpEntry = Entry(self.frame,\
+            textvariable=self.referencias['bairroEmp'],\
+                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
+                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
+
+        ########### CEP Empre
+
+        self.valCEP_Empre = StringVar()
+
+        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
+            self.cep_formater(passed, *args) )
+
+        Label(self.frame, text='CEP',\
+            background='lightblue', font=(10))\
+                .place(relx=0.05,rely=0.31)
+        
+
+        self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
+            validate ='key', validatecommand =(self.frame.register(self.cep_validator), '%P'))\
+                .place(relx=0.05,rely=0.36,relwidth=0.075,relheight=0.05)
+
+        self.referencias['cepEmp'] = self.valCEP_Empre
+
+        ########### CNPJ
+        
+        self.valCNPJ = StringVar()
+
+        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
+            self.cnpj_formater(passed, *args) )
+
+        Label(self.frame, text='CNPJ',\
+            background='lightblue', font=(10))\
+                .place(relx=0.35,rely=0.31)
+        
+
+        Entry(self.frame, textvariable = self.valCNPJ, \
+            validate ='key', validatecommand =(self.frame.register(self.cnpj_validator), '%P'))\
+                .place(relx=0.35,rely=0.36,relwidth=0.135,relheight=0.05)
+
+        self.referencias['cnpjEmp'] = self.valCNPJ
+                
+        ###########Complemento
+
+        Label(self.frame, text='Complemento (opcional)',\
+            background='lightblue', font=(10))\
+                .place(relx=0.6,rely=0.31)
+
+        self.complementoEntry = Entry(self.frame,\
+            textvariable=self.referencias['compleEmp'])\
+                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
+
+        self.repre.titulo_divisor()
+        self.repre.exibir()
+
+        self.contrato()
+
+class ILucroPresumido(IPages):
+    def index(self):
+        IJuridica.index(self)
+
+        ###########Valor EFD
+        
+        self.valCompe = StringVar()
+
+        self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
+            self.valor_formater(passed, *args) )
+
+        Label(self.frame, text='Val. EFD-Compe.',\
+            background='lightblue', font=(10))\
+                .place(relx=0.62,rely=0.88)
+        
+        Entry(self.frame, textvariable = self.valCompe, \
+            validate ='key', validatecommand =(self.frame.register(self.valor_validator), '%P'))\
+                .place(relx=0.65,rely=0.93,relwidth=0.1,relheight=0.05)
+                
+        self.referencias['valCompe'] = self.valCompe
+
+        #btn Enviar
+        self.btnEnviar.place(relx=0.8,rely=0.86,relwidth=0.15,relheight=0.12)
+
+
+class Form (IValidator, IFormater):
+    def __init__(self, titulo, tipo = IPages):
         self.frame = Frame(window, bd=4, bg='lightblue')
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+
+        self.tipo = tipo
 
         #TODO Referencias
         self.referencias = {}
 
-        for i in ['valPag', 'dtInic', 'dtAss', 'dtVenc','numEmpre']:
-            self.referencias[i] = StringVar()   
+        valores_ref = [
+            'valPag', 'dtInic', 'dtAss', 'dtVenc','numEmpre','nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp','valCompe'
+            ]
+        
+        for i in valores_ref:
+            self.referencias[i] = StringVar()  
 
         self.titulo = titulo
         self.file = File(titulo)
         self.repre = Representante(frame = self.frame, ref=self.referencias)
+
+    def exibir_page(self):
+        self.tipo.index(self)
 
     def executar(self):
             #TODO EXECUTAR
@@ -806,164 +961,6 @@ class Pages (IValidator, IFormater):
         self.btnEnviar = Button(self.frame, text='Gerar CPS',\
             command= lambda: self.executar())
         self.btnEnviar.place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
-    
-class Enterprise(Pages):
-    def __init__(self, titulo):
-        super().__init__(titulo)
-        for i in ['nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp']:
-            self.referencias[i] = StringVar()
-
-    def index(self):
-        self.cabecalho()
-
-        #Empresa
-        Label(self.frame, text='Empresa',\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0.05,rely=0.115)
-                
-        self.canvas = Canvas(self.frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.17,rely=0.15)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-        
-        # x,angulo x , y, angulo y
-                
-        ###########nome empresa
-
-        Label(self.frame, text='Nome',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.18)
-
-        self.nomeEmpEntry = Entry(self.frame,\
-            textvariable=self.referencias['nomeEmp'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.05,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ###########rua
-
-        Label(self.frame, text='Rua',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.18)
-
-        self.ruaEmpEntry = Entry(self.frame,\
-            textvariable=self.referencias['ruaEmp'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.35,rely=0.23,relwidth=0.20,relheight=0.05)
-
-        ###########Num
-
-        Label(self.frame, text='Num.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.18)
-
-        self.numEmpEntry = Entry(self.frame,\
-            textvariable=self.referencias['numEmp'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
-                    .place(relx=0.61,rely=0.23,relwidth=0.05,relheight=0.05)
-
-        ###########bairro
-
-        Label(self.frame, text='Bairro',\
-            background='lightblue', font=(10))\
-                .place(relx=0.7,rely=0.18)
-
-        self.bairroEmpEntry = Entry(self.frame,\
-            textvariable=self.referencias['bairroEmp'],\
-                validate='key', validatecommand=(self.frame.register(lambda text: not text.isdecimal()), '%S'))\
-                .place(relx=0.7,rely=0.23,relwidth=0.25,relheight=0.05)
-
-        ########### CEP Empre
-
-        self.valCEP_Empre = StringVar()
-
-        self.valCEP_Empre.trace_add('write', lambda *args, passed = self.valCEP_Empre:\
-            self.cep_formater(passed, *args) )
-
-        Label(self.frame, text='CEP',\
-            background='lightblue', font=(10))\
-                .place(relx=0.05,rely=0.31)
-        
-
-        self.CEPEntry = Entry(self.frame, textvariable = self.valCEP_Empre, \
-            validate ='key', validatecommand =(self.frame.register(self.cep_validator), '%P'))\
-                .place(relx=0.05,rely=0.36,relwidth=0.075,relheight=0.05)
-
-        self.referencias['cepEmp'] = self.valCEP_Empre
-
-        ########### CNPJ
-        
-        self.valCNPJ = StringVar()
-
-        self.valCNPJ.trace_add('write', lambda *args, passed = self.valCNPJ:\
-            self.cnpj_formater(passed, *args) )
-
-        Label(self.frame, text='CNPJ',\
-            background='lightblue', font=(10))\
-                .place(relx=0.35,rely=0.31)
-        
-
-        Entry(self.frame, textvariable = self.valCNPJ, \
-            validate ='key', validatecommand =(self.frame.register(self.cnpj_validator), '%P'))\
-                .place(relx=0.35,rely=0.36,relwidth=0.135,relheight=0.05)
-
-        self.referencias['cnpjEmp'] = self.valCNPJ
-                
-        ###########Complemento
-
-        Label(self.frame, text='Complemento (opcional)',\
-            background='lightblue', font=(10))\
-                .place(relx=0.6,rely=0.31)
-
-        self.complementoEntry = Entry(self.frame,\
-            textvariable=self.referencias['compleEmp'])\
-                .place(relx=0.61,rely=0.36,relwidth=0.35,relheight=0.05)
-
-        self.repre.titulo_divisor()
-        self.repre.exibir()
-
-        self.contrato()
-
-
-class LucroPresumido(Enterprise):
-    def __init__(self, titulo):
-        super().__init__(titulo)
-        self.referencias['valCompe'] = StringVar()
-
-        self.index()
-        self.add_competencia()
-
-    def add_competencia(self):
-        ###########Valor EFD
-        
-        self.valCompe = StringVar()
-
-        self.valCompe.trace_add('write', lambda *args, passed = self.valCompe:\
-            self.valor_formater(passed, *args) )
-
-        Label(self.frame, text='Val. EFD-Compe.',\
-            background='lightblue', font=(10))\
-                .place(relx=0.62,rely=0.88)
-        
-        Entry(self.frame, textvariable = self.valCompe, \
-            validate ='key', validatecommand =(self.frame.register(self.valor_validator), '%P'))\
-                .place(relx=0.65,rely=0.93,relwidth=0.1,relheight=0.05)
-                
-        self.referencias['valCompe'] = self.valCompe
-
-        #btn Enviar
-        self.btnEnviar.place(relx=0.8,rely=0.86,relwidth=0.15,relheight=0.12)
-
-class Person(Pages):
-    def __init__(self, titulo):
-        super().__init__(titulo)
-    
-    def index(self):
-        self.cabecalho(0.08)
-        self.repre.titulo_divisor()
-        self.repre.exibir()
-        self.contrato()
-
-#Aplicação
 
 class App:
     def __init__(self):
@@ -994,22 +991,22 @@ class App:
 
         #Pessoa física
         Button(self.menu, text='CPS Pessoa Física',\
-            command= lambda: Person('Pessoa Física').index())\
+            command= lambda: Form('Pessoa Física', IFisica).exibir_page())\
                 .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
 
         #Inatividade
         Button(self.menu, text='CPS Inatividade',\
-            command= lambda: Enterprise('Inatividade').index())\
+            command= lambda: Form('Inatividade', IJuridica).exibir_page())\
                 .place(relx=0.60,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Lucro Presumido
         Button(self.menu, text='CPS Lucro Presumido / Real',\
-            command= lambda: LucroPresumido('Lucros'))\
+            command= lambda: Form('Lucros', ILucroPresumido).exibir_page())\
                 .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
 
         #Simples Nacional
         Button(self.menu, text='CPS Simples Nacional',\
-            command= lambda: Enterprise('Simples Nacional').index())\
+            command= lambda: Form('Simples Nacional',IJuridica).exibir_page())\
                 .place(relx=0.60,rely=0.7,relwidth=0.25,relheight=0.15)
 
 App()
