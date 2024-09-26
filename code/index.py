@@ -902,6 +902,7 @@ class Form (IValidator, IFormater):
     def __input_vazio(self, fisi):
         ref_base = copy.deepcopy(self.referencias)
 
+        #Usar return nos métodos se for necessário
         if fisi == True:
             self.filt_juri(ref_base)
         self.filt_repre(ref_base)
@@ -916,9 +917,13 @@ class Form (IValidator, IFormater):
             ref.pop(i,None)
 
     def filt_repre(self, ref):
+        for i in range(1, self.repre.get_qnt()+1):
+            ref.pop('emissorContra' + str(i))
+            if ref['valNacionalidade' + str(i)].get() != 'brasileiro(a)':
+                ref.pop('rgContra' + str(i))
+
         if self.repre.get_qnt() > 1:
             for i in range(2, 3):
-                ref.pop('emissorContra' + str(i))
                 for j in self.itens_repre:
                     ref.pop(j + str(i),None)
                     
