@@ -280,9 +280,8 @@ class Content:
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
-
-class Janela():
-    def __init__(self, frame, ref):
+class Opcionais:
+    def __init__(self, frame):
         self.janela = Toplevel(frame, bd=4, bg='darkblue' )
         self.janela.resizable(False,False)
         self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
@@ -292,18 +291,11 @@ class Janela():
 
         self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
         self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        self.referencias = ref
-
-class Opcionais(Janela):
-    def __init__(self, frame, ref):
-        super().__init__(frame, ref)
-
         self.janela.geometry('300x70')
         self.janela.title('Complemento')
         
 
-    def exibir(self, title):
+    def exibir(self, title, ref):
         #Titulo
         Label(self.janela_frame, text= title,\
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
@@ -326,7 +318,7 @@ class Opcionais(Janela):
                 )
             ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
                 
-        self.referencias[f'val{title}'] = valComp
+        ref[f'val{title}'] = valComp
 
         Button(self.janela_frame, text='OK',\
             command= lambda: self.janela.destroy())\
@@ -521,14 +513,14 @@ class Representante (IValidator, IFormater):
         nacio_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
             command= lambda: \
-                Opcionais(self.frame_ativo, self.referencias).exibir('Nacionalidade') if nacio_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
+                Opcionais(self.frame_ativo).exibir('Nacionalidade', self.referencias) if nacio_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
                     .place(relx=0.644,rely=0.15,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
             command= lambda:\
-                Opcionais(self.frame_ativo, self.referencias).exibir('Emprego')if empreg_var.get() else self.referencias['valEmprego' + id].set('empresário(a)'))\
+                Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['valEmprego' + id].set('empresário(a)'))\
                     .place(relx=0.825,rely=0.15,relwidth=0.175,relheight=0.15)
 
         ###########rua
