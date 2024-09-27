@@ -191,7 +191,60 @@ class File:
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
         os.startfile(self.caminho)
 
-#Conteudo
+class IValido:
+    def __init__(self) -> None:
+        pass
+
+    def validar(self, ref):
+        resp_final = self.__textos_vazios(self.__add_vazios(ref))
+
+        if len(resp_final) != 0:
+            raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}favor preencher todos')
+        
+    def __add_vazios(self, ref):
+        vazios_contrato = []
+        vazios_emp = []
+        vazios_repre1 = []
+        vazios_repre2 = []
+        vazios_repre3 = []
+    
+        vazios_repre = {
+            1: vazios_repre1,
+            2: vazios_repre2,
+            3: vazios_repre3
+        }
+
+        for key, valor in ref.items():
+            if valor == '':
+                if 'Contra' in key:
+                    for index, lista in vazios_repre.items():
+                        if str(index) in key:
+                            lista.append(key.replace('Contra'+ str(index), ''))
+                elif 'Emp' in key:
+                    vazios_emp.append(key.replace('Emp',''))
+                else:
+                    vazios_contrato.append(key)
+
+        return [vazios_emp, vazios_repre, vazios_contrato]
+
+    def __textos_vazios(self, lista):
+        resp_final = ''
+
+        text_void = {
+            'Empresa: ': lista[0],
+            'Representante 1: ': lista[1][1],
+            'Representante 2: ': lista[1][2],
+            'Representante 3: ': lista[1][3],
+            'Contrato: ': lista[2]
+        }
+         
+        for titulo, vet in text_void.items():
+            if len(vet) != 0:
+                resp_final = f'{resp_final} \n {titulo.upper()} {' - '.join(str(x) for x in vet)}\n'
+
+        return resp_final
+    
+
 class Content:
     def __init__(self, referencias):
         self.dictonary = {chave: copy.deepcopy(valor.get()) for chave, valor in referencias.items()}
@@ -372,7 +425,7 @@ class Representante (IValidator, IFormater):
 
         self.conteudo = {
             1: [
-                '{{r nomeContra1 }}, {{ valNacionalidade1 }}, {{ valEmprego1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
@@ -395,10 +448,10 @@ class Representante (IValidator, IFormater):
             background='lightblue', font=('Times New Roman',15,'bold italic'))\
                 .place(relx=0.05,rely= y + 0.42)
                 
-        self.canvas = Canvas(self.frame_mae, width=555, height=10,border=-5)
-        self.canvas.place(relx=0.23,rely= y + 0.455)
+        canvas = Canvas(self.frame_mae, width=555, height=10,border=-5)
+        canvas.place(relx=0.23,rely= y + 0.455)
                 
-        self.canvas.create_line(-5,0,555,0, fill="darkblue", width=10)
+        canvas.create_line(-5,0,555,0, fill="darkblue", width=10)
 
         ###########TODO Inp-Soc
         
@@ -406,11 +459,11 @@ class Representante (IValidator, IFormater):
             background='lightblue', font=('Arial',12,'bold italic'))\
                 .place(relx=0.7,rely= y + 0.42)
 
-        self.num_repres = IntVar(value=1)
+        num_repres = IntVar(value=1)
 
-        self.popup_repre = ttk.OptionMenu(self.frame_mae, self.num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(self.num_repres.get()))
+        popup_repre = ttk.OptionMenu(self.frame_mae, num_repres,'', *self.opcoes_disp, command= lambda val: self.alterar_qnt(num_repres.get()))
 
-        self.popup_repre.place(relx=0.85,rely= y + 0.42,relwidth=0.1,relheight=0.06)
+        popup_repre.place(relx=0.85,rely= y + 0.42,relwidth=0.1,relheight=0.06)
 
     def alterar_qnt(self, quantidade):
         self.frame_ativo.destroy()
@@ -467,9 +520,9 @@ class Representante (IValidator, IFormater):
         
          ###########RG
         
-        self.valRG = StringVar(value= self.referencias['rgContra' + id].get())
+        valRG = StringVar(value= self.referencias['rgContra' + id].get())
 
-        self.valRG.trace_add('write', lambda *args, passed = self.valRG:\
+        valRG.trace_add('write', lambda *args, passed = valRG:\
             self.rg_formater(passed, *args) )
 
         Label(self.frame_ativo, text='RG',\
@@ -477,11 +530,11 @@ class Representante (IValidator, IFormater):
                 .place(relx=0.28,rely=0)
         
 
-        Entry(self.frame_ativo, textvariable = self.valRG, \
+        Entry(self.frame_ativo, textvariable = valRG, \
             validate ='key', validatecommand =(self.frame_ativo.register(self.rg_validator), '%P'))\
                 .place(relx=0.28,rely=0.15,relwidth=0.1,relheight=0.15)
 
-        self.referencias['rgContra' + id] = self.valRG
+        self.referencias['rgContra' + id] = valRG
         
         ###########Org. Emissor
 
@@ -496,9 +549,9 @@ class Representante (IValidator, IFormater):
 
         ###########CPF
         
-        self.valCPF = StringVar(value= self.referencias['cpfContra' + id].get())
+        valCPF = StringVar(value= self.referencias['cpfContra' + id].get())
 
-        self.valCPF.trace_add('write', lambda *args, passed = self.valCPF:\
+        valCPF.trace_add('write', lambda *args, passed = valCPF:\
             self.cpf_formater(passed, *args) )
 
         Label(self.frame_ativo, text='CPF',\
@@ -506,24 +559,24 @@ class Representante (IValidator, IFormater):
                 .place(relx=0.47,rely=0)
         
 
-        Entry(self.frame_ativo, textvariable = self.valCPF, \
+        Entry(self.frame_ativo, textvariable = valCPF, \
             validate ='key', validatecommand =(self.frame_ativo.register(self.cpf_validator), '%P'))\
                 .place(relx=0.47,rely=0.15,relwidth=0.13,relheight=0.15)
 
-        self.referencias['cpfContra' + id] = self.valCPF
+        self.referencias['cpfContra' + id] = valCPF
         
         ###########TODO Nacionalidade
         nacio_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é brasileiro?', variable= nacio_var, \
             command= lambda: \
-                Opcionais(self.frame_ativo).exibir('Nacionalidade', self.referencias) if nacio_var.get() else self.referencias['valNacionalidade' + id].set('brasileiro(a)'))\
+                Opcionais(self.frame_ativo).exibir('Nacionalidade', self.referencias) if nacio_var.get() else self.referencias['nacionalidadeContra' + id].set('brasileiro(a)'))\
                     .place(relx=0.644,rely=0,relwidth=0.16,relheight=0.15)
 
         ###########Emprego
         empreg_var = BooleanVar()
         ttk.Checkbutton(self.frame_ativo, text='Não é empresário?', variable= empreg_var, \
             command= lambda:\
-                Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['valEmprego' + id].set('empresário(a)'))\
+                Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['empregoContra' + id].set('empresário(a)'))\
                     .place(relx=0.637,rely=0.18,relwidth=0.175,relheight=0.15)
 
         ###########Tipo
@@ -532,30 +585,28 @@ class Representante (IValidator, IFormater):
             background='lightblue', font=(10))\
                 .place(relx=0.84,rely=0)
 
-        self.tipoRepreEntry = StringVar(value= self.referencias['tipoRepre' + id].get())
+        tipoRepreEntry = StringVar(value= self.referencias['tipoRepre' + id].get())
 
-        self.tipoRepreEntryOpt = ('Sócio', 'Administrador', 'Procurador')
+        tipoRepreEntryOpt = ('Sócio', 'Administrador', 'Procurador')
 
-        self.popup = ttk.OptionMenu(self.frame_ativo, self.tipoRepreEntry,'', *self.tipoRepreEntryOpt)
+        popup = ttk.OptionMenu(self.frame_ativo, tipoRepreEntry, *tipoRepreEntryOpt)
 
-        self.menuCasado = self.popup['menu']
+        popup.place(relx=0.84,rely=0.15,relwidth=0.16,relheight=0.16)
 
-        self.popup.place(relx=0.84,rely=0.15,relwidth=0.16,relheight=0.16)
-
-        self.referencias['tipoRepre' + id] = self.tipoRepreEntry
+        self.referencias['tipoRepre' + id] = tipoRepreEntry
 
         ###########rua
         
-        self.tipoRuaEntry = StringVar(value= self.referencias['tipoRua' + id].get())
+        tipoRuaEntry = StringVar(value= self.referencias['tipoRua' + id].get())
 
-        self.tipoRuaEntryOpt = ('Rua', 'Avenida', 'Logadouro')
+        tipoRuaEntryOpt = ('Rua', 'Avenida', 'Logadouro')
 
-        self.popup = OptionMenu(self.frame_ativo, self.tipoRuaEntry,'', *self.tipoRuaEntryOpt)
-        self.popup.config(indicatoron = False, font=('Arial',10), justify='left')
+        popup = OptionMenu(self.frame_ativo, tipoRuaEntry, *tipoRuaEntryOpt)
+        popup.config(indicatoron = False, font=('Arial',10), justify='left')
 
-        self.popup.place(relx=0,rely=0.35,relwidth=0.1,relheight=0.16)
+        popup.place(relx=0,rely=0.35,relwidth=0.1,relheight=0.16)
 
-        self.referencias['tipoRepre' + id] = self.tipoRuaEntry
+        self.referencias['tipoRepre' + id] = tipoRuaEntry
 
         Entry(self.frame_ativo,\
             textvariable=self.referencias['ruaContra' + id],\
@@ -586,9 +637,9 @@ class Representante (IValidator, IFormater):
         
         ###########CEP 
         
-        self.valCEP_Contra = StringVar(value= self.referencias['cepContra' + id].get())
+        valCEP_Contra = StringVar(value= self.referencias['cepContra' + id].get())
 
-        self.valCEP_Contra.trace_add('write', lambda *args, passed = self.valCEP_Contra:\
+        valCEP_Contra.trace_add('write', lambda *args, passed = valCEP_Contra:\
             self.cep_formater(passed, *args) )
 
         Label(self.frame_ativo, text='CEP',\
@@ -596,11 +647,11 @@ class Representante (IValidator, IFormater):
                 .place(relx=0.65,rely=0.35)
         
 
-        Entry(self.frame_ativo, textvariable = self.valCEP_Contra, \
+        Entry(self.frame_ativo, textvariable = valCEP_Contra, \
             validate ='key', validatecommand =(self.frame_ativo.register(self.cep_validator), '%P'))\
                 .place(relx=0.65,rely=0.5,relwidth=0.075,relheight=0.15)
 
-        self.referencias['cepContra' + id] = self.valCEP_Contra
+        self.referencias['cepContra' + id] = valCEP_Contra
 
         ###########Estado Civil
         
@@ -608,30 +659,30 @@ class Representante (IValidator, IFormater):
             background='lightblue', font=(10))\
                 .place(relx=0.8,rely=0.35)
 
-        self.estadoEntry = StringVar(value= self.referencias['estadoCivilContra' + id].get())
+        estadoEntry = StringVar(value= self.referencias['estadoCivilContra' + id].get())
 
-        self.estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
+        estadoEntryOpt = ('solteiro(a)','divorciado(a)','viuvo(a)')
 
-        self.popup = ttk.OptionMenu(self.frame_ativo, self.estadoEntry,'', *self.estadoEntryOpt)
+        popup = ttk.OptionMenu(self.frame_ativo, estadoEntry,'', *estadoEntryOpt)
 
-        self.menuCasado = self.popup['menu']
+        menuCasado = popup['menu']
 
         #Casado
-        self.subLista = Menu(self.menuCasado, tearoff=False)
-        self.menuCasado.add_cascade(label = 'casado(a)',menu= self.subLista)
-        self.subLista.add_command(label='Comunhão Parcial de Bens', \
-            command= lambda: self.estadoEntry.set('casado(a) em CPB'))
+        subLista = Menu(menuCasado, tearoff=False)
+        menuCasado.add_cascade(label = 'casado(a)',menu= subLista)
+        subLista.add_command(label='Comunhão Parcial de Bens', \
+            command= lambda: estadoEntry.set('casado(a) em CPB'))
         
-        self.subLista.add_command(label='Comunhão Universal de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em CUB'))
+        subLista.add_command(label='Comunhão Universal de Bens',\
+            command= lambda: estadoEntry.set('casado(a) em CUB'))
         
-        self.subLista.add_command(label='Separação Total de Bens',\
-            command= lambda: self.estadoEntry.set('casado(a) em STB'))
+        subLista.add_command(label='Separação Total de Bens',\
+            command= lambda: estadoEntry.set('casado(a) em STB'))
 
 
-        self.popup.place(relx=0.8,rely=0.5,relwidth=0.2,relheight=0.16)
+        popup.place(relx=0.8,rely=0.5,relwidth=0.2,relheight=0.16)
 
-        self.referencias['estadoCivilContra' + id] = self.estadoEntry
+        self.referencias['estadoCivilContra' + id] = estadoEntry
         
         ###########Cidade
 
@@ -824,6 +875,8 @@ class Form (IValidator, IFormater):
     def __init__(self, titulo, tipo = IPages):
         self.frame = Frame(window, bd=4, bg='lightblue')
         self.frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+        self.MIN_REPRE = 1
+        self.MAX_REPRE = 3
 
         self.tipo = tipo
 
@@ -842,8 +895,8 @@ class Form (IValidator, IFormater):
             'emissorContra', 
             'cpfContra', 
             'estadoCivilContra',
-            'valNacionalidade', 
-            'valEmprego',
+            'nacionalidadeContra', 
+            'empregoContra',
             'tipoRua',
             'tipoRepre',
             'ruaContra', 
@@ -881,9 +934,8 @@ class Form (IValidator, IFormater):
     def executar(self, fisi):
             #TODO EXECUTAR
         try:
-            if self.__input_vazio(fisi):
-                raise Exception ('Existem entradas vazias, favor preencher todas')
-            
+            IValido().validar(self.filtro(fisi))
+
             conteudo_base = self.repre.conteudo_base()
 
             conteudo_updt = Content(self.referencias).update_dict(self.repre.get_qnt())
@@ -899,34 +951,25 @@ class Form (IValidator, IFormater):
         except Exception as e:
             messagebox.showwarning(title='Aviso', message= e)
 
-    def __input_vazio(self, fisi):
-        ref_base = copy.deepcopy(self.referencias)
+    def filtro(self, fisi):
+        ref_temp = {chave: copy.deepcopy(valor.get()) for chave, valor in self.referencias.items()}
 
-        #Usar return nos métodos se for necessário
         if fisi == True:
-            self.filt_juri(ref_base)
-        self.filt_repre(ref_base)
+            for i in self.itens_juri:
+                ref_temp.pop(i,None)
 
-        for valor in ref_base.values():
-            if valor.get() == '':
-                return True
-        return False
-    
-    def filt_juri(self, ref):
-        for i in self.itens_juri:
-            ref.pop(i,None)
+        for i in range(1, self.repre.get_qnt() +1):
+            ref_temp.pop('emissorContra' + str(i))
+            ref_temp.pop('compleContra' + str(i))
+            if ref_temp['nacionalidadeContra' + str(i)] != 'brasileiro(a)':
+                ref_temp.pop('rgContra' + str(i))
 
-    def filt_repre(self, ref):
-        for i in range(1, self.repre.get_qnt()+1):
-            ref.pop('emissorContra' + str(i))
-            if ref['valNacionalidade' + str(i)].get() != 'brasileiro(a)':
-                ref.pop('rgContra' + str(i))
+        for i in range(self.repre.get_qnt() + 1, 4):
+            for j in self.itens_repre:
+                ref_temp.pop(j + str(i),None)
 
-        if self.repre.get_qnt() > 1:
-            for i in range(2, 3):
-                for j in self.itens_repre:
-                    ref.pop(j + str(i),None)
-                    
+        return ref_temp
+
     def cabecalho(self, y = 0):
         #Titulo
         Label(self.frame, text= self.titulo, background='lightblue',\
