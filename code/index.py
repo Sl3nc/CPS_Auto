@@ -240,7 +240,7 @@ class IValido:
          
         for titulo, vet in text_void.items():
             if len(vet) != 0:
-                resp_final = f'{resp_final} \n {titulo.upper()} {' - '.join(str(x) for x in vet)}\n'
+                resp_final = f'{resp_final}\n{titulo.upper()}\n{' - '.join(str(x) for x in vet)}\n'
 
         return resp_final
     
@@ -986,7 +986,7 @@ class Form (IValidator, IFormater):
                 .place(relx=0.325,rely= y + 0.05)
         
         #Logo
-        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice_logo-slim.png'))
+        self.logo = PhotoImage(file=resource_path('imgs\\cps_logo.png'))
         
         self.logo = self.logo.subsample(5,5)
         
@@ -1089,32 +1089,32 @@ class App:
         self.menu.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
 
         self.textOrientacao = Label(self.menu, text='Selecione o tipo de CPS que deseja fazer:', background='lightblue', font=('arial',20,'bold'))\
-        .place(relx=0.15,rely=0.23,relheight=0.15)
+        .place(relx=0.15,rely=0.3,relheight=0.15)
         
         #Logo
-        self.logo = PhotoImage(file=resource_path('imgs\\deltaprice-hori.png')).subsample(4,4)
+        self.logo = PhotoImage(file=resource_path('imgs\\cps_horizontal.png')).subsample(2,2)
         
         Label(self.menu, image=self.logo, background='lightblue')\
-            .place(relx=0.175,rely=0.05,relwidth=0.7,relheight=0.2)
+            .place(relx=0.135,rely=0.05)
 
         #Pessoa física
         Button(self.menu, text='CPS Pessoa Física',\
             command= lambda: Form('Pessoa Física', IFisica).exibir_page())\
-                .place(relx=0.15,rely=0.7,relwidth=0.25,relheight=0.15)
+                .place(relx=0.15,rely=0.75,relwidth=0.25,relheight=0.15)
 
         #Inatividade
         Button(self.menu, text='CPS Inatividade',\
             command= lambda: Form('Inatividade', IJuridica).exibir_page())\
-                .place(relx=0.60,rely=0.4,relwidth=0.25,relheight=0.15)
+                .place(relx=0.60,rely=0.5,relwidth=0.25,relheight=0.15)
 
         #Lucro Presumido
         Button(self.menu, text='CPS Lucro Presumido / Real',\
             command= lambda: Form('Lucros', ILucroPresumido).exibir_page())\
-                .place(relx=0.15,rely=0.4,relwidth=0.25,relheight=0.15)
+                .place(relx=0.15,rely=0.5,relwidth=0.25,relheight=0.15)
 
         #Simples Nacional
         Button(self.menu, text='CPS Simples Nacional',\
             command= lambda: Form('Simples Nacional',IJuridica).exibir_page())\
-                .place(relx=0.60,rely=0.7,relwidth=0.25,relheight=0.15)
+                .place(relx=0.60,rely=0.75,relwidth=0.25,relheight=0.15)
 
 App()
