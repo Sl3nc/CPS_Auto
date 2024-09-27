@@ -281,12 +281,12 @@ class Content:
     def update_dict(self, qnt_repre):
 
         ref = {
-            'valPag': self.__set_valor(),
-            'numEmpre': self.__set_num(self.dictonary['numEmpre']),
-            'diaVenc': self.__set_num(self.dictonary['dtVenc']),
-            'dataComple': lambda: self.dictonary['dtInic'].get()[2:],
-            'dtAss': self.__set_data(self.dictonary['dtAss']),
-            'dtInic': self.__set_data(self.dictonary['dtInic']),
+            'valorPagamento': self.__set_valor(),
+            'numeroRuaEmp': self.__set_num(self.dictonary['numeroRuaEmp']),
+            'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
+            'dataComple': lambda: self.dictonary['dataInicio'].get()[2:],
+            'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
+            'dataInicio': self.__set_data(self.dictonary['dataInicio']),
         }
 
         self.dictonary['valPorc'] = self.__calc_porc()
@@ -341,7 +341,7 @@ class Content:
             #     self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
 
     def __set_valor(self):
-        valor = self.dictonary['valPag'].replace(',','.')
+        valor = self.dictonary['valorPagamento'].replace(',','.')
         valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
         return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
@@ -355,7 +355,7 @@ class Content:
         return data_format.strftime("%d de %B de %Y")
         
     def __calc_porc(self):
-        valor = self.dictonary['valPag'].replace(',','.')
+        valor = self.dictonary['valorPagamento'].replace(',','.')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
@@ -910,10 +910,10 @@ class Form (IValidator, IFormater):
         self.referencias = {}
 
         valores_ref = [
-            'valPag', 'dtInic', 'dtAss', 'dtVenc'
+            'valorPagamento', 'dataInicio', 'dataAssinatura', 'diaVencimento'
             ] 
         
-        self.itens_juri = ['numEmpre','nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp','valCompe']
+        self.itens_juri = ['numeroRuaEmp','nomeEmp', 'ruaEmp', 'numEmp', 'bairroEmp','cepEmp', 'cnpjEmp','compleEmp','valCompe']
 
         self.itens_repre = [
             'nomeContra',
@@ -1038,18 +1038,18 @@ class Form (IValidator, IFormater):
         # x,angulo x , y, angulo y
 
         ###########Valor pagamento
-        self.valPag = StringVar()
-        self.valPag.trace_add('write', lambda *args, passed = self.valPag:\
+        self.valorPagamento = StringVar()
+        self.valorPagamento.trace_add('write', lambda *args, passed = self.valorPagamento:\
             self.valor_formater(passed, *args) )
         Label(self.frame, text='Val. Contrato.',\
             background='lightblue', font=(10))\
                 .place(relx=0.05,rely=0.88)
         
-        Entry(self.frame, textvariable = self.valPag, \
+        Entry(self.frame, textvariable = self.valorPagamento, \
             validate ='key', validatecommand =(self.frame.register(self.valor_validator), '%P'))\
                 .place(relx=0.06,rely=0.93,relwidth=0.1,relheight=0.05)
                 
-        self.referencias['valPag'] = self.valPag
+        self.referencias['valorPagamento'] = self.valorPagamento
 
         ###########Data inicio
         self.valDT_inic = StringVar()
@@ -1061,7 +1061,7 @@ class Form (IValidator, IFormater):
         
         Entry(self.frame, textvariable = self.valDT_inic, \
             validate ='key', validatecommand =(self.frame.register(self.date_validator), '%P')).place(relx=0.185,rely=0.93,relwidth=0.08,relheight=0.05)
-        self.referencias['dtInic'] = self.valDT_inic
+        self.referencias['dataInicio'] = self.valDT_inic
 
         ###########Data Assinatura
         self.valDT_ass = StringVar()
@@ -1073,21 +1073,21 @@ class Form (IValidator, IFormater):
         
         Entry(self.frame, textvariable = self.valDT_ass, \
             validate ='key', validatecommand =(self.frame.register(self.date_validator), '%P')).place(relx=0.3,rely=0.93,relwidth=0.08,relheight=0.05)
-        self.referencias['dtAss'] = self.valDT_ass
+        self.referencias['dataAssinatura'] = self.valDT_ass
 
         ###########Dia vencimento
         Label(self.frame, text='Dia Venc.',\
             background='lightblue', font=(10))\
                 .place(relx=0.4,rely=0.88)
         
-        Entry(self.frame,textvariable=self.referencias['dtVenc'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal() if len(text) < 3 else False), '%P')).place(relx=0.435,rely=0.93,relwidth=0.02,relheight=0.05)
+        Entry(self.frame,textvariable=self.referencias['diaVencimento'], validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal() if len(text) < 3 else False), '%P')).place(relx=0.435,rely=0.93,relwidth=0.02,relheight=0.05)
 
         ###########Num. Empregados
         Label(self.frame, text='Num.Empre.',\
             background='lightblue', font=(10))\
                 .place(relx=0.5,rely=0.88)
         Entry(self.frame,\
-            textvariable=self.referencias['numEmpre'],\
+            textvariable=self.referencias['numeroRuaEmp'],\
                 validate='key', validatecommand=(self.frame.register(lambda text: text.isdecimal()), '%S'))\
                 .place(relx=0.535,rely=0.93,relwidth=0.05,relheight=0.05)
         
