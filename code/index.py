@@ -243,7 +243,6 @@ class IValido:
                 resp_final = f'{resp_final}\n{titulo.upper()}\n{' - '.join(str(x) for x in vet)}\n'
 
         return resp_final
-    
 
 class Content:
     def __init__(self, referencias):
