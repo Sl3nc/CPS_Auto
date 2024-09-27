@@ -199,7 +199,7 @@ class IValido:
         resp_final = self.__textos_vazios(self.__add_vazios(ref))
 
         if len(resp_final) != 0:
-            raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}favor preencher todos')
+            raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}\nfavor preencher todos')
         
     def __add_vazios(self, ref):
         vazios_contrato = []
@@ -912,6 +912,11 @@ class Form (IValidator, IFormater):
             'tipoRua': 'Rua',
             'tipoRepre': 'Sócio'
         }
+
+        nacio_emp_padrao = {
+            'nacionalidadeContra': 'brasileiro(a)',
+            'empregoContra': 'empresário(a)'
+        }
         
         for i in valores_ref + self.itens_juri:
             self.referencias[i] = StringVar() 
@@ -919,6 +924,10 @@ class Form (IValidator, IFormater):
         for index in range(1, 3):
             for i in self.itens_repre:
                 self.referencias[i + str(index)] = StringVar()
+
+        for index in range(1, 3):
+            for nome, valor in nacio_emp_padrao.items():
+                self.referencias[nome + str(index)].set(valor)
 
         for index in range(1, 3):
             for key, valor in values_padroes.items():
