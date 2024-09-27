@@ -6,6 +6,7 @@ from abc import ABCMeta, abstractmethod
 from num2words import num2words
 from docxtpl import DocxTemplate, RichText
 from datetime import datetime
+from itertools import cycle
 import unicodedata
 import decimal
 import copy
@@ -114,20 +115,46 @@ class IValidator:    #TODO Validators
             return True
         return re.match(padrao, text) is not None
 
-    
+    def operacao_cpf(self, text):
+        numeros = [int(digito) for digito in text if digito.isdigit()]
+  
+        for i in range(9,11):
+            soma_produtos = sum(a*b for a, b in zip (numeros[0:i], range (i + 1, 1, -1)))
+            digito_esperado = (soma_produtos * 10 % 11) % 10
+            if numeros[i] != digito_esperado:
+                return False
+        return True
+        
     def cpf_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 15:
             if len(text) >= 12:
+                if len(text) == 14 and self.operacao_cpf(text) == False:
+                    messagebox.showwarning(title='Aviso', message='O CPF digitado é inválido')
                 return re.match(padrao, text) is not None
             elif len(text) == 0 or text.isdecimal():
                 return True
         return False
+    
+    def operacao_cnpj(self, text):
+        cnpj = ''.join([digito for digito in text if digito.isdigit()])
+        if cnpj in (c * 14 for c in "1234567890"):
+            return False
+
+        cnpj_r = cnpj[::-1]
+        for i in range(2, 0, -1):
+            cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
+            dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
+        if cnpj_r[i - 1:i] != str(dv % 10):
+            return False
+        return True
         
     def cnpj_validator(self, text):
         padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
         if len(text) < 19:
             if len(text) >= 15:
+                if len(text) == 18 and self.operacao_cnpj(text) == False:
+                    messagebox.showwarning(title='Aviso', message='O CNPJ digitado é inválido')
                 return re.match(padrao, text) is not None
             elif len(text) == 0 or text.isdecimal():
                 return True
