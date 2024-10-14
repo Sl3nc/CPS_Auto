@@ -989,11 +989,11 @@ class Form (IValidator, IFormater):
     def filtro(self, fisi):
         ref_temp = {chave: copy.deepcopy(valor.get()) for chave, valor in self.referencias.items()}
 
+        ref_temp.pop('compleEmp')
+
         if fisi == True:
             for i in self.itens_juri:
                 ref_temp.pop(i,None)
-            ref_temp.pop('compleEmp')
-
 
         for i in range(1, self.repre.get_qnt() +1):
             ref_temp.pop('emissorContra' + str(i))
