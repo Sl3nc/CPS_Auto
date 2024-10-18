@@ -226,7 +226,7 @@ class IValido:
         resp_final = self.__textos_vazios(self.__add_vazios(ref))
 
         if len(resp_final) != 0:
-            raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}\nfavor preencher todos')
+            raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}\nfavor preencher TODOS')
         
     def __add_vazios(self, ref):
         vazios_contrato = []
