@@ -306,59 +306,63 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addLayout(self.intro_repre)
 
-        self.grid_repre = QGridLayout()
+        self.stackedWidget_2 = QStackedWidget(self.form)
+        self.stackedWidget_2.setObjectName(u"stackedWidget_2")
+        self.Page1 = QWidget()
+        self.Page1.setObjectName(u"Page1")
+        self.grid_repre = QGridLayout(self.Page1)
         self.grid_repre.setObjectName(u"grid_repre")
-        self.lineEdit_bairro_repre = QLineEdit(self.form)
+        self.lineEdit_bairro_repre = QLineEdit(self.Page1)
         self.lineEdit_bairro_repre.setObjectName(u"lineEdit_bairro_repre")
 
         self.grid_repre.addWidget(self.lineEdit_bairro_repre, 15, 0, 1, 1)
 
-        self.label_orgao_repre = QLabel(self.form)
+        self.label_orgao_repre = QLabel(self.Page1)
         self.label_orgao_repre.setObjectName(u"label_orgao_repre")
 
         self.grid_repre.addWidget(self.label_orgao_repre, 0, 4, 1, 1)
 
-        self.label_estado_civil_repre = QLabel(self.form)
+        self.label_estado_civil_repre = QLabel(self.Page1)
         self.label_estado_civil_repre.setObjectName(u"label_estado_civil_repre")
 
         self.grid_repre.addWidget(self.label_estado_civil_repre, 2, 0, 1, 1)
 
-        self.checkBox_empresario_repre = QCheckBox(self.form)
+        self.checkBox_empresario_repre = QCheckBox(self.Page1)
         self.checkBox_empresario_repre.setObjectName(u"checkBox_empresario_repre")
 
         self.grid_repre.addWidget(self.checkBox_empresario_repre, 3, 1, 1, 1)
 
-        self.lineEdit_cep_repre = QLineEdit(self.form)
+        self.lineEdit_cep_repre = QLineEdit(self.Page1)
         self.lineEdit_cep_repre.setObjectName(u"lineEdit_cep_repre")
 
         self.grid_repre.addWidget(self.lineEdit_cep_repre, 3, 2, 1, 1)
 
-        self.lineEdit_endereco_repre = QLineEdit(self.form)
+        self.lineEdit_endereco_repre = QLineEdit(self.Page1)
         self.lineEdit_endereco_repre.setObjectName(u"lineEdit_endereco_repre")
 
         self.grid_repre.addWidget(self.lineEdit_endereco_repre, 3, 3, 1, 1)
 
-        self.label_complemento_repre = QLabel(self.form)
+        self.label_complemento_repre = QLabel(self.Page1)
         self.label_complemento_repre.setObjectName(u"label_complemento_repre")
 
         self.grid_repre.addWidget(self.label_complemento_repre, 4, 3, 1, 1)
 
-        self.checkBox_brasileiro_repre = QCheckBox(self.form)
+        self.checkBox_brasileiro_repre = QCheckBox(self.Page1)
         self.checkBox_brasileiro_repre.setObjectName(u"checkBox_brasileiro_repre")
 
         self.grid_repre.addWidget(self.checkBox_brasileiro_repre, 2, 1, 1, 1)
 
-        self.label_bairro_repre = QLabel(self.form)
+        self.label_bairro_repre = QLabel(self.Page1)
         self.label_bairro_repre.setObjectName(u"label_bairro_repre")
 
         self.grid_repre.addWidget(self.label_bairro_repre, 4, 0, 1, 1)
 
-        self.lineEdit_cidade_repre = QLineEdit(self.form)
+        self.lineEdit_cidade_repre = QLineEdit(self.Page1)
         self.lineEdit_cidade_repre.setObjectName(u"lineEdit_cidade_repre")
 
         self.grid_repre.addWidget(self.lineEdit_cidade_repre, 15, 1, 1, 1)
 
-        self.comboBox_estado_civil_repre = QComboBox(self.form)
+        self.comboBox_estado_civil_repre = QComboBox(self.Page1)
         self.comboBox_estado_civil_repre.addItem("")
         self.comboBox_estado_civil_repre.addItem("")
         self.comboBox_estado_civil_repre.addItem("")
@@ -367,62 +371,62 @@ class Ui_MainWindow(object):
 
         self.grid_repre.addWidget(self.comboBox_estado_civil_repre, 3, 0, 1, 1)
 
-        self.label_cep_repre = QLabel(self.form)
+        self.label_cep_repre = QLabel(self.Page1)
         self.label_cep_repre.setObjectName(u"label_cep_repre")
 
         self.grid_repre.addWidget(self.label_cep_repre, 2, 2, 1, 1)
 
-        self.lineEdit_orgao_repre = QLineEdit(self.form)
+        self.lineEdit_orgao_repre = QLineEdit(self.Page1)
         self.lineEdit_orgao_repre.setObjectName(u"lineEdit_orgao_repre")
 
         self.grid_repre.addWidget(self.lineEdit_orgao_repre, 1, 4, 1, 1)
 
-        self.label_nome_repre = QLabel(self.form)
+        self.label_nome_repre = QLabel(self.Page1)
         self.label_nome_repre.setObjectName(u"label_nome_repre")
 
         self.grid_repre.addWidget(self.label_nome_repre, 0, 1, 1, 1)
 
-        self.label_funcao_repre = QLabel(self.form)
+        self.label_funcao_repre = QLabel(self.Page1)
         self.label_funcao_repre.setObjectName(u"label_funcao_repre")
 
         self.grid_repre.addWidget(self.label_funcao_repre, 0, 0, 1, 1)
 
-        self.lineEdit_numero_repre = QLineEdit(self.form)
+        self.lineEdit_numero_repre = QLineEdit(self.Page1)
         self.lineEdit_numero_repre.setObjectName(u"lineEdit_numero_repre")
 
         self.grid_repre.addWidget(self.lineEdit_numero_repre, 3, 4, 1, 1)
 
-        self.lineEdit_complemento_repre = QLineEdit(self.form)
+        self.lineEdit_complemento_repre = QLineEdit(self.Page1)
         self.lineEdit_complemento_repre.setObjectName(u"lineEdit_complemento_repre")
 
         self.grid_repre.addWidget(self.lineEdit_complemento_repre, 15, 3, 1, 2)
 
-        self.lineEdit_cpf_repre = QLineEdit(self.form)
+        self.lineEdit_cpf_repre = QLineEdit(self.Page1)
         self.lineEdit_cpf_repre.setObjectName(u"lineEdit_cpf_repre")
 
         self.grid_repre.addWidget(self.lineEdit_cpf_repre, 1, 3, 1, 1)
 
-        self.label_estado_repre = QLabel(self.form)
+        self.label_estado_repre = QLabel(self.Page1)
         self.label_estado_repre.setObjectName(u"label_estado_repre")
 
         self.grid_repre.addWidget(self.label_estado_repre, 4, 2, 1, 1)
 
-        self.lineEdit_nome_repre = QLineEdit(self.form)
+        self.lineEdit_nome_repre = QLineEdit(self.Page1)
         self.lineEdit_nome_repre.setObjectName(u"lineEdit_nome_repre")
 
         self.grid_repre.addWidget(self.lineEdit_nome_repre, 1, 1, 1, 1)
 
-        self.lineEdit_estado_repre = QLineEdit(self.form)
+        self.lineEdit_estado_repre = QLineEdit(self.Page1)
         self.lineEdit_estado_repre.setObjectName(u"lineEdit_estado_repre")
 
         self.grid_repre.addWidget(self.lineEdit_estado_repre, 15, 2, 1, 1)
 
-        self.label_cpf_repre = QLabel(self.form)
+        self.label_cpf_repre = QLabel(self.Page1)
         self.label_cpf_repre.setObjectName(u"label_cpf_repre")
 
         self.grid_repre.addWidget(self.label_cpf_repre, 0, 3, 1, 1)
 
-        self.comboBox_funcao_repre = QComboBox(self.form)
+        self.comboBox_funcao_repre = QComboBox(self.Page1)
         self.comboBox_funcao_repre.addItem("")
         self.comboBox_funcao_repre.addItem("")
         self.comboBox_funcao_repre.addItem("")
@@ -430,33 +434,106 @@ class Ui_MainWindow(object):
 
         self.grid_repre.addWidget(self.comboBox_funcao_repre, 1, 0, 1, 1)
 
-        self.lineEdit_rg_repre = QLineEdit(self.form)
+        self.lineEdit_rg_repre = QLineEdit(self.Page1)
         self.lineEdit_rg_repre.setObjectName(u"lineEdit_rg_repre")
 
         self.grid_repre.addWidget(self.lineEdit_rg_repre, 1, 2, 1, 1)
 
-        self.label_cidade_repre = QLabel(self.form)
+        self.label_cidade_repre = QLabel(self.Page1)
         self.label_cidade_repre.setObjectName(u"label_cidade_repre")
 
         self.grid_repre.addWidget(self.label_cidade_repre, 4, 1, 1, 1)
 
-        self.label_rg_repre = QLabel(self.form)
+        self.label_rg_repre = QLabel(self.Page1)
         self.label_rg_repre.setObjectName(u"label_rg_repre")
 
         self.grid_repre.addWidget(self.label_rg_repre, 0, 2, 1, 1)
 
-        self.label_numero_repre = QLabel(self.form)
+        self.label_numero_repre = QLabel(self.Page1)
         self.label_numero_repre.setObjectName(u"label_numero_repre")
 
         self.grid_repre.addWidget(self.label_numero_repre, 2, 4, 1, 1)
 
-        self.label_endereco_repre = QLabel(self.form)
+        self.label_endereco_repre = QLabel(self.Page1)
         self.label_endereco_repre.setObjectName(u"label_endereco_repre")
 
         self.grid_repre.addWidget(self.label_endereco_repre, 2, 3, 1, 1)
 
+        self.stackedWidget_2.addWidget(self.Page1)
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.gridLayout_3 = QGridLayout(self.page)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.pushButton = QPushButton(self.page)
+        self.pushButton.setObjectName(u"pushButton")
 
-        self.verticalLayout_3.addLayout(self.grid_repre)
+        self.gridLayout_3.addWidget(self.pushButton, 0, 0, 1, 1)
+
+        self.pushButton_2 = QPushButton(self.page)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.gridLayout_3.addWidget(self.pushButton_2, 0, 2, 1, 1)
+
+        self.line_4 = QFrame(self.page)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.Shape.VLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_3.addWidget(self.line_4, 0, 1, 3, 1)
+
+        self.gridLayout_4 = QGridLayout()
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.label_2 = QLabel(self.page)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 1)
+
+        self.label_5 = QLabel(self.page)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout_4.addWidget(self.label_5, 0, 1, 1, 1)
+
+        self.label_4 = QLabel(self.page)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_4.addWidget(self.label_4, 1, 0, 1, 1)
+
+        self.label_6 = QLabel(self.page)
+        self.label_6.setObjectName(u"label_6")
+
+        self.gridLayout_4.addWidget(self.label_6, 1, 1, 1, 1)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout_4, 1, 0, 2, 1)
+
+        self.gridLayout_5 = QGridLayout()
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.label = QLabel(self.page)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_5.addWidget(self.label, 0, 0, 1, 1)
+
+        self.label_7 = QLabel(self.page)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout_5.addWidget(self.label_7, 0, 1, 1, 1)
+
+        self.label_3 = QLabel(self.page)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.label_8 = QLabel(self.page)
+        self.label_8.setObjectName(u"label_8")
+
+        self.gridLayout_5.addWidget(self.label_8, 1, 1, 1, 1)
+
+
+        self.gridLayout_3.addLayout(self.gridLayout_5, 1, 2, 2, 1)
+
+        self.stackedWidget_2.addWidget(self.page)
+
+        self.verticalLayout_3.addWidget(self.stackedWidget_2)
 
         self.intro_contrato = QHBoxLayout()
         self.intro_contrato.setObjectName(u"intro_contrato")
@@ -564,6 +641,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -618,6 +696,16 @@ class Ui_MainWindow(object):
         self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
         self.label_numero_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
         self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Representante 1", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Representante 2", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.titulo_contrato.setText(QCoreApplication.translate("MainWindow", u"Contrato", None))
         self.label_dia_vencimento_contrato.setText(QCoreApplication.translate("MainWindow", u"Dia Vencimento", None))
         self.label_dt_assinatura_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Assinatura", None))
