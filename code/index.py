@@ -16,6 +16,13 @@ import sys
 import os
 import locale
 
+from PySide6.QtWidgets import (
+    QMainWindow, QApplication, QRadioButton, QVBoxLayout, QWidget
+)
+from PySide6.QtGui import QPixmap, QIcon, QMovie
+from PySide6.QtCore import QThread, QObject, Signal, QSize
+from src.window_cps import Ui_MainWindow
+
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 def resource_path(relative_path):
@@ -1098,51 +1105,36 @@ class Form (IValidator, IFormater):
             command= lambda: self.executar(fisi))
         self.btnEnviar.place(relx=0.7,rely=0.86,relwidth=0.25,relheight=0.12)
 
-class App:
-    def __init__(self):
-        self.window = window
-        self.tela()
-        self.menu()
-        window.mainloop()
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent = None) -> None:
+        super().__init__(parent)
+        self.setupUi(self)
 
-    def tela(self):
-        self.window.configure(background='darkblue')
-        self.window.resizable(False,False)
-        self.window.geometry('880x500')
-        self.window.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.window.title('Gerador de CPS')
+        self.setWindowIcon(QIcon(resource_path('src\\imgs\\cps-icon.ico')))
+        self.setWindowTitle('Gerador de CPS')
 
-    def menu(self):
-        self.menu = Frame(self.window, bd=4, bg='lightblue')
-        self.menu.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
+        self.logo_menu.setPixmap(QPixmap(
+            resource_path('src\\imgs\\cps_horizontal.png'))
+        )
 
-        self.textOrientacao = Label(self.menu, text='Selecione o tipo de CPS que deseja fazer:', background='lightblue', font=('arial',20,'bold'))\
-        .place(relx=0.15,rely=0.3,relheight=0.15)
-        
-        #Logo
-        self.logo = PhotoImage(file=resource_path('imgs\\cps_horizontal.png')).subsample(2,2)
-        
-        Label(self.menu, image=self.logo, background='lightblue')\
-            .place(relx=0.135,rely=0.05)
+        self.pb_pessoa.clicked.connect(
+            lambda: Form('Pessoa Física', IFisica).exibir_page()
+        )
 
-        #Pessoa física
-        Button(self.menu, text='CPS Pessoa Física',\
-            command= lambda: Form('Pessoa Física', IFisica).exibir_page())\
-                .place(relx=0.15,rely=0.75,relwidth=0.25,relheight=0.15)
+        self.pb_inatividade.clicked.connect(
+            lambda: Form('Pessoa Física', IJuridica).exibir_page()
+        )
 
-        #Inatividade
-        Button(self.menu, text='CPS Inatividade',\
-            command= lambda: Form('Inatividade', IJuridica).exibir_page())\
-                .place(relx=0.60,rely=0.5,relwidth=0.25,relheight=0.15)
+        self.pb_lucro.clicked.connect(
+            lambda: Form('Inatividade', ILucroPresumido).exibir_page()
+        )
 
-        #Lucro Presumido
-        Button(self.menu, text='CPS Lucro Presumido / Real',\
-            command= lambda: Form('Lucros', ILucroPresumido).exibir_page())\
-                .place(relx=0.15,rely=0.5,relwidth=0.25,relheight=0.15)
+        self.pb_simples.clicked.connect(
+            lambda: Form('Simples Nacional', IJuridica).exibir_page()
+        )
 
-        #Simples Nacional
-        Button(self.menu, text='CPS Simples Nacional',\
-            command= lambda: Form('Simples Nacional',IJuridica).exibir_page())\
-                .place(relx=0.60,rely=0.75,relwidth=0.25,relheight=0.15)
-
-App()
+if __name__ == '__main__':
+    app = QApplication()
+    window = MainWindow()
+    window.show()
+    app.exec()
