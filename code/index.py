@@ -204,7 +204,7 @@ class IValidator:    #TODO Validators
 class File:
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
-        self.base_caminho = 'CPS\'s\\CPS {0}.docx'
+        self.base_caminho = 'src\\CPS\'s\\CPS {0}.docx'
 
     def set_option(self, nome: str):
         self.arquivo = \
