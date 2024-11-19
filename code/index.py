@@ -17,7 +17,7 @@ import os
 import locale
 
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QLabel, QLineEdit
+    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox
 )
 from PySide6.QtGui import QPixmap, QIcon, QMovie
 from PySide6.QtCore import QThread, QObject, Signal, QSize
@@ -427,43 +427,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         #TODO Referencias
-        self.referencias = {}
-
-        self.valores_gerais = [
-            'nomeEmp',
-            'cnpjEmp',
-            'cepEmp',
-            'ruaEmp',
-            'numEmp',
-            'bairroEmp',
-            'compleEmp',
-            'valorPagamento',
-            'dataInicio',
-            'dataAssinatura',
-            'diaVencimento',
-            'numFuncionario'
-            ]
-
-        self.valores_contratante = [
-            'funcaoContra',
-            'nomeContra',
-            'rgContra',  
-            'cpfContra', 
-            'emissorContra', 
-            'estadoCivilContra',
-            'cepContra',  
-            'ruaContra', 
-            'numContra', 
-            'bairroContra',  
-            'cidadeContra', 
-            'estadoContra', 
-            'compleContra'
-            ]
-        
-        self.status_contratante = {
-            'nacionalidadeContra': 'brasileiro(a)',
-            'empregoContra': 'empresário(a)'
+        self.referencias = {
+            'nomeEmp': self.lineEdit_nome_empresa,
+            'cnpjEmp': self.lineEdit_cnpj_empresa,
+            'cepEmp': self.lineEdit_cep_empresa,
+            'ruaEmp': self.lineEdit_endereco_empresa,
+            'numEmp': self.lineEdit_numero_empresa,
+            'bairroEmp': self.lineEdit_bairro_empresa,
+            'compleEmp': self.lineEdit_complemento_empresa,
+            'valorPagamento': self.lineEdit_valor_contrato,
+            'dataInicio': self.lineEdit_dt_inicio_contrato,
+            'dataAssinatura': self.lineEdit_dt_assinatura_contrato,
+            'diaVencimento': self.lineEdit_dia_vencimento_contrato,
+            'numFuncionario': self.lineEdit_num_empreg_contrato,
         }
+
+        self.valores_contratante = {
+            'funcaoContra': self.comboBox_funcao_repre,
+            'nomeContra': self.lineEdit_nome_repre,
+            'rgContra': self.lineEdit_rg_repre,  
+            'cpfContra': self.lineEdit_cpf_repre, 
+            'emissorContra': self.lineEdit_orgao_repre, 
+            'estadoCivilContra': self.comboBox_estado_civil_repre,
+            'cepContra': self.lineEdit_cep_repre,  
+            'ruaContra': self.lineEdit_endereco_repre, 
+            'numContra': self.lineEdit_numero_repre, 
+            'bairroContra': self.lineEdit_bairro_repre,  
+            'cidadeContra': self.lineEdit_cidade_repre, 
+            'estadoContra': self.lineEdit_estado_repre, 
+            'compleContra': self.lineEdit_complemento_repre
+        }
+        
+        # self.status_contratante = {
+        #     'nacionalidadeContra': 'brasileiro(a)',
+        #     'empregoContra': 'empresário(a)'
+        # }
 
         self.init_reference()
 
@@ -521,34 +519,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def init_reference(self):
-        for i in self.valores_gerais:
-            self.referencias[i] = ''
-        
         for index in range(1, 3):
-            for nome in self.valores_contratante:
-                self.referencias[nome + str(index)] = ''
-
-            for nome, valor in self.status_contratante.items():
-                self.referencias[nome + str(index)] = valor
+            for nome, widget in self.valores_contratante.items():
+                self.referencias[nome + str(index)] = widget
 
     def executar(self):
-        print(self.referencias)
         #TODO EXECUTAR
-        # try:
-                # Valido(self.filtro()).validar()
+        try:
+            print(
+                {
+                chave: widget.text() for chave, widget in self.referencias.items() if type(widget) == QLineEdit
+                }
+            )
 
-        #     conteudo = Conteudo(self.referencias)
+            print(
+                {
+                chave: widget.currentText() for chave, widget in self.referencias.items() if type(widget) == QComboBox
+                }
+            )
+        
+            # Aviso(self.filtro()).validar()
 
-        #     base = conteudo.base()
-        #     atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
+            # conteudo = Conteudo(self.referencias)
 
-        #     self.file.alterar(base, atualizado)
-        # except decimal.InvalidOperation:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        # except ValueError:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        # except Exception as e:
-        #     messagebox.showwarning(title='Aviso', message= e)
+            # base = conteudo.base()
+            # atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
+
+            # self.file.alterar(base, atualizado)
+        except decimal.InvalidOperation:
+            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        except ValueError:
+            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except Exception as e:
+            messagebox.showwarning(title='Aviso', message= e)
 
     def acess_form(self, titulo: str, excecao: IExececao|None):
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
@@ -567,7 +570,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def filtro(self):
         ref_temp = {
-            chave: copy.deepcopy(valor.get()) for chave, valor in self.referencias.items()
+            chave: widget.text() for chave, widget in self.referencias.items()
         }
 
         ref_temp.pop('compleEmp')
