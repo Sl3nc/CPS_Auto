@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGridLayout, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QSpacerItem, QStackedWidget, QStatusBar, QVBoxLayout,
-    QWidget)
+    QSpacerItem, QStackedWidget, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -119,6 +119,7 @@ class Ui_MainWindow(object):
         self.back_button = QPushButton(self.form)
         self.back_button.setObjectName(u"back_button")
         self.back_button.setMaximumSize(QSize(100, 16777215))
+        self.back_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.header_form.addWidget(self.back_button, 0, 0, 1, 1)
 
@@ -301,6 +302,7 @@ class Ui_MainWindow(object):
         self.comboBox_repre.setObjectName(u"comboBox_repre")
         sizePolicy1.setHeightForWidth(self.comboBox_repre.sizePolicy().hasHeightForWidth())
         self.comboBox_repre.setSizePolicy(sizePolicy1)
+        self.comboBox_repre.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.intro_repre.addWidget(self.comboBox_repre)
 
@@ -465,72 +467,193 @@ class Ui_MainWindow(object):
         self.page.setObjectName(u"page")
         self.gridLayout_3 = QGridLayout(self.page)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.pushButton = QPushButton(self.page)
+        self.tabWidget = QTabWidget(self.page)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.tabWidget.setStyleSheet(u"background-color: rgb(85, 170, 255);")
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.tab.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.tab.setStyleSheet(u"background-color: white;")
+        self.gridLayout_2 = QGridLayout(self.tab)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.label = QLabel(self.tab)
+        self.label.setObjectName(u"label")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy3)
+        font4 = QFont()
+        font4.setFamilies([u"Yu Gothic"])
+        font4.setPointSize(16)
+        font4.setBold(True)
+        self.label.setFont(font4)
+
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
+
+        self.label_2 = QLabel(self.tab)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy3.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy3)
+        self.label_2.setFont(font4)
+
+        self.gridLayout_2.addWidget(self.label_2, 2, 0, 1, 1)
+
+        self.label_4 = QLabel(self.tab)
+        self.label_4.setObjectName(u"label_4")
+        font5 = QFont()
+        font5.setPointSize(16)
+        font5.setBold(False)
+        self.label_4.setFont(font5)
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.label_4, 2, 1, 1, 1)
+
+        self.pushButton = QPushButton(self.tab)
         self.pushButton.setObjectName(u"pushButton")
+        font6 = QFont()
+        font6.setFamilies([u"Yu Gothic UI"])
+        font6.setPointSize(16)
+        self.pushButton.setFont(font6)
+        self.pushButton.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton.setStyleSheet(u"background-color: #E1E1E1;")
+        icon = QIcon()
+        icon.addFile(u"../imgs/engine.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton.setIcon(icon)
+        self.pushButton.setIconSize(QSize(32, 32))
+        self.pushButton.setFlat(False)
 
-        self.gridLayout_3.addWidget(self.pushButton, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.pushButton, 2, 2, 1, 1)
 
-        self.pushButton_2 = QPushButton(self.page)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-
-        self.gridLayout_3.addWidget(self.pushButton_2, 0, 2, 1, 1)
-
-        self.line_4 = QFrame(self.page)
+        self.line_4 = QFrame(self.tab)
         self.line_4.setObjectName(u"line_4")
-        self.line_4.setFrameShape(QFrame.Shape.VLine)
+        self.line_4.setFrameShape(QFrame.Shape.HLine)
         self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.gridLayout_3.addWidget(self.line_4, 0, 1, 3, 1)
+        self.gridLayout_2.addWidget(self.line_4, 1, 0, 1, 3)
 
-        self.gridLayout_4 = QGridLayout()
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.label_2 = QLabel(self.page)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 1)
-
-        self.label_5 = QLabel(self.page)
-        self.label_5.setObjectName(u"label_5")
-
-        self.gridLayout_4.addWidget(self.label_5, 0, 1, 1, 1)
-
-        self.label_4 = QLabel(self.page)
-        self.label_4.setObjectName(u"label_4")
-
-        self.gridLayout_4.addWidget(self.label_4, 1, 0, 1, 1)
-
-        self.label_6 = QLabel(self.page)
-        self.label_6.setObjectName(u"label_6")
-
-        self.gridLayout_4.addWidget(self.label_6, 1, 1, 1, 1)
-
-
-        self.gridLayout_3.addLayout(self.gridLayout_4, 1, 0, 2, 1)
-
-        self.gridLayout_5 = QGridLayout()
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.label = QLabel(self.page)
-        self.label.setObjectName(u"label")
-
-        self.gridLayout_5.addWidget(self.label, 0, 0, 1, 1)
-
-        self.label_7 = QLabel(self.page)
-        self.label_7.setObjectName(u"label_7")
-
-        self.gridLayout_5.addWidget(self.label_7, 0, 1, 1, 1)
-
-        self.label_3 = QLabel(self.page)
+        self.label_3 = QLabel(self.tab)
         self.label_3.setObjectName(u"label_3")
+        font7 = QFont()
+        font7.setPointSize(16)
+        self.label_3.setFont(font7)
+        self.label_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_3, 0, 1, 1, 2)
 
-        self.label_8 = QLabel(self.page)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.tab_2.setStyleSheet(u"background-color: white;")
+        self.gridLayout_4 = QGridLayout(self.tab_2)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.label_7 = QLabel(self.tab_2)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFont(font7)
+        self.label_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_4.addWidget(self.label_7, 0, 1, 1, 2)
+
+        self.label_5 = QLabel(self.tab_2)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy3.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy3)
+        self.label_5.setFont(font4)
+
+        self.gridLayout_4.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.label_8 = QLabel(self.tab_2)
         self.label_8.setObjectName(u"label_8")
+        self.label_8.setFont(font5)
+        self.label_8.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout_5.addWidget(self.label_8, 1, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.label_8, 2, 1, 1, 1)
 
+        self.label_6 = QLabel(self.tab_2)
+        self.label_6.setObjectName(u"label_6")
+        sizePolicy3.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy3)
+        self.label_6.setFont(font4)
 
-        self.gridLayout_3.addLayout(self.gridLayout_5, 1, 2, 2, 1)
+        self.gridLayout_4.addWidget(self.label_6, 0, 0, 1, 1)
+
+        self.pushButton_2 = QPushButton(self.tab_2)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.pushButton_2.setFont(font6)
+        self.pushButton_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_2.setStyleSheet(u"background-color: #E1E1E1;")
+        self.pushButton_2.setIcon(icon)
+        self.pushButton_2.setIconSize(QSize(32, 32))
+        self.pushButton_2.setFlat(False)
+
+        self.gridLayout_4.addWidget(self.pushButton_2, 2, 2, 1, 1)
+
+        self.line_5 = QFrame(self.tab_2)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setFrameShape(QFrame.Shape.HLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_4.addWidget(self.line_5, 1, 0, 1, 3)
+
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QWidget()
+        self.tab_3.setObjectName(u"tab_3")
+        self.tab_3.setStyleSheet(u"background-color: white;")
+        self.gridLayout_5 = QGridLayout(self.tab_3)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.label_10 = QLabel(self.tab_3)
+        self.label_10.setObjectName(u"label_10")
+        sizePolicy3.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy3)
+        self.label_10.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_10, 0, 0, 1, 1)
+
+        self.label_9 = QLabel(self.tab_3)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setFont(font7)
+        self.label_9.setStyleSheet(u"")
+        self.label_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_5.addWidget(self.label_9, 0, 1, 1, 2)
+
+        self.line_6 = QFrame(self.tab_3)
+        self.line_6.setObjectName(u"line_6")
+        self.line_6.setFrameShape(QFrame.Shape.HLine)
+        self.line_6.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_5.addWidget(self.line_6, 1, 0, 1, 3)
+
+        self.label_12 = QLabel(self.tab_3)
+        self.label_12.setObjectName(u"label_12")
+        sizePolicy3.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy3)
+        self.label_12.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_12, 2, 0, 1, 1)
+
+        self.label_11 = QLabel(self.tab_3)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setFont(font5)
+        self.label_11.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_5.addWidget(self.label_11, 2, 1, 1, 1)
+
+        self.pushButton_3 = QPushButton(self.tab_3)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setFont(font6)
+        self.pushButton_3.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_3.setStyleSheet(u"background-color: #E1E1E1;")
+        self.pushButton_3.setIcon(icon)
+        self.pushButton_3.setIconSize(QSize(32, 32))
+        self.pushButton_3.setFlat(False)
+
+        self.gridLayout_5.addWidget(self.pushButton_3, 2, 2, 1, 1)
+
+        self.tabWidget.addTab(self.tab_3, "")
+
+        self.gridLayout_3.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         self.stackedWidget_2.addWidget(self.page)
 
@@ -613,12 +736,13 @@ class Ui_MainWindow(object):
 
         self.pushButton_executar = QPushButton(self.form)
         self.pushButton_executar.setObjectName(u"pushButton_executar")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.pushButton_executar.sizePolicy().hasHeightForWidth())
-        self.pushButton_executar.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.pushButton_executar.sizePolicy().hasHeightForWidth())
+        self.pushButton_executar.setSizePolicy(sizePolicy4)
         self.pushButton_executar.setMinimumSize(QSize(200, 0))
+        self.pushButton_executar.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.grid_contrato.addWidget(self.pushButton_executar, 0, 5, 2, 1)
 
@@ -643,6 +767,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -697,16 +822,24 @@ class Ui_MainWindow(object):
         self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
         self.label_numero_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
         self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Representante 1", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Representante 2", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Nome: ", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"CPF: ", None))
+        self.label_4.setText("")
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Editar ", None))
+        self.label_3.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Cliente A", None))
+        self.label_7.setText("")
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"CPF: ", None))
+        self.label_8.setText("")
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Nome: ", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Editar ", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Cliente B", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Nome: ", None))
+        self.label_9.setText("")
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"CPF: ", None))
+        self.label_11.setText("")
+        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Editar ", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Cliente C", None))
         self.titulo_contrato.setText(QCoreApplication.translate("MainWindow", u"Contrato", None))
         self.label_dia_vencimento_contrato.setText(QCoreApplication.translate("MainWindow", u"Dia Vencimento", None))
         self.label_dt_assinatura_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Assinatura", None))
