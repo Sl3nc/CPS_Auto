@@ -17,7 +17,7 @@ import os
 import locale
 
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QRadioButton, QVBoxLayout, QWidget
+    QMainWindow, QApplication, QLabel, QLineEdit
 )
 from PySide6.QtGui import QPixmap, QIcon, QMovie
 from PySide6.QtCore import QThread, QObject, Signal, QSize
@@ -31,19 +31,6 @@ def resource_path(relative_path):
         '_MEIPASS',
         os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
-
-def enter_press(event):
-    if event.keysym == 'Return':
-        keyboard.send('tab')
-
-def alter_estado(self, event):
-    if event.keysym == 'Down' or event.keysym == 'Up':
-        self.popup.focus()
-        keyboard.send('space')
-        
-window = Tk()
-window.bind('<Key>', enter_press)
-
 
 class IFormater: #TODO Formaters
     def cpf_formater(self, text, var, index, mode):
@@ -198,8 +185,6 @@ class IValidator:    #TODO Validators
             elif len(text) in [0,6] or text.isdecimal():
                 return True
         return False
-#sdas
-#Arquivo
 
 class File:
     def __init__(self):
@@ -214,25 +199,28 @@ class File:
                 ).encode('ascii', 'ignore').decode('ascii'))) \
                     if nome in self.options else None
 
-    def alterar(self, base, updt):  
+    def alterar(self, base, updt): 
+        caminho = self.salvar() 
+
         self.arquivo.render(base)
-        self.arquivo.save(self.caminho)
-        self.arquivo = DocxTemplate(self.caminho)
+        self.arquivo.save(caminho)
+        self.arquivo = DocxTemplate(caminho)
         self.arquivo.render(updt)
-        self.arquivo.save(self.caminho)
+        self.arquivo.save(caminho)
+
+        self.abrir(caminho)
 
     def salvar(self):
-        self.caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
+        caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
-        if self.caminho[self.caminho.rfind('/') + 1:] == '':
+        if caminho[caminho.rfind('/') + 1:] == '':
             raise Exception('Operação Cancelada')
         
-        self.caminho = self.caminho + '.docx'
-        
+        return caminho + '.docx'
     
-    def abrir(self):
+    def abrir(self, caminho: str):
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
-        os.startfile(self.caminho)
+        os.startfile(caminho)
 
 class IValido:
     def __init__(self) -> None:
@@ -325,7 +313,7 @@ class Conteudo:
             'valorPagamento': self.__set_valor(),
             'numeroRuaEmp': self.__set_num(self.dictonary['numeroRuaEmp']),
             'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
-            'dataComple': lambda: self.dictonary['dataInicio'].get()[2:],
+            'dataComple': lambda: self.dictonary['dataInicio'][2:],
             'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
             'dataInicio': self.__set_data(self.dictonary['dataInicio']),
         }
@@ -401,84 +389,15 @@ class Conteudo:
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
 class Opcionais:
-    def __init__(self, frame):
-        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-        self.janela.protocol("WM_DELETE_WINDOW", self.__disable_x)
-
-        self.janela_frame = Frame(self.janela, bd=4, bg='lightblue')
-        self.janela_frame.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-        self.janela.geometry('300x70')
-        self.janela.title('Complemento')
-        
-    def __disable_x(self):
-        pass
-
-    def exibir(self, title, ref):
-        #Titulo
-        Label(self.janela_frame, text= title,\
-            background='lightblue', font=('Times New Roman',15,'bold italic'))\
-                .place(relx=0,rely=0)
-                
-        self.canvas = Canvas(self.janela_frame, width=625, height=10, background='darkblue',border=-5)
-        self.canvas.place(relx=0.55,rely=0.05)
-                
-        self.canvas.create_line(-5,0,625,0, fill="darkblue", width=10)
-
-        ###########Valor Competência
-        valComp = StringVar()
-
-        self.entryVal = Entry(
-            self.janela_frame, 
-            textvariable = valComp,
-            validate='key', 
-            validatecommand=(
-                self.janela.register(lambda text: not text.isdecimal()), '%S'
-                )
-            ).place(relx=0,rely=0.65,relwidth=0.7,relheight=0.3)
-                
-        ref[f'val{title}'] = valComp
-
-        Button(self.janela_frame, text='OK',\
-            command= lambda: self.janela.destroy())\
-                .place(relx=0.75,rely=0.6,relwidth=0.15,relheight=0.4)
+        # self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        # self.janela.geometry('300x70')
+        # self.janela.title('Complemento')
+        ...
         
 class Layout():
-    def __init__(self) -> None:
-        pass
-
-    def  janela(self, obj, id, frame):
-        self.janela = Toplevel(frame, bd=4, bg='darkblue' )
-        self.janela.resizable(False,False)
-        self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        self.janela.transient(window)
-        self.janela.focus_force()
-        self.janela.grab_set()
-        self.janela.geometry('880x190')
-        self.janela.title(f'Entrada Sócio {id}')
-        self.janela.protocol("WM_DELETE_WINDOW", self.__disable_x)
-
-        obj.frame_ativo = Frame(self.janela, bd=4, bg='lightblue')
-        obj.frame_ativo.place(relx=0.05,rely=0.05,relwidth=0.9,relheight=0.9)
-
-        obj.base(id)
-
-        obj.compleEntry.place(relx=0.65,rely=0.85,relwidth=0.225,relheight=0.15)
-
-        Button(obj.frame_ativo, text='OK',\
-            command= lambda: self.__fechar_janela(obj))\
-                .place(relx=0.9,rely=0.75,relwidth=0.1,relheight=0.25)
-        
-    def __fechar_janela(self, obj):
-        self.janela.destroy()
-        obj.exibir()
-
-    def __disable_x(self):
-        pass
+        # self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
+        # self.janela.geometry('880x190')
+        # self.janela.title(f'Entrada Sócio {id}')
         
         # Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['empregoContra' + id].set('empresário(a)'))\
 
@@ -492,10 +411,9 @@ class Layout():
         #     command= lambda: estadoEntry.set('casado(a) em STB'))
         ...
 
-
 class IExececao(metaclass=ABCMeta):
     @abstractmethod
-    def index(self):
+    def aplicacao(self, reverso: bool):
         pass
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -507,35 +425,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.referencias = {}
 
         self.valores_gerais = [
+            'nomeEmp',
+            'cnpjEmp',
+            'cepEmp',
+            'ruaEmp',
+            'numEmp',
+            'bairroEmp',
+            'compleEmp',
             'valorPagamento',
             'dataInicio',
             'dataAssinatura',
             'diaVencimento',
-            'numeroRuaEmp',
-            'nomeEmp',
-            'ruaEmp',
-            'numEmp',
-            'bairroEmp',
-            'cepEmp',
-            'cnpjEmp',
-            'compleEmp',
-            'valCompe'
+            'numFuncionario'
             ]
 
         self.valores_contratante = [
+            'funcaoContra',
             'nomeContra',
             'rgContra',  
-            'emissorContra', 
             'cpfContra', 
+            'emissorContra', 
             'estadoCivilContra',
-            'nacionalidadeContra', 
-            'empregoContra',
-            'tipoRua',
-            'tipoRepre',
+            'cepContra',  
             'ruaContra', 
             'numContra', 
             'bairroContra',  
-            'cepContra',  
             'cidadeContra', 
             'estadoContra', 
             'compleContra'
@@ -546,7 +460,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'empregoContra': 'empresário(a)'
         }
 
-        
         self.init_reference()
 
         self.ID_MENU = 0
@@ -573,8 +486,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.executar
         )
 
+        self.comboBox_repre.currentTextChanged.connect(
+            lambda: self.stackedWidget_2.setCurrentIndex(
+                self.comboBox_repre.currentIndex()
+            )
+        )
+
         self.back_button.clicked.connect(
-            lambda: self.stackedWidget.setCurrentIndex(0)
+            self.return_menu
         )
 
         self.pb_inatividade.clicked.connect(
@@ -605,24 +524,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.referencias[nome + str(index)] = valor
 
     def executar(self):
+        print(self.referencias)
         #TODO EXECUTAR
-        try:
-            IValido.validar(self.filtro())
+        # try:
+        #     IValido.validar(self.filtro())
 
-            conteudo = Conteudo(self.referencias)
+        #     conteudo = Conteudo(self.referencias)
 
-            base = conteudo.base()
-            atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
+        #     base = conteudo.base()
+        #     atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
 
-            self.file.salvar()
-            self.file.alterar(base, atualizado)
-            self.file.abrir()
-        except decimal.InvalidOperation:
-            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        except ValueError:
-            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        except Exception as e:
-            messagebox.showwarning(title='Aviso', message= e)
+        #     self.file.alterar(base, atualizado)
+        # except decimal.InvalidOperation:
+        #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        # except ValueError:
+        #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        # except Exception as e:
+        #     messagebox.showwarning(title='Aviso', message= e)
 
     def acess_form(self, titulo: str, excecao: IExececao|None):
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
@@ -631,7 +549,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file.set_option(titulo)
 
         if self.excecao != None:
-            self.excecao.index(self)
+            self.excecao.aplicacao(self)
+
+    def return_menu(self):
+        self.stackedWidget.setCurrentIndex(self.ID_MENU)
+        if self.excecao != None:
+            self.excecao.aplicacao(self, reverso= True)
 
     def filtro(self):
         ref_temp = {
@@ -657,12 +580,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return ref_temp
 
 class ILucroPresumido(IExececao):
-    def index(self: MainWindow):
-        print('oi')
+    def aplicacao(self: MainWindow, reverso = False):
+        self.grid_contrato.removeWidget(self.pushButton_executar)
+        self.grid_contrato.addWidget(QLabel('Valor EFD'),0,6)
+        self.grid_contrato.addWidget(QLineEdit(), 1,6)
+        self.grid_contrato.addWidget(self.pushButton_executar, 0,7, 2, 1)
 
 class IFisica(IExececao):
-    def index(self: MainWindow):
-        print('oi')
+    def aplicacao(self: MainWindow, reverso = False):
+        for layout in [self.grid_empresa, self.intro_empresa]:
+            for i in range(layout.count()):
+                layout.itemAt(i).widget().hide() if reverso == False \
+                    else layout.itemAt(i).widget().show() 
 
 if __name__ == '__main__':
     app = QApplication()
