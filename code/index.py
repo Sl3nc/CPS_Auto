@@ -17,7 +17,7 @@ import os
 import locale
 
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox
+    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox
 )
 from PySide6.QtGui import QPixmap, QIcon, QMovie
 from PySide6.QtCore import QThread, QObject, Signal, QSize
@@ -455,14 +455,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'bairroContra': self.lineEdit_bairro_repre,  
             'cidadeContra': self.lineEdit_cidade_repre, 
             'estadoContra': self.lineEdit_estado_repre, 
-            'compleContra': self.lineEdit_complemento_repre
+            'compleContra': self.lineEdit_complemento_repre,
+            'nacionalidadeContra': self.lineEdit_bairro_repre,
+            'empregoContra': self.lineEdit_bairro_repre
         }
         
-        # self.status_contratante = {
-        #     'nacionalidadeContra': 'brasileiro(a)',
-        #     'empregoContra': 'empresário(a)'
-        # }
-
         self.init_reference()
 
         self.ID_MENU = 0
@@ -525,20 +522,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def executar(self):
         #TODO EXECUTAR
-        try:
-            print(
-                {
-                chave: widget.text() for chave, widget in self.referencias.items() if type(widget) == QLineEdit
-                }
-            )
-
-            print(
-                {
-                chave: widget.currentText() for chave, widget in self.referencias.items() if type(widget) == QComboBox
-                }
-            )
-        
-            # Aviso(self.filtro()).validar()
+        # try:    
+            Aviso(self.filtro()).validar()
 
             # conteudo = Conteudo(self.referencias)
 
@@ -546,12 +531,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
 
             # self.file.alterar(base, atualizado)
-        except decimal.InvalidOperation:
-            messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        except ValueError:
-            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        except Exception as e:
-            messagebox.showwarning(title='Aviso', message= e)
+        # except decimal.InvalidOperation:
+        #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
+        # except ValueError:
+        #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        # except Exception as e:
+        #     messagebox.showwarning(title='Aviso', message= e)
 
     def acess_form(self, titulo: str, excecao: IExececao|None):
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
@@ -570,23 +555,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def filtro(self):
         ref_temp = {
-            chave: widget.text() for chave, widget in self.referencias.items()
+                chave: widget.text() 
+                for chave, widget in self.referencias.items() if type(widget) == QLineEdit
+            } | {
+                chave: widget.currentText()
+                for chave, widget in self.referencias.items() if type(widget) == QComboBox
         }
 
         ref_temp.pop('compleEmp')
 
         if type(self.excecao) == IFisica:
-            for i in self.itens_juri:
-                ref_temp.pop(i,None)
+            for key in ref_temp.keys:
+                ref_temp.pop(key, None) if 'emp' in key else None
 
-        for i in range(1, self.comboBox_repre.currentData() +1):
+        for i in range(1, self.comboBox_repre.currentIndex() +2):
             ref_temp.pop('emissorContra' + str(i))
             ref_temp.pop('compleContra' + str(i))
             if ref_temp['nacionalidadeContra' + str(i)] != 'brasileiro(a)':
                 ref_temp.pop('rgContra' + str(i))
 
-        for i in range(self.comboBox_repre.currentData() + 1, 4):
-            for j in self.itens_repre:
+        for i in range(self.comboBox_repre.currentIndex() + 2, 4):
+            for j in self.valores_contratante:
                 ref_temp.pop(j + str(i),None)
 
         return ref_temp
