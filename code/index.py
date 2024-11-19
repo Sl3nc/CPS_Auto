@@ -222,17 +222,18 @@ class File:
         messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
         os.startfile(caminho)
 
-class IValido:
-    def __init__(self) -> None:
+class Aviso:
+    def __init__(self, ref) -> None:
+        self.ref = ref
         pass
 
-    def validar(self, ref):
-        resp_final = self.__textos_vazios(self.__add_vazios(ref))
+    def validar(self):
+        resp_final = self.__textos_vazios(self.__add_vazios())
 
         if len(resp_final) != 0:
             raise Exception (f'Estão vazios as seguintes dados:\n{resp_final}\nfavor preencher TODOS')
         
-    def __add_vazios(self, ref):
+    def __add_vazios(self):
         vazios_contrato = []
         vazios_emp = []
         vazios_repre1 = []
@@ -245,7 +246,7 @@ class IValido:
             3: vazios_repre3
         }
 
-        for key, valor in ref.items():
+        for key, valor in self.ref.items():
             if valor == '':
                 if 'Contra' in key:
                     for index, lista in vazios_repre.items():
@@ -493,14 +494,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.executar
         )
 
+        self.back_button.clicked.connect(
+            self.return_menu
+        )
+
         self.comboBox_repre.currentTextChanged.connect(
             lambda: self.stackedWidget_2.setCurrentIndex(
                 self.comboBox_repre.currentIndex()
             )
-        )
-
-        self.back_button.clicked.connect(
-            self.return_menu
         )
 
         self.pb_inatividade.clicked.connect(
@@ -534,7 +535,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print(self.referencias)
         #TODO EXECUTAR
         # try:
-        #     IValido.validar(self.filtro())
+                # Valido(self.filtro()).validar()
 
         #     conteudo = Conteudo(self.referencias)
 
@@ -552,9 +553,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def acess_form(self, titulo: str, excecao: IExececao|None):
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
 
-        self.excecao = excecao
         self.file.set_option(titulo)
+        self.titulo_id1.setText(titulo)
 
+        self.excecao = excecao
         if self.excecao != None:
             self.excecao.aplicacao(self)
 
