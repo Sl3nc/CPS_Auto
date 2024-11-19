@@ -413,7 +413,11 @@ class Layout():
 
 class IExececao(metaclass=ABCMeta):
     @abstractmethod
-    def aplicacao(self, reverso: bool):
+    def aplicacao(self):
+        pass
+
+    @abstractmethod
+    def remocao(self):
         pass
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -464,6 +468,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.ID_MENU = 0
         self.ID_FORM = 1
+
+        self.label_EFD = QLabel('Valor EFD')
+        self.lineEdit_EFD = QLineEdit()
 
         self.file = File()
         self.excecao = None
@@ -554,7 +561,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def return_menu(self):
         self.stackedWidget.setCurrentIndex(self.ID_MENU)
         if self.excecao != None:
-            self.excecao.aplicacao(self, reverso= True)
+            self.excecao.remocao(self)
 
     def filtro(self):
         ref_temp = {
@@ -580,18 +587,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return ref_temp
 
 class ILucroPresumido(IExececao):
-    def aplicacao(self: MainWindow, reverso = False):
+    def aplicacao(self: MainWindow):
         self.grid_contrato.removeWidget(self.pushButton_executar)
-        self.grid_contrato.addWidget(QLabel('Valor EFD'),0,6)
-        self.grid_contrato.addWidget(QLineEdit(), 1,6)
-        self.grid_contrato.addWidget(self.pushButton_executar, 0,7, 2, 1)
+        self.grid_contrato.addWidget(self.label_EFD,0,5)
+        self.grid_contrato.addWidget(self.lineEdit_EFD, 1,5)
+        self.grid_contrato.addWidget(self.pushButton_executar, 0,6, 2, 1)
+        self.lineEdit_EFD.show()
+        self.label_EFD.show()
 
+    def remocao(self: MainWindow):
+        self.grid_contrato.removeWidget(self.lineEdit_EFD)
+        self.grid_contrato.removeWidget(self.label_EFD)
+        self.lineEdit_EFD.hide()
+        self.label_EFD.hide()
+            
 class IFisica(IExececao):
-    def aplicacao(self: MainWindow, reverso = False):
+    def aplicacao(self: MainWindow):
         for layout in [self.grid_empresa, self.intro_empresa]:
             for i in range(layout.count()):
-                layout.itemAt(i).widget().hide() if reverso == False \
-                    else layout.itemAt(i).widget().show() 
+                layout.itemAt(i).widget().hide()
+
+    def remocao(self: MainWindow):
+        for layout in [self.grid_empresa, self.intro_empresa]:
+            for i in range(layout.count()):
+                layout.itemAt(i).widget().show()
 
 if __name__ == '__main__':
     app = QApplication()
