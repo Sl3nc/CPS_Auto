@@ -484,40 +484,79 @@
           </property>
           <widget class="QWidget" name="page_form_repre">
            <layout class="QGridLayout" name="grid_repre">
-            <item row="15" column="0">
-             <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
-            </item>
-            <item row="0" column="4">
-             <widget class="QLabel" name="label_orgao_repre">
-              <property name="text">
-               <string>Orgão</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_estado_civil_repre">
-              <property name="text">
-               <string>Estado Civil</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QCheckBox" name="checkBox_empresario_repre">
-              <property name="text">
-               <string>Não é Empresário?</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QLineEdit" name="lineEdit_cep_repre"/>
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="lineEdit_cpf_repre"/>
             </item>
             <item row="3" column="3">
              <widget class="QLineEdit" name="lineEdit_endereco_repre"/>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_rg_repre">
+              <property name="text">
+               <string>RG</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="3" colspan="2">
+             <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_numero_repre">
+              <property name="text">
+               <string>Número</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_estado_repre">
+              <property name="text">
+               <string>Estado</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBox_funcao_repre">
+              <item>
+               <property name="text">
+                <string>Sócio</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Adminstrador</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Procurador</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_nome_repre">
+              <property name="text">
+               <string>Nome</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QLineEdit" name="lineEdit_numero_repre"/>
+            </item>
+            <item row="15" column="2">
+             <widget class="QLineEdit" name="lineEdit_estado_repre"/>
             </item>
             <item row="4" column="3">
              <widget class="QLabel" name="label_complemento_repre">
               <property name="text">
                <string>Complemento (opcional)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_orgao_repre">
+              <property name="text">
+               <string>Orgão</string>
               </property>
              </widget>
             </item>
@@ -528,6 +567,56 @@
               </property>
              </widget>
             </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="label_cidade_repre">
+              <property name="text">
+               <string>Cidade</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="lineEdit_cep_repre"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="lineEdit_rg_repre"/>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_cpf_repre">
+              <property name="text">
+               <string>CPF</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_funcao_repre">
+              <property name="text">
+               <string>Função</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLabel" name="label_endereco_repre">
+              <property name="text">
+               <string>Endereço</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="1">
+             <widget class="QLineEdit" name="lineEdit_cidade_repre"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_estado_civil_repre">
+              <property name="text">
+               <string>Estado Civil</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_nome_repre"/>
+            </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label_bairro_repre">
               <property name="text">
@@ -535,8 +624,15 @@
               </property>
              </widget>
             </item>
-            <item row="15" column="1">
-             <widget class="QLineEdit" name="lineEdit_cidade_repre"/>
+            <item row="15" column="0">
+             <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_cep_repre">
+              <property name="text">
+               <string>CEP</string>
+              </property>
+             </widget>
             </item>
             <item row="3" column="0">
              <widget class="QComboBox" name="comboBox_estado_civil_repre">
@@ -562,106 +658,10 @@
               </item>
              </widget>
             </item>
-            <item row="2" column="2">
-             <widget class="QLabel" name="label_cep_repre">
+            <item row="3" column="1">
+             <widget class="QCheckBox" name="checkBox_empresario_repre">
               <property name="text">
-               <string>CEP</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_nome_repre">
-              <property name="text">
-               <string>Nome</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_funcao_repre">
-              <property name="text">
-               <string>Função</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="4">
-             <widget class="QLineEdit" name="lineEdit_numero_repre"/>
-            </item>
-            <item row="15" column="3" colspan="2">
-             <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
-            </item>
-            <item row="1" column="3">
-             <widget class="QLineEdit" name="lineEdit_cpf_repre"/>
-            </item>
-            <item row="4" column="2">
-             <widget class="QLabel" name="label_estado_repre">
-              <property name="text">
-               <string>Estado</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_nome_repre"/>
-            </item>
-            <item row="15" column="2">
-             <widget class="QLineEdit" name="lineEdit_estado_repre"/>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_cpf_repre">
-              <property name="text">
-               <string>CPF</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QComboBox" name="comboBox_funcao_repre">
-              <item>
-               <property name="text">
-                <string>Sócio</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Adminstrador</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Procurador</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QLineEdit" name="lineEdit_rg_repre"/>
-            </item>
-            <item row="4" column="1">
-             <widget class="QLabel" name="label_cidade_repre">
-              <property name="text">
-               <string>Cidade</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="label_rg_repre">
-              <property name="text">
-               <string>RG</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QLabel" name="label_numero_repre">
-              <property name="text">
-               <string>Número</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="3">
-             <widget class="QLabel" name="label_endereco_repre">
-              <property name="text">
-               <string>Endereço</string>
+               <string>Não é Empresário?</string>
               </property>
              </widget>
             </item>
