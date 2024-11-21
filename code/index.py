@@ -427,7 +427,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         #TODO Referencias
-        self.referencias = {
+        self.referencias = {}
+
+        self.relacoes = {
             'nomeEmp': self.lineEdit_nome_empresa,
             'cnpjEmp': self.lineEdit_cnpj_empresa,
             'cepEmp': self.lineEdit_cep_empresa,
@@ -466,13 +468,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ID_FORM = 1
 
         self.relacao_ids = {'A':1,'B':2,'C':3}
-        self.r = {
+        self.relacoes_label_cliente = {
             'nomeContra1': self.label_nome_input_clienteA,
             'nomeContra2': self.label_nome_input_clienteB,
             'nomeContra3': self.label_nome_input_clienteC,
-            'cpfContra1': self.label_cpf_clienteA,
-            'cpfContra2': self.label_cpf_clienteB,
-            'cpfContra3': self.label_cpf_clienteC,
+            'cpfContra1': self.label_cpf_input_clienteA,
+            'cpfContra2': self.label_cpf_input_clienteB,
+            'cpfContra3': self.label_cpf_input_clienteC,
         }
         self.max_repre = 3
 
@@ -550,7 +552,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def init_reference(self):
         for index in range(1, 3):
             for nome, widget in self.valores_contratante.items():
-                self.referencias[nome + str(index)] = widget
+                self.relacoes[nome + str(index)] = widget
+
+        self.referencias = {
+                chave: '' 
+                for chave, widget in self.relacoes.items() if type(widget) == QLineEdit
+            } | {
+                chave: widget.currentText()
+                for chave, widget in self.relacoes.items() if type(widget) == QComboBox
+        }
 
     def executar(self):
         #TODO EXECUTAR
@@ -598,14 +608,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.excecao.remocao(self)
 
     def filtro(self):
-        ref_temp = {
-                chave: widget.text() 
-                for chave, widget in self.referencias.items() if type(widget) == QLineEdit
-            } | {
-                chave: widget.currentText()
-                for chave, widget in self.referencias.items() if type(widget) == QComboBox
-        }
-
+        ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
 
         if type(self.excecao) == IFisica:
@@ -657,6 +660,13 @@ class IFisica(IExececao):
 
 class IEnviar(IExececao):
     def aplicacao(self: MainWindow, id: str):
+        id = self.convert_id(id)
+        for key, widget in self.relacoes.items():
+            if f'Contra{id}' in key and type(widget) == QLineEdit:
+                widget.setText(self.referencias[key])
+            elif f'Contra{id}' in key and type(widget) == QComboBox:
+                widget.setCurrentText(self.referencias[key])
+
         self.stackedWidget_2.setCurrentIndex(0)
         self.titulo_quantidade.hide()
         self.comboBox_repre.hide()
@@ -669,10 +679,15 @@ class IEnviar(IExececao):
         )
 
     def remocao(self: MainWindow, id: str):
-        id = self.convert_id(id)
-        for key, widget in self.referencias.items():
-            if f'Contra {id}' in key:
+        for key, widget in self.relacoes.items():
+            if f'Contra{id}' in key and type(widget) == QLineEdit:
                 self.referencias[key] = widget.text()
+            elif f'Contra{id}' in key and type(widget) == QComboBox:
+                self.referencias[key] = widget.currentText()
+
+        for key, widget in self.relacoes_label_cliente.items():
+            if f'Contra{id}' in key:
+                widget.setText(self.referencias[key])
 
         self.grid_repre.removeWidget(self.cb_voltar)
         self.cb_voltar.hide()
