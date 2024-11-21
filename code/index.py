@@ -17,7 +17,7 @@ import os
 import locale
 
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox
+    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton
 )
 from PySide6.QtGui import QPixmap, QIcon, QMovie
 from PySide6.QtCore import QThread, QObject, Signal, QSize
@@ -465,11 +465,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ID_MENU = 0
         self.ID_FORM = 1
 
+        self.relacao_ids = {'A':1,'B':2,'C':3}
         self.max_repre = 3
 
         self.label_EFD = QLabel('Valor EFD')
         self.lineEdit_EFD = QLineEdit()
 
+        self.cb_voltar = QPushButton()
+        self.cb_voltar.setText('Enviar')
+        
         self.file = File()
         self.excecao = None
 
@@ -520,6 +524,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
              lambda: self.acess_form('Lucro Presumido', ILucroPresumido)
         )
 
+        self.pushButton_clienteA.clicked.connect(
+            lambda: self.edit_repre('A')
+        )
+
     def init_reference(self):
         for index in range(1, 3):
             for nome, widget in self.valores_contratante.items():
@@ -565,6 +573,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.stackedWidget_2.setCurrentIndex(index)
 
+    def edit_repre(self, id: str):
+        self.stackedWidget_2.setCurrentIndex(0)
+        IEnviar.aplicacao(self, id)
+
     def return_menu(self):
         self.stackedWidget.setCurrentIndex(self.ID_MENU)
         if self.excecao != None:
@@ -596,6 +608,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 ref_temp.pop(j + str(i),None)
 
         return ref_temp
+    
+    def convert_id(self, id) -> str:
+        for key, index in self.relacao_ids.items():
+            if id == key:
+                return str(index)
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
@@ -622,6 +639,27 @@ class IFisica(IExececao):
         for layout in [self.grid_empresa, self.intro_empresa]:
             for i in range(layout.count()):
                 layout.itemAt(i).widget().show()
+
+class IEnviar(IExececao):
+    def aplicacao(self: MainWindow, id: str):
+        self.titulo_repre.setText(f'Cliente {id}')
+        self.grid_repre.addWidget(self.cb_voltar, 0,6)
+
+        self.cb_voltar.clicked.connect(
+            lambda: IEnviar.remocao(self, id)
+        )
+
+    def remocao(self: MainWindow, id: str):
+        id = self.convert_id(id)
+        for key, widget in self.referencias.items():
+            if f'Contra {id}' in key:
+                self.referencias[key] = widget.text()
+
+        self.grid_contrato.removeWidget(self.cb_voltar)
+        self.cb_voltar.hide()
+
+        self.titulo_repre.setText('Representante')
+        self.change_repre()
 
 if __name__ == '__main__':
     app = QApplication()
