@@ -465,6 +465,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ID_MENU = 0
         self.ID_FORM = 1
 
+        self.max_repre = 3
+
         self.label_EFD = QLabel('Valor EFD')
         self.lineEdit_EFD = QLineEdit()
 
@@ -476,6 +478,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon(
             resource_path('src\\imgs\\cps-icon.ico'))
         )
+
+        for i in [self.pushButton_clienteA, self.pushButton__clienteB, self.pushButton_clienteC]:
+            icon = QIcon()
+            icon.addFile(resource_path("src\\imgs\\engine.png"), QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+            i.setIcon(icon)
 
         self.logo_menu.setPixmap(QPixmap(
             resource_path('src\\imgs\\cps_horizontal.png'))
@@ -494,9 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
         self.comboBox_repre.currentTextChanged.connect(
-            lambda: self.stackedWidget_2.setCurrentIndex(
-                self.comboBox_repre.currentIndex()
-            )
+            self.change_repre
         )
 
         self.pb_inatividade.clicked.connect(
@@ -547,6 +552,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.excecao = excecao
         if self.excecao != None:
             self.excecao.aplicacao(self)
+
+    def change_repre(self):
+        valor_cb = self.comboBox_repre.currentIndex()
+        index = 0
+        if valor_cb != 0:
+            count = 0
+            for count in range(self.max_repre):
+                visivel = True if valor_cb - count >= 0 else False
+                self.tabWidget.setTabVisible(count, visivel)
+            index = 1
+
+        self.stackedWidget_2.setCurrentIndex(index)
 
     def return_menu(self):
         self.stackedWidget.setCurrentIndex(self.ID_MENU)

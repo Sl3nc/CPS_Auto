@@ -482,7 +482,7 @@
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="Page1">
+          <widget class="QWidget" name="page_form_repre">
            <layout class="QGridLayout" name="grid_repre">
             <item row="15" column="0">
              <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
@@ -667,7 +667,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="page">
+          <widget class="QWidget" name="page_show_cliente">
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
              <widget class="QTabWidget" name="tabWidget">
@@ -692,7 +692,7 @@
                </attribute>
                <layout class="QGridLayout" name="gridLayout_2">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="label_nome_clienteA">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -712,7 +712,7 @@
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="label_2">
+                 <widget class="QLabel" name="label_cpf_clienteA">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -732,7 +732,7 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLabel" name="label_4">
+                 <widget class="QLabel" name="label_cpf_input_clienteA">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -748,7 +748,7 @@
                  </widget>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="pushButton_clienteA">
                   <property name="font">
                    <font>
                     <family>Yu Gothic UI</family>
@@ -780,14 +780,14 @@
                  </widget>
                 </item>
                 <item row="1" column="0" colspan="3">
-                 <widget class="Line" name="line_4">
+                 <widget class="Line" name="line_clienteA">
                   <property name="orientation">
                    <enum>Qt::Orientation::Horizontal</enum>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1" colspan="2">
-                 <widget class="QLabel" name="label_3">
+                 <widget class="QLabel" name="label_nome_input_clienteA">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -812,7 +812,7 @@
                </attribute>
                <layout class="QGridLayout" name="gridLayout_4">
                 <item row="0" column="1" colspan="2">
-                 <widget class="QLabel" name="label_7">
+                 <widget class="QLabel" name="label_nome_input_clienteB">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -827,7 +827,7 @@
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="label_5">
+                 <widget class="QLabel" name="label_cpf_clienteB">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -847,7 +847,7 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLabel" name="label_8">
+                 <widget class="QLabel" name="label_cpf_input_clienteB">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -863,7 +863,7 @@
                  </widget>
                 </item>
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label_6">
+                 <widget class="QLabel" name="label_nome_clienteB">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -883,7 +883,7 @@
                  </widget>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="pushButton__clienteB">
                   <property name="font">
                    <font>
                     <family>Yu Gothic UI</family>
@@ -915,7 +915,7 @@
                  </widget>
                 </item>
                 <item row="1" column="0" colspan="3">
-                 <widget class="Line" name="line_5">
+                 <widget class="Line" name="line_clienteB">
                   <property name="orientation">
                    <enum>Qt::Orientation::Horizontal</enum>
                   </property>
@@ -932,7 +932,7 @@
                </attribute>
                <layout class="QGridLayout" name="gridLayout_5">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label_10">
+                 <widget class="QLabel" name="label_nome_clienteC">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -952,7 +952,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1" colspan="2">
-                 <widget class="QLabel" name="label_9">
+                 <widget class="QLabel" name="label_nome_input_clienteC">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -970,14 +970,14 @@
                  </widget>
                 </item>
                 <item row="1" column="0" colspan="3">
-                 <widget class="Line" name="line_6">
+                 <widget class="Line" name="line_clienteC">
                   <property name="orientation">
                    <enum>Qt::Orientation::Horizontal</enum>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="label_12">
+                 <widget class="QLabel" name="label_cpf_clienteC">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -997,7 +997,7 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLabel" name="label_11">
+                 <widget class="QLabel" name="label_cpf_input_clienteC">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -1013,7 +1013,7 @@
                  </widget>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="pushButton_clienteC">
                   <property name="font">
                    <font>
                     <family>Yu Gothic UI</family>
