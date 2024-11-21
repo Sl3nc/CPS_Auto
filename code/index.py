@@ -481,8 +481,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.label_EFD = QLabel('Valor EFD')
         self.lineEdit_EFD = QLineEdit()
 
-        self.cb_voltar = QPushButton()
-        self.cb_voltar.setText('Enviar')
+        self.cb_enviar_repre = QPushButton()
+        self.cb_enviar_repre.setText('Enviar')
         
         self.file = File()
         self.excecao = None
@@ -592,6 +592,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def change_repre(self):
         valor_cb = self.comboBox_repre.currentIndex()
+        self.absorve_preenche(valor_cb)
         index = 0
         if valor_cb != 0:
             count = 0
@@ -632,6 +633,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if id == key:
                 return str(index)
 
+    def absorve_preenche(self, id):
+        for key, widget in self.relacoes.items():
+            if f'Contra{id}' in key and type(widget) == QLineEdit:
+                self.referencias[key] = widget.text()
+                # print(f'Contra{id}')
+                # print(f'chave - {key}')
+            elif f'Contra{id}' in key and type(widget) == QComboBox:
+                self.referencias[key] = widget.currentText()
+
+        for key, widget in self.relacoes_label_cliente.items():
+            if f'Contra{id}' in key:
+                widget.setText(self.referencias[key])
+
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
         self.grid_contrato.removeWidget(self.pushButton_executar)
@@ -660,6 +674,8 @@ class IFisica(IExececao):
 
 class IEnviar(IExececao):
     def aplicacao(self: MainWindow, id: str):
+        self.titulo_repre.setText(f'Representante {id}')
+
         id = self.convert_id(id)
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key and type(widget) == QLineEdit:
@@ -670,30 +686,23 @@ class IEnviar(IExececao):
         self.stackedWidget_2.setCurrentIndex(0)
         self.titulo_quantidade.hide()
         self.comboBox_repre.hide()
-        self.titulo_repre.setText(f'Cliente {id}')
-        self.grid_repre.addWidget(self.cb_voltar, 0,6)
-        self.cb_voltar.show()
+        self.grid_repre.addWidget(self.cb_enviar_repre, 0,6)
+        self.cb_enviar_repre.show()
+        self.pushButton_executar.setDisabled(True)
 
-        self.cb_voltar.clicked.connect(
+        self.cb_enviar_repre.clicked.connect(
             lambda: IEnviar.remocao(self, id)
         )
 
     def remocao(self: MainWindow, id: str):
-        for key, widget in self.relacoes.items():
-            if f'Contra{id}' in key and type(widget) == QLineEdit:
-                self.referencias[key] = widget.text()
-            elif f'Contra{id}' in key and type(widget) == QComboBox:
-                self.referencias[key] = widget.currentText()
-
-        for key, widget in self.relacoes_label_cliente.items():
-            if f'Contra{id}' in key:
-                widget.setText(self.referencias[key])
-
-        self.grid_repre.removeWidget(self.cb_voltar)
-        self.cb_voltar.hide()
+        self.absorve_preenche(id)
+        
+        self.grid_repre.removeWidget(self.cb_enviar_repre)
+        self.cb_enviar_repre.hide()
         self.titulo_quantidade.show()
         self.comboBox_repre.show()
         self.titulo_repre.setText('Representante')
+        self.pushButton_executar.setDisabled(False)
         self.change_repre()
 
 if __name__ == '__main__':
