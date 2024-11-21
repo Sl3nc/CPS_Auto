@@ -315,55 +315,138 @@ class Ui_MainWindow(object):
         self.page_form_repre.setObjectName(u"page_form_repre")
         self.grid_repre = QGridLayout(self.page_form_repre)
         self.grid_repre.setObjectName(u"grid_repre")
-        self.lineEdit_bairro_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_bairro_repre.setObjectName(u"lineEdit_bairro_repre")
+        self.lineEdit_cpf_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_cpf_repre.setObjectName(u"lineEdit_cpf_repre")
 
-        self.grid_repre.addWidget(self.lineEdit_bairro_repre, 15, 0, 1, 1)
-
-        self.label_orgao_repre = QLabel(self.page_form_repre)
-        self.label_orgao_repre.setObjectName(u"label_orgao_repre")
-
-        self.grid_repre.addWidget(self.label_orgao_repre, 0, 4, 1, 1)
-
-        self.label_estado_civil_repre = QLabel(self.page_form_repre)
-        self.label_estado_civil_repre.setObjectName(u"label_estado_civil_repre")
-
-        self.grid_repre.addWidget(self.label_estado_civil_repre, 2, 0, 1, 1)
-
-        self.checkBox_empresario_repre = QCheckBox(self.page_form_repre)
-        self.checkBox_empresario_repre.setObjectName(u"checkBox_empresario_repre")
-
-        self.grid_repre.addWidget(self.checkBox_empresario_repre, 3, 1, 1, 1)
-
-        self.lineEdit_cep_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_cep_repre.setObjectName(u"lineEdit_cep_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_cep_repre, 3, 2, 1, 1)
+        self.grid_repre.addWidget(self.lineEdit_cpf_repre, 1, 3, 1, 1)
 
         self.lineEdit_endereco_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_endereco_repre.setObjectName(u"lineEdit_endereco_repre")
 
         self.grid_repre.addWidget(self.lineEdit_endereco_repre, 3, 3, 1, 1)
 
+        self.label_rg_repre = QLabel(self.page_form_repre)
+        self.label_rg_repre.setObjectName(u"label_rg_repre")
+
+        self.grid_repre.addWidget(self.label_rg_repre, 0, 2, 1, 1)
+
+        self.lineEdit_complemento_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_complemento_repre.setObjectName(u"lineEdit_complemento_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_complemento_repre, 15, 3, 1, 2)
+
+        self.label_numero_repre = QLabel(self.page_form_repre)
+        self.label_numero_repre.setObjectName(u"label_numero_repre")
+
+        self.grid_repre.addWidget(self.label_numero_repre, 2, 4, 1, 1)
+
+        self.label_estado_repre = QLabel(self.page_form_repre)
+        self.label_estado_repre.setObjectName(u"label_estado_repre")
+
+        self.grid_repre.addWidget(self.label_estado_repre, 4, 2, 1, 1)
+
+        self.comboBox_funcao_repre = QComboBox(self.page_form_repre)
+        self.comboBox_funcao_repre.addItem("")
+        self.comboBox_funcao_repre.addItem("")
+        self.comboBox_funcao_repre.addItem("")
+        self.comboBox_funcao_repre.setObjectName(u"comboBox_funcao_repre")
+
+        self.grid_repre.addWidget(self.comboBox_funcao_repre, 1, 0, 1, 1)
+
+        self.label_nome_repre = QLabel(self.page_form_repre)
+        self.label_nome_repre.setObjectName(u"label_nome_repre")
+
+        self.grid_repre.addWidget(self.label_nome_repre, 0, 1, 1, 1)
+
+        self.lineEdit_numero_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_numero_repre.setObjectName(u"lineEdit_numero_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_numero_repre, 3, 4, 1, 1)
+
+        self.lineEdit_estado_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_estado_repre.setObjectName(u"lineEdit_estado_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_estado_repre, 15, 2, 1, 1)
+
         self.label_complemento_repre = QLabel(self.page_form_repre)
         self.label_complemento_repre.setObjectName(u"label_complemento_repre")
 
         self.grid_repre.addWidget(self.label_complemento_repre, 4, 3, 1, 1)
+
+        self.label_orgao_repre = QLabel(self.page_form_repre)
+        self.label_orgao_repre.setObjectName(u"label_orgao_repre")
+
+        self.grid_repre.addWidget(self.label_orgao_repre, 0, 4, 1, 1)
 
         self.checkBox_brasileiro_repre = QCheckBox(self.page_form_repre)
         self.checkBox_brasileiro_repre.setObjectName(u"checkBox_brasileiro_repre")
 
         self.grid_repre.addWidget(self.checkBox_brasileiro_repre, 2, 1, 1, 1)
 
-        self.label_bairro_repre = QLabel(self.page_form_repre)
-        self.label_bairro_repre.setObjectName(u"label_bairro_repre")
+        self.label_cidade_repre = QLabel(self.page_form_repre)
+        self.label_cidade_repre.setObjectName(u"label_cidade_repre")
 
-        self.grid_repre.addWidget(self.label_bairro_repre, 4, 0, 1, 1)
+        self.grid_repre.addWidget(self.label_cidade_repre, 4, 1, 1, 1)
+
+        self.lineEdit_cep_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_cep_repre.setObjectName(u"lineEdit_cep_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_cep_repre, 3, 2, 1, 1)
+
+        self.lineEdit_rg_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_rg_repre.setObjectName(u"lineEdit_rg_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_rg_repre, 1, 2, 1, 1)
+
+        self.label_cpf_repre = QLabel(self.page_form_repre)
+        self.label_cpf_repre.setObjectName(u"label_cpf_repre")
+
+        self.grid_repre.addWidget(self.label_cpf_repre, 0, 3, 1, 1)
+
+        self.lineEdit_orgao_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_orgao_repre.setObjectName(u"lineEdit_orgao_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_orgao_repre, 1, 4, 1, 1)
+
+        self.label_funcao_repre = QLabel(self.page_form_repre)
+        self.label_funcao_repre.setObjectName(u"label_funcao_repre")
+
+        self.grid_repre.addWidget(self.label_funcao_repre, 0, 0, 1, 1)
+
+        self.label_endereco_repre = QLabel(self.page_form_repre)
+        self.label_endereco_repre.setObjectName(u"label_endereco_repre")
+
+        self.grid_repre.addWidget(self.label_endereco_repre, 2, 3, 1, 1)
 
         self.lineEdit_cidade_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_cidade_repre.setObjectName(u"lineEdit_cidade_repre")
 
         self.grid_repre.addWidget(self.lineEdit_cidade_repre, 15, 1, 1, 1)
+
+        self.label_estado_civil_repre = QLabel(self.page_form_repre)
+        self.label_estado_civil_repre.setObjectName(u"label_estado_civil_repre")
+
+        self.grid_repre.addWidget(self.label_estado_civil_repre, 2, 0, 1, 1)
+
+        self.lineEdit_nome_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_nome_repre.setObjectName(u"lineEdit_nome_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_nome_repre, 1, 1, 1, 1)
+
+        self.label_bairro_repre = QLabel(self.page_form_repre)
+        self.label_bairro_repre.setObjectName(u"label_bairro_repre")
+
+        self.grid_repre.addWidget(self.label_bairro_repre, 4, 0, 1, 1)
+
+        self.lineEdit_bairro_repre = QLineEdit(self.page_form_repre)
+        self.lineEdit_bairro_repre.setObjectName(u"lineEdit_bairro_repre")
+
+        self.grid_repre.addWidget(self.lineEdit_bairro_repre, 15, 0, 1, 1)
+
+        self.label_cep_repre = QLabel(self.page_form_repre)
+        self.label_cep_repre.setObjectName(u"label_cep_repre")
+
+        self.grid_repre.addWidget(self.label_cep_repre, 2, 2, 1, 1)
 
         self.comboBox_estado_civil_repre = QComboBox(self.page_form_repre)
         self.comboBox_estado_civil_repre.addItem("")
@@ -374,93 +457,10 @@ class Ui_MainWindow(object):
 
         self.grid_repre.addWidget(self.comboBox_estado_civil_repre, 3, 0, 1, 1)
 
-        self.label_cep_repre = QLabel(self.page_form_repre)
-        self.label_cep_repre.setObjectName(u"label_cep_repre")
+        self.checkBox_empresario_repre = QCheckBox(self.page_form_repre)
+        self.checkBox_empresario_repre.setObjectName(u"checkBox_empresario_repre")
 
-        self.grid_repre.addWidget(self.label_cep_repre, 2, 2, 1, 1)
-
-        self.lineEdit_orgao_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_orgao_repre.setObjectName(u"lineEdit_orgao_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_orgao_repre, 1, 4, 1, 1)
-
-        self.label_nome_repre = QLabel(self.page_form_repre)
-        self.label_nome_repre.setObjectName(u"label_nome_repre")
-
-        self.grid_repre.addWidget(self.label_nome_repre, 0, 1, 1, 1)
-
-        self.label_funcao_repre = QLabel(self.page_form_repre)
-        self.label_funcao_repre.setObjectName(u"label_funcao_repre")
-
-        self.grid_repre.addWidget(self.label_funcao_repre, 0, 0, 1, 1)
-
-        self.lineEdit_numero_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_numero_repre.setObjectName(u"lineEdit_numero_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_numero_repre, 3, 4, 1, 1)
-
-        self.lineEdit_complemento_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_complemento_repre.setObjectName(u"lineEdit_complemento_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_complemento_repre, 15, 3, 1, 2)
-
-        self.lineEdit_cpf_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_cpf_repre.setObjectName(u"lineEdit_cpf_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_cpf_repre, 1, 3, 1, 1)
-
-        self.label_estado_repre = QLabel(self.page_form_repre)
-        self.label_estado_repre.setObjectName(u"label_estado_repre")
-
-        self.grid_repre.addWidget(self.label_estado_repre, 4, 2, 1, 1)
-
-        self.lineEdit_nome_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_nome_repre.setObjectName(u"lineEdit_nome_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_nome_repre, 1, 1, 1, 1)
-
-        self.lineEdit_estado_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_estado_repre.setObjectName(u"lineEdit_estado_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_estado_repre, 15, 2, 1, 1)
-
-        self.label_cpf_repre = QLabel(self.page_form_repre)
-        self.label_cpf_repre.setObjectName(u"label_cpf_repre")
-
-        self.grid_repre.addWidget(self.label_cpf_repre, 0, 3, 1, 1)
-
-        self.comboBox_funcao_repre = QComboBox(self.page_form_repre)
-        self.comboBox_funcao_repre.addItem("")
-        self.comboBox_funcao_repre.addItem("")
-        self.comboBox_funcao_repre.addItem("")
-        self.comboBox_funcao_repre.setObjectName(u"comboBox_funcao_repre")
-
-        self.grid_repre.addWidget(self.comboBox_funcao_repre, 1, 0, 1, 1)
-
-        self.lineEdit_rg_repre = QLineEdit(self.page_form_repre)
-        self.lineEdit_rg_repre.setObjectName(u"lineEdit_rg_repre")
-
-        self.grid_repre.addWidget(self.lineEdit_rg_repre, 1, 2, 1, 1)
-
-        self.label_cidade_repre = QLabel(self.page_form_repre)
-        self.label_cidade_repre.setObjectName(u"label_cidade_repre")
-
-        self.grid_repre.addWidget(self.label_cidade_repre, 4, 1, 1, 1)
-
-        self.label_rg_repre = QLabel(self.page_form_repre)
-        self.label_rg_repre.setObjectName(u"label_rg_repre")
-
-        self.grid_repre.addWidget(self.label_rg_repre, 0, 2, 1, 1)
-
-        self.label_numero_repre = QLabel(self.page_form_repre)
-        self.label_numero_repre.setObjectName(u"label_numero_repre")
-
-        self.grid_repre.addWidget(self.label_numero_repre, 2, 4, 1, 1)
-
-        self.label_endereco_repre = QLabel(self.page_form_repre)
-        self.label_endereco_repre.setObjectName(u"label_endereco_repre")
-
-        self.grid_repre.addWidget(self.label_endereco_repre, 2, 3, 1, 1)
+        self.grid_repre.addWidget(self.checkBox_empresario_repre, 3, 1, 1, 1)
 
         self.stackedWidget_2.addWidget(self.page_form_repre)
         self.page_show_cliente = QWidget()
@@ -767,7 +767,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -798,30 +798,30 @@ class Ui_MainWindow(object):
         self.comboBox_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"2", None))
         self.comboBox_repre.setItemText(2, QCoreApplication.translate("MainWindow", u"3", None))
 
-        self.label_orgao_repre.setText(QCoreApplication.translate("MainWindow", u"Org\u00e3o", None))
-        self.label_estado_civil_repre.setText(QCoreApplication.translate("MainWindow", u"Estado Civil", None))
-        self.checkBox_empresario_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00e3o \u00e9 Empres\u00e1rio?", None))
+        self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
+        self.label_numero_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
+        self.label_estado_repre.setText(QCoreApplication.translate("MainWindow", u"Estado", None))
+        self.comboBox_funcao_repre.setItemText(0, QCoreApplication.translate("MainWindow", u"S\u00f3cio", None))
+        self.comboBox_funcao_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"Adminstrador", None))
+        self.comboBox_funcao_repre.setItemText(2, QCoreApplication.translate("MainWindow", u"Procurador", None))
+
+        self.label_nome_repre.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
         self.label_complemento_repre.setText(QCoreApplication.translate("MainWindow", u"Complemento (opcional)", None))
+        self.label_orgao_repre.setText(QCoreApplication.translate("MainWindow", u"Org\u00e3o", None))
         self.checkBox_brasileiro_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00e3o \u00e9 Brasileiro?", None))
+        self.label_cidade_repre.setText(QCoreApplication.translate("MainWindow", u"Cidade", None))
+        self.label_cpf_repre.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
+        self.label_funcao_repre.setText(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00e3o", None))
+        self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
+        self.label_estado_civil_repre.setText(QCoreApplication.translate("MainWindow", u"Estado Civil", None))
         self.label_bairro_repre.setText(QCoreApplication.translate("MainWindow", u"Bairro", None))
+        self.label_cep_repre.setText(QCoreApplication.translate("MainWindow", u"CEP", None))
         self.comboBox_estado_civil_repre.setItemText(0, QCoreApplication.translate("MainWindow", u"Solteiro(a)", None))
         self.comboBox_estado_civil_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"Divorciado(a)", None))
         self.comboBox_estado_civil_repre.setItemText(2, QCoreApplication.translate("MainWindow", u"Vi\u00favo(a)", None))
         self.comboBox_estado_civil_repre.setItemText(3, QCoreApplication.translate("MainWindow", u"Casado(a)", None))
 
-        self.label_cep_repre.setText(QCoreApplication.translate("MainWindow", u"CEP", None))
-        self.label_nome_repre.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
-        self.label_funcao_repre.setText(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00e3o", None))
-        self.label_estado_repre.setText(QCoreApplication.translate("MainWindow", u"Estado", None))
-        self.label_cpf_repre.setText(QCoreApplication.translate("MainWindow", u"CPF", None))
-        self.comboBox_funcao_repre.setItemText(0, QCoreApplication.translate("MainWindow", u"S\u00f3cio", None))
-        self.comboBox_funcao_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"Adminstrador", None))
-        self.comboBox_funcao_repre.setItemText(2, QCoreApplication.translate("MainWindow", u"Procurador", None))
-
-        self.label_cidade_repre.setText(QCoreApplication.translate("MainWindow", u"Cidade", None))
-        self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
-        self.label_numero_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
-        self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
+        self.checkBox_empresario_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00e3o \u00e9 Empres\u00e1rio?", None))
         self.label_nome_clienteA.setText(QCoreApplication.translate("MainWindow", u"Nome: ", None))
         self.label_cpf_clienteA.setText(QCoreApplication.translate("MainWindow", u"CPF: ", None))
         self.label_cpf_input_clienteA.setText("")

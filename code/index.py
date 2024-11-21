@@ -466,6 +466,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ID_FORM = 1
 
         self.relacao_ids = {'A':1,'B':2,'C':3}
+        self.r = {
+            'nomeContra1': self.label_nome_input_clienteA,
+            'nomeContra2': self.label_nome_input_clienteB,
+            'nomeContra3': self.label_nome_input_clienteC,
+            'cpfContra1': self.label_cpf_clienteA,
+            'cpfContra2': self.label_cpf_clienteB,
+            'cpfContra3': self.label_cpf_clienteC,
+        }
         self.max_repre = 3
 
         self.label_EFD = QLabel('Valor EFD')
@@ -525,7 +533,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
         self.pushButton_clienteA.clicked.connect(
-            lambda: self.edit_repre('A')
+            lambda: IEnviar.aplicacao(self, 'A')
+
+        )
+
+        self.pushButton__clienteB.clicked.connect(
+            lambda: IEnviar.aplicacao(self, 'B')
+
+        )
+
+        self.pushButton_clienteC.clicked.connect(
+            lambda: IEnviar.aplicacao(self, 'C')
+
         )
 
     def init_reference(self):
@@ -572,10 +591,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             index = 1
 
         self.stackedWidget_2.setCurrentIndex(index)
-
-    def edit_repre(self, id: str):
-        self.stackedWidget_2.setCurrentIndex(0)
-        IEnviar.aplicacao(self, id)
 
     def return_menu(self):
         self.stackedWidget.setCurrentIndex(self.ID_MENU)
@@ -642,8 +657,12 @@ class IFisica(IExececao):
 
 class IEnviar(IExececao):
     def aplicacao(self: MainWindow, id: str):
+        self.stackedWidget_2.setCurrentIndex(0)
+        self.titulo_quantidade.hide()
+        self.comboBox_repre.hide()
         self.titulo_repre.setText(f'Cliente {id}')
         self.grid_repre.addWidget(self.cb_voltar, 0,6)
+        self.cb_voltar.show()
 
         self.cb_voltar.clicked.connect(
             lambda: IEnviar.remocao(self, id)
@@ -655,9 +674,10 @@ class IEnviar(IExececao):
             if f'Contra {id}' in key:
                 self.referencias[key] = widget.text()
 
-        self.grid_contrato.removeWidget(self.cb_voltar)
+        self.grid_repre.removeWidget(self.cb_voltar)
         self.cb_voltar.hide()
-
+        self.titulo_quantidade.show()
+        self.comboBox_repre.show()
         self.titulo_repre.setText('Representante')
         self.change_repre()
 
