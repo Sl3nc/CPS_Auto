@@ -425,6 +425,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
+        self.vez = 1
+
+        self.atual_stacked_2 = 0
 
         #TODO Referencias
         self.referencias = {}
@@ -591,13 +594,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.excecao.aplicacao(self)
 
     def change_repre(self):
-        valor_cb = self.comboBox_repre.currentIndex()
-        self.absorve_preenche(valor_cb)
+        if self.atual_stacked_2 == 0:
+            self.absorve_preenche(1)
+        self.atual_stacked_2 = self.comboBox_repre.currentIndex()
         index = 0
-        if valor_cb != 0:
+        if self.atual_stacked_2 != 0:
             count = 0
             for count in range(self.max_repre):
-                visivel = True if valor_cb - count >= 0 else False
+                visivel = True if self.atual_stacked_2 - count >= 0 else False
                 self.tabWidget.setTabVisible(count, visivel)
             index = 1
 
@@ -637,14 +641,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key and type(widget) == QLineEdit:
                 self.referencias[key] = widget.text()
-                # print(f'Contra{id}')
-                # print(f'chave - {key}')
+                print(f'Contra{id}')
+                print(f'chave - {key}')
             elif f'Contra{id}' in key and type(widget) == QComboBox:
                 self.referencias[key] = widget.currentText()
 
         for key, widget in self.relacoes_label_cliente.items():
             if f'Contra{id}' in key:
                 widget.setText(self.referencias[key])
+
+        print(f'---------------------------------------{self.vez}')
+        self.vez = self.vez + 1
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
@@ -703,7 +710,8 @@ class IEnviar(IExececao):
         self.comboBox_repre.show()
         self.titulo_repre.setText('Representante')
         self.pushButton_executar.setDisabled(False)
-        self.change_repre()
+        self.stackedWidget_2.setCurrentIndex(1)
+        self.cb_enviar_repre.clicked.disconnect()
 
 if __name__ == '__main__':
     app = QApplication()
