@@ -703,7 +703,7 @@ class IEnviar(IExececao):
 
     def remocao(self: MainWindow, id: str):
         self.absorve_preenche(id)
-        
+        self.cb_enviar_repre.clicked.disconnect()
         self.grid_repre.removeWidget(self.cb_enviar_repre)
         self.cb_enviar_repre.hide()
         self.titulo_quantidade.show()
@@ -711,7 +711,6 @@ class IEnviar(IExececao):
         self.titulo_repre.setText('Representante')
         self.pushButton_executar.setDisabled(False)
         self.stackedWidget_2.setCurrentIndex(1)
-        self.cb_enviar_repre.clicked.disconnect()
 
 if __name__ == '__main__':
     app = QApplication()
