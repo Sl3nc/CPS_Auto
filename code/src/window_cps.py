@@ -250,12 +250,12 @@ class Ui_MainWindow(object):
 
         self.grid_empresa.addWidget(self.label_complemento_empresa, 2, 2, 1, 1)
 
-        self.spinBox = QSpinBox(self.form)
-        self.spinBox.setObjectName(u"spinBox")
-        self.spinBox.setMinimum(1)
-        self.spinBox.setMaximum(1000)
+        self.lineEdit_numero_empresa = QSpinBox(self.form)
+        self.lineEdit_numero_empresa.setObjectName(u"lineEdit_numero_empresa")
+        self.lineEdit_numero_empresa.setMinimum(1)
+        self.lineEdit_numero_empresa.setMaximum(1000)
 
-        self.grid_empresa.addWidget(self.spinBox, 3, 0, 1, 1)
+        self.grid_empresa.addWidget(self.lineEdit_numero_empresa, 3, 0, 1, 1)
 
 
         self.verticalLayout_3.addLayout(self.grid_empresa)
@@ -829,7 +829,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stackedWidget_2.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 

@@ -102,6 +102,12 @@ class SpecialOnly(QValidator):
             return QValidator.State.Acceptable
         return QValidator.State.Invalid
 
+class TextOnly(QValidator):
+    def validate(self, string, index):
+        if re.compile("[a-zA-Z]+").fullmatch(string) or string == '':
+            return QValidator.State.Acceptable
+        return QValidator.State.Invalid
+
 class IValidator:    #TODO Validators
     def str_validator(self, text):
         return not text.isdecimal()
@@ -395,13 +401,6 @@ class Conteudo:
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
-class Layout():
-        # self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        # self.janela.geometry('880x190')
-        # self.janela.title(f'Entrada Sócio {id}')
-        
-        # Opcionais(self.frame_ativo).exibir('Emprego', self.referencias)if empreg_var.get() else self.referencias['empregoContra' + id].set('empresário(a)'))\
-
         # subLista.add_command(label='Comunhão Parcial de Bens', \
         #     command= lambda: estadoEntry.set('casado(a) em CPB'))
         
@@ -410,7 +409,6 @@ class Layout():
         
         # subLista.add_command(label='Separação Total de Bens',\
         #     command= lambda: estadoEntry.set('casado(a) em STB'))
-        ...
 
 class IExececao(metaclass=ABCMeta):
     @abstractmethod
@@ -427,7 +425,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.vez = 1
-        self.lineEdit_cnpj_empresa.setValidator(SpecialOnly())
 
         self.atual_stacked_2 = 0
 
@@ -476,8 +473,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.init_reference()
 
-        self.ID_MENU = 0
-        self.ID_FORM = 1
+        self.relacoes_validator ={
+            self.lineEdit_cnpj_empresa: SpecialOnly(),
+            self.lineEdit_cep_empresa: SpecialOnly(),
+            self.lineEdit_cpf_repre: SpecialOnly(),
+            self.lineEdit_cep_repre: SpecialOnly(),
+            self.lineEdit_dt_inicio_contrato: SpecialOnly(),
+            self.lineEdit_dt_assinatura_contrato: SpecialOnly(),
+            self.lineEdit_nome_repre: TextOnly(),
+            self.lineEdit_orgao_repre: TextOnly(),
+            self.lineEdit_nacio: TextOnly(),
+            self.lineEdit_cargo: TextOnly(),
+            self.lineEdit_cidade_repre: TextOnly(),
+            self.lineEdit_estado_repre: TextOnly()
+        }
+
+        for widget, validator in self.relacoes_validator.items():
+            widget.setValidator(validator)
 
         self.relacao_ids = {'A':1,'B':2,'C':3}
         self.relacoes_label_cliente = {
@@ -496,6 +508,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         for i in [self.lineEdit_nacio, self.pushButton_nacio, self.lineEdit_cargo, self.pushButton_cargo]:
             i.hide()
+
+        self.ID_MENU = 0
+        self.ID_FORM = 1
         
         self.max_repre = 3
       
@@ -620,6 +635,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.excecao != None:
             self.excecao.aplicacao(self)
 
+    #TODO CHANGE REPRE
     def change_repre(self):
         if self.atual_stacked_2 == 0:
             self.absorve_preenche(1)
@@ -631,6 +647,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 visivel = True if self.atual_stacked_2 - count >= 0 else False
                 self.tabWidget.setTabVisible(count, visivel)
             index = 1
+        else: #Se está voltando para o 0, necessáriamente deve ter Contra1
+            for key, widget in self.relacoes.items():
+                if f'Contra1' in key and type(widget) == QLineEdit:
+                    widget.setText(self.referencias[key])
+                elif f'Contra1' in key and type(widget) == QComboBox:
+                    widget.setCurrentText(self.referencias[key])
 
         self.stackedWidget_2.setCurrentIndex(index)
 
@@ -663,7 +685,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
-            
+    #TODO ABS
     def absorve_preenche(self, id):
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key and type(widget) == QLineEdit:
@@ -712,6 +734,7 @@ class IFisica(IExececao):
             for i in range(layout.count()):
                 layout.itemAt(i).widget().show()
 
+#TODO ENVIAR
 class IEnviar(IExececao):
     def aplicacao(self: MainWindow, id: str):
         self.titulo_repre.setText(f'Representante {id}')
