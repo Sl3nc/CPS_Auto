@@ -285,7 +285,7 @@ class Conteudo:
 
         self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
 
-        self.conteudo = {
+        self.conteudo_base = {
             1: [
                 '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
@@ -304,8 +304,8 @@ class Conteudo:
     def base(self):
         return {
             'cabecalho_emp' : self.cabecalho[0],
-            'honorarios' : self.conteudo[self.qnt][0],
-            'assinatura' : self.conteudo[self.qnt][1]
+            'honorarios' : self.conteudo_base[self.qnt][0],
+            'assinatura' : self.conteudo_base[self.qnt][1]
         }
 
     def update_dict(self, qnt_repre):
