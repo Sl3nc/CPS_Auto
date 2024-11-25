@@ -15,9 +15,10 @@ import re
 import sys
 import os
 import locale
+import traceback
 
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton
+    QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton, QSpinBox, QDoubleSpinBox
 )
 from PySide6.QtGui import QPixmap, QIcon, QMovie, QValidator
 from PySide6.QtCore import QThread, QObject, Signal, QSize
@@ -32,7 +33,7 @@ def resource_path(relative_path):
         os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-class IFormater: #TODO Formaters
+class IFormater:
     def cpf_formater(self, text, var, index, mode):
         #Só recebe valor que passa pelo validador
         valor = text.get()
@@ -108,7 +109,7 @@ class TextOnly(QValidator):
             return QValidator.State.Acceptable
         return QValidator.State.Invalid
 
-class IValidator:    #TODO Validators
+class IValidator:    
     def str_validator(self, text):
         return not text.isdecimal()
     
@@ -288,9 +289,10 @@ class Aviso:
 
         return resp_final
 
+#TODO CONTEUDO
 class Conteudo:
     def __init__(self, referencias):
-        self.dictonary = {chave: copy.deepcopy(valor.get()) for chave, valor in referencias.items()}
+        self.dictonary = copy.deepcopy(referencias)
         
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
@@ -298,14 +300,14 @@ class Conteudo:
         self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
 
         self.conteudo_base = {
-            1: [
+            0: [
                 '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                 '''
                 ],
-            2: [
+            1: [
                 '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
                 '''_______________________________                                                  ____________________________________
@@ -313,18 +315,17 @@ class Conteudo:
                 ''']
         }
 
-    def base(self):
+    def base(self, index_atual: int):
         return {
             'cabecalho_emp' : self.cabecalho[0],
-            'honorarios' : self.conteudo_base[self.qnt][0],
-            'assinatura' : self.conteudo_base[self.qnt][1]
+            'honorarios' : self.conteudo_base[index_atual][0],
+            'assinatura' : self.conteudo_base[index_atual][1]
         }
 
     def update_dict(self, qnt_repre):
-
         ref = {
             'valorPagamento': self.__set_valor(),
-            'numeroRuaEmp': self.__set_num(self.dictonary['numeroRuaEmp']),
+            'numEmp': self.__set_num(self.dictonary['numEmp']),
             'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
             'dataComple': lambda: self.dictonary['dataInicio'][2:],
             'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
@@ -606,24 +607,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             } | {
                 chave: widget.currentText()
                 for chave, widget in self.relacoes.items() if type(widget) == QComboBox
+            } | {
+                chave: widget.text()
+                for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
+        #TODO TESTE EXECUTAR
+        teste.preencher_teste(self)
+
     def executar(self):
-        # try:    
+        try:    
             Aviso(self.filtro()).validar()
+            conteudo = Conteudo(self.referencias)
+            print(self.referencias)
 
-            # conteudo = Conteudo(self.referencias)
+            qnt_repre = self.comboBox_repre.currentIndex()
+            base = conteudo.base(qnt_repre)
+            atualizado = conteudo.update_dict(qnt_repre)
 
-            # base = conteudo.base()
-            # atualizado = conteudo.update_dict(self.comboBox_repre.currentData())
-
-            # self.file.alterar(base, atualizado)
+            self.file.alterar(base, atualizado)
         # except decimal.InvalidOperation:
         #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
         # except ValueError:
         #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
-        # except Exception as e:
-        #     messagebox.showwarning(title='Aviso', message= e)
+        except Exception as e:
+            traceback.print_exc()
+            messagebox.showwarning(title='Aviso', message= e)
 
     def acess_form(self, titulo: str, excecao: IExececao|None):
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
@@ -635,7 +644,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.excecao != None:
             self.excecao.aplicacao(self)
 
-    #TODO CHANGE REPRE
     def change_repre(self):
         if self.atual_stacked_2 == 0:
             self.absorve_preenche(1)
@@ -685,7 +693,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
-    #TODO ABS
+
     def absorve_preenche(self, id):
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key and type(widget) == QLineEdit:
@@ -707,6 +715,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if key == check_box:
                 lineEdit, button = list
         return lineEdit,button
+
+#TODO TESTE
+class teste:
+    def preencher_teste(self: MainWindow):
+        for index, chave in enumerate(self.referencias.keys()):
+            self.referencias[chave] = str(index)
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
@@ -734,7 +748,6 @@ class IFisica(IExececao):
             for i in range(layout.count()):
                 layout.itemAt(i).widget().show()
 
-#TODO ENVIAR
 class IEnviar(IExececao):
     def aplicacao(self: MainWindow, id: str):
         self.titulo_repre.setText(f'Representante {id}')
