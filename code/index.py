@@ -479,6 +479,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'cpfContra2': self.label_cpf_input_clienteB,
             'cpfContra3': self.label_cpf_input_clienteC,
         }
+
+        self.relacoes_checkbox = {
+            self.checkBox_nacio_repre : [self.lineEdit_nacio, self.pushButton_nacio],
+            self.checkBox_cargo_repre: [self.lineEdit_cargo, self.pushButton_cargo]
+        }
+
+        for i in [self.lineEdit_nacio, self.pushButton_nacio, self.lineEdit_cargo, self.pushButton_cargo]:
+            i.hide()
+        
         self.max_repre = 3
 
         self.label_EFD = QLabel('Valor EFD')
@@ -496,7 +505,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             resource_path('src\\imgs\\cps-icon.ico'))
         )
 
-        for i in [self.pushButton_clienteA, self.pushButton__clienteB, self.pushButton_clienteC]:
+        for i in [self.pushButton_clienteA, self.pushButton_clienteB, self.pushButton_clienteC]:
             icon = QIcon()
             icon.addFile(resource_path("src\\imgs\\engine.png"), QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             i.setIcon(icon)
@@ -521,6 +530,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.change_repre
         )
 
+        self.checkBox_nacio_repre.checkStateChanged.connect(
+            lambda: ICheckBox.aplicacao(self, self.checkBox_nacio_repre)
+        )
+
+        self.checkBox_cargo_repre.checkStateChanged.connect(
+            lambda: ICheckBox.aplicacao(self, self.checkBox_cargo_repre)
+        )
+
+        self.pushButton_nacio.clicked.connect(
+            lambda: ICheckBox.remocao(self, self.checkBox_nacio_repre)
+        )
+
+        self.pushButton_cargo.clicked.connect(
+            lambda: ICheckBox.remocao(self, self.checkBox_cargo_repre)
+        )
+
         self.pb_inatividade.clicked.connect(
              lambda: self.acess_form('Inatividade', None)
         )
@@ -542,7 +567,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         )
 
-        self.pushButton__clienteB.clicked.connect(
+        self.pushButton_clienteB.clicked.connect(
             lambda: IEnviar.aplicacao(self, 'B')
 
         )
@@ -636,7 +661,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
-
+            
     def absorve_preenche(self, id):
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key and type(widget) == QLineEdit:
@@ -652,6 +677,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         print(f'---------------------------------------{self.vez}')
         self.vez = self.vez + 1
+
+    def items_checkbox(self, check_box: QCheckBox):
+        for key, list in self.relacoes_checkbox.items():
+            if key == check_box:
+                lineEdit, button = list
+        return lineEdit,button
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
@@ -711,6 +742,25 @@ class IEnviar(IExececao):
         self.titulo_repre.setText('Representante')
         self.pushButton_executar.setDisabled(False)
         self.stackedWidget_2.setCurrentIndex(1)
+
+class ICheckBox:
+    def aplicacao(self: MainWindow, check_box: QCheckBox):
+        lineEdit, button = self.items_checkbox(check_box)
+
+        if check_box.isChecked() == True:
+            check_box.hide()
+            lineEdit.show()
+            lineEdit.setFocus()
+            button.show()
+
+    def remocao(self: MainWindow, check_box: QCheckBox):
+        lineEdit, button = self.items_checkbox(check_box)
+        
+        lineEdit.setText('')
+        check_box.setChecked(False)
+        check_box.show()
+        lineEdit.hide()
+        button.hide()
 
 if __name__ == '__main__':
     app = QApplication()
