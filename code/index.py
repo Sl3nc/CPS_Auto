@@ -204,6 +204,7 @@ class File:
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
         self.base_caminho = 'src\\CPS\'s\\CPS {0}.docx'
 
+#Falta usarmos o set quando se escolhe uma opção do menu
     def set_option(self, nome: str):
         self.arquivo = \
             DocxTemplate(
@@ -322,14 +323,15 @@ class Conteudo:
             'assinatura' : self.conteudo_base[index_atual][1]
         }
 
+    #TODO UPDT DICT
     def update_dict(self, qnt_repre):
         ref = {
             'valorPagamento': self.__set_valor(),
             'numEmp': self.__set_num(self.dictonary['numEmp']),
             'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
             'dataComple': lambda: self.dictonary['dataInicio'][2:],
-            'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
-            'dataInicio': self.__set_data(self.dictonary['dataInicio']),
+            # 'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
+            # 'dataInicio': self.__set_data(self.dictonary['dataInicio']),
         }
 
         self.dictonary['valPorc'] = self.__calc_porc()
