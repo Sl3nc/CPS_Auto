@@ -24,7 +24,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menu">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -314,7 +314,14 @@
            <widget class="QLineEdit" name="lineEdit_bairro_empresa"/>
           </item>
           <item row="1" column="2">
-           <widget class="QLineEdit" name="lineEdit_cep_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_cep_empresa">
+            <property name="maxLength">
+             <number>9</number>
+            </property>
+            <property name="placeholderText">
+             <string>_____-___</string>
+            </property>
+           </widget>
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="label_bairro_empresa">
@@ -322,9 +329,6 @@
              <string>Bairro</string>
             </property>
            </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLineEdit" name="lineEdit_numero_empresa"/>
           </item>
           <item row="1" column="0">
            <widget class="QLineEdit" name="lineEdit_nome_empresa"/>
@@ -354,7 +358,11 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_cnpj_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_cnpj_empresa">
+            <property name="placeholderText">
+             <string>__.___.___/____-__</string>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_numero_empresa">
@@ -370,6 +378,16 @@
            <widget class="QLabel" name="label_complemento_empresa">
             <property name="text">
              <string>Complemento (opcional)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QSpinBox" name="spinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
             </property>
            </widget>
           </item>
@@ -488,7 +506,14 @@
              <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
             </item>
             <item row="1" column="3">
-             <widget class="QLineEdit" name="lineEdit_cpf_repre"/>
+             <widget class="QLineEdit" name="lineEdit_cpf_repre">
+              <property name="maxLength">
+               <number>14</number>
+              </property>
+              <property name="placeholderText">
+               <string>___.___.___-__</string>
+              </property>
+             </widget>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_funcao_repre">
@@ -528,9 +553,6 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="4">
-             <widget class="QLineEdit" name="lineEdit_numero_repre"/>
-            </item>
             <item row="16" column="3" colspan="2">
              <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
             </item>
@@ -563,7 +585,14 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QLineEdit" name="lineEdit_rg_repre"/>
+             <widget class="QLineEdit" name="lineEdit_rg_repre">
+              <property name="maxLength">
+               <number>12</number>
+              </property>
+              <property name="placeholderText">
+               <string>XX__.___.___</string>
+              </property>
+             </widget>
             </item>
             <item row="1" column="4">
              <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
@@ -614,6 +643,12 @@
             </item>
             <item row="2" column="1">
              <widget class="QFrame" name="frame_nacio">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Shape::StyledPanel</enum>
               </property>
@@ -645,6 +680,45 @@
               </layout>
              </widget>
             </item>
+            <item row="3" column="1">
+             <widget class="QFrame" name="frame_cargo">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="lineEdit_cargo">
+                 <property name="placeholderText">
+                  <string>Insira o cargo</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pushButton_cargo">
+                 <property name="text">
+                  <string>Desfazer</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QCheckBox" name="checkBox_cargo_repre">
+                 <property name="text">
+                  <string>Não é Empresário?</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="16" column="2">
              <widget class="QLineEdit" name="lineEdit_estado_repre"/>
             </item>
@@ -659,7 +733,14 @@
              </widget>
             </item>
             <item row="3" column="2">
-             <widget class="QLineEdit" name="lineEdit_cep_repre"/>
+             <widget class="QLineEdit" name="lineEdit_cep_repre">
+              <property name="maxLength">
+               <number>9</number>
+              </property>
+              <property name="placeholderText">
+               <string>_____-___</string>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QComboBox" name="comboBox_funcao_repre">
@@ -694,37 +775,14 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="QFrame" name="frame_cargo">
-              <property name="frameShape">
-               <enum>QFrame::Shape::StyledPanel</enum>
+            <item row="3" column="4">
+             <widget class="QSpinBox" name="lineEdit_numero_repre">
+              <property name="minimum">
+               <number>1</number>
               </property>
-              <property name="frameShadow">
-               <enum>QFrame::Shadow::Raised</enum>
+              <property name="maximum">
+               <number>1000</number>
               </property>
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="1" column="0">
-                <widget class="QLineEdit" name="lineEdit_cargo">
-                 <property name="placeholderText">
-                  <string>Insira o cargo</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="pushButton_cargo">
-                 <property name="text">
-                  <string>Desfazer</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0" colspan="2">
-                <widget class="QCheckBox" name="checkBox_cargo_repre">
-                 <property name="text">
-                  <string>Não é Empresário?</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
              </widget>
             </item>
            </layout>
@@ -1160,49 +1218,6 @@
         </item>
         <item>
          <layout class="QGridLayout" name="grid_contrato">
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_dt_inicio_contrato"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="lineEdit_dt_assinatura_contrato"/>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_dia_vencimento_contrato">
-            <property name="text">
-             <string>Dia Vencimento</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLineEdit" name="lineEdit_num_empreg_contrato"/>
-          </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_dia_vencimento_contrato"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_valor_contrato"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_dt_assinatura_contrato">
-            <property name="text">
-             <string>Data Assinatura</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_valor_contrato">
-            <property name="text">
-             <string>Valor</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_num_empreg_contrato">
-            <property name="text">
-             <string>Num. Empregados</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
            <widget class="QLabel" name="label_dt_inicio_contrato">
             <property name="text">
@@ -1210,7 +1225,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="5" rowspan="2">
+          <item row="0" column="5" rowspan="3">
            <widget class="QPushButton" name="pushButton_executar">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1229,6 +1244,98 @@
             </property>
             <property name="text">
              <string>Enviar</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="lineEdit_dt_inicio_contrato">
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>__/__/____</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_num_empreg_contrato">
+            <property name="text">
+             <string>Num. Empregados</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_dt_assinatura_contrato">
+            <property name="text">
+             <string>Data Assinatura</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_valor_contrato">
+            <property name="text">
+             <string>Valor</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="lineEdit_dt_assinatura_contrato">
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>__/__/____</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_dia_vencimento_contrato">
+            <property name="text">
+             <string>Dia Vencimento</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QDoubleSpinBox" name="lineEdit_valor_contrato">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+            </property>
+            <property name="prefix">
+             <string>R$ </string>
+            </property>
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <double>99999.990000000005239</double>
+            </property>
+            <property name="stepType">
+             <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QSpinBox" name="lineEdit_num_empreg_contrato"/>
+          </item>
+          <item row="2" column="3">
+           <widget class="QSpinBox" name="lineEdit_dia_vencimento_contrato">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>30</number>
             </property>
            </widget>
           </item>

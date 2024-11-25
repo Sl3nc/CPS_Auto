@@ -19,7 +19,7 @@ import locale
 from PySide6.QtWidgets import (
     QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton
 )
-from PySide6.QtGui import QPixmap, QIcon, QMovie
+from PySide6.QtGui import QPixmap, QIcon, QMovie, QValidator
 from PySide6.QtCore import QThread, QObject, Signal, QSize
 from src.window_cps import Ui_MainWindow
 
@@ -95,6 +95,12 @@ class IFormater: #TODO Formaters
             valor = valor + ',00'
         
         text.set(valor)      
+
+class SpecialOnly(QValidator):
+    def validate(self, string, index):
+        if re.compile("[./0-9-]+").fullmatch(string) or string == '':
+            return QValidator.State.Acceptable
+        return QValidator.State.Invalid
 
 class IValidator:    #TODO Validators
     def str_validator(self, text):
@@ -389,12 +395,6 @@ class Conteudo:
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
-class Opcionais:
-        # self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
-        # self.janela.geometry('300x70')
-        # self.janela.title('Complemento')
-        ...
-        
 class Layout():
         # self.janela.iconbitmap(resource_path('imgs\\cps-icon.ico'))
         # self.janela.geometry('880x190')
@@ -421,15 +421,22 @@ class IExececao(metaclass=ABCMeta):
     def remocao(self):
         pass
 
+#TODO MAIN
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
         self.vez = 1
+        self.lineEdit_cnpj_empresa.setValidator(SpecialOnly())
 
         self.atual_stacked_2 = 0
 
-        #TODO Referencias
+        self.label_EFD = QLabel('Valor EFD')
+        self.lineEdit_EFD = QLineEdit()
+
+        self.cb_enviar_repre = QPushButton()
+        self.cb_enviar_repre.setText('Enviar')
+
         self.referencias = {}
 
         self.relacoes = {
@@ -491,13 +498,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             i.hide()
         
         self.max_repre = 3
-
-        self.label_EFD = QLabel('Valor EFD')
-        self.lineEdit_EFD = QLineEdit()
-
-        self.cb_enviar_repre = QPushButton()
-        self.cb_enviar_repre.setText('Enviar')
-        
+      
         self.file = File()
         self.excecao = None
 
@@ -593,7 +594,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
     def executar(self):
-        #TODO EXECUTAR
         # try:    
             Aviso(self.filtro()).validar()
 
