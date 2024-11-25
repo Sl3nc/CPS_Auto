@@ -445,6 +445,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'dataAssinatura': self.lineEdit_dt_assinatura_contrato,
             'diaVencimento': self.lineEdit_dia_vencimento_contrato,
             'numFuncionario': self.lineEdit_num_empreg_contrato,
+            'valorEFD': self.lineEdit_EFD
         }
 
         self.valores_contratante = {
@@ -461,9 +462,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'cidadeContra': self.lineEdit_cidade_repre, 
             'estadoContra': self.lineEdit_estado_repre, 
             'compleContra': self.lineEdit_complemento_repre,
-            'nacionalidadeContra': self.lineEdit_bairro_repre, #Colocar aqui seu lineEdit da janela, se este estiver vazio, fica como "brasileiro"
-            'empregoContra': self.lineEdit_bairro_repre
+            'nacionalidadeContra': self.lineEdit_nacio, 
+            'empregoContra': self.lineEdit_cargo
         }
+        #Colocar aqui seu lineEdit da janela, se este estiver vazio, fica como "brasileiro"
         
         self.init_reference()
 
