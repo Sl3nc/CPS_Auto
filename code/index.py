@@ -199,7 +199,6 @@ class IValidator:
                 return True
         return False
 
-#TODO FILE
 class File:
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
@@ -392,10 +391,10 @@ Deltaprice Serviços Contábeis Ltda.                                           
             #     self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
 
     def __set_valor(self):
-        valor = self.dictonary['valorPagamento'].replace(',','.')
+        valor = self.dictonary['valorPagamento'].replace(',','.').replace('R$','')
         valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
-        return f'R$ {float(valor):,.2f} ({valorExtenso})'.replace('.',',')
+        return f'R$ {float(valor):_.2f} ({valorExtenso})'.replace('.',',').replace('_','.')
     
     def __set_num(self, num):
         valorExtenso = num2words(num,lang='pt_BR')
@@ -406,7 +405,7 @@ Deltaprice Serviços Contábeis Ltda.                                           
         return data_format.strftime("%d de %B de %Y")
         
     def __calc_porc(self):
-        valor = self.dictonary['valorPagamento'].replace(',','.')
+        valor = self.dictonary['valorPagamento'].replace(',','.').replace('R$','')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
     
@@ -518,6 +517,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i in [self.lineEdit_nacio, self.pushButton_nacio, self.lineEdit_cargo, self.pushButton_cargo]:
             i.hide()
 
+        self.relacoes_nacio_emprego = {
+            'nacionalidadeContra': 'Brasileiro(a)', 'empregoContra':'Empresário(a)'
+        }
+
         self.ID_MENU = 0
         self.ID_FORM = 1
         
@@ -620,11 +623,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
+    #TODO EXECUTAR
     def executar(self):
         try:    
+            if self.comboBox_repre.currentIndex() == 0:
+                self.absorve_preenche(1)
             Aviso(self.filtro()).validar()
             conteudo = Conteudo(self.referencias)
-            print(self.referencias)
 
             qnt_repre = self.comboBox_repre.currentIndex()
             base = conteudo.base(qnt_repre)
@@ -635,6 +640,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
         # except ValueError:
         #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except ZeroDivisionError:
+            messagebox.showwarning(title='Aviso', message= 'Insira um valor de contrato diferente de R$ 0.00')
         except Exception as e:
             traceback.print_exc()
             messagebox.showwarning(title='Aviso', message= e)
@@ -678,9 +685,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
 
-        if type(self.excecao) == IFisica:
-            for key in ref_temp.keys:
-                ref_temp.pop(key, None) if 'emp' in key else None
+        if self.excecao.__qualname__ != ILucroPresumido.__qualname__:
+            ref_temp.pop('valorEFD')
+
+        if self.excecao.__qualname__ == IFisica.__qualname__:
+            for key in self.relacoes.keys():
+                ref_temp.pop(key, None) if 'Emp' in key else None
 
         for i in range(1, self.comboBox_repre.currentIndex() +2):
             ref_temp.pop('emissorContra' + str(i))
@@ -698,15 +708,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
-
+#TODO ABS
     def absorve_preenche(self, id):
         for key, widget in self.relacoes.items():
-            if f'Contra{id}' in key and type(widget) == QLineEdit:
-                self.referencias[key] = widget.text()
+            if f'Contra{id}' in key:
+                if type(widget) == QLineEdit:
+                    self.referencias[key] = widget.text()
+                elif f'Contra{id}' in key and type(widget) == QComboBox:
+                    self.referencias[key] = widget.currentText()
+
                 print(f'Contra{id}')
                 print(f'chave - {key}')
-            elif f'Contra{id}' in key and type(widget) == QComboBox:
-                self.referencias[key] = widget.currentText()
+
+            elif 'Contra' not in key:
+                self.referencias[key] = widget.text()
+
+        for key, value in self.relacoes_nacio_emprego.items():
+            if self.relacoes[f'{key}{id}'].text() == '':
+                self.referencias[f'{key}{id}'] = value
 
         for key, widget in self.relacoes_label_cliente.items():
             if f'Contra{id}' in key:
@@ -719,7 +738,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, list in self.relacoes_checkbox.items():
             if key == check_box:
                 lineEdit, button = list
-        return lineEdit,button#
+        return lineEdit,button
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
