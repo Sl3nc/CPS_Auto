@@ -620,9 +620,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
-        #TODO TESTE EXECUTAR
-        teste.preencher_teste(self)
-
     def executar(self):
         try:    
             Aviso(self.filtro()).validar()
@@ -723,12 +720,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if key == check_box:
                 lineEdit, button = list
         return lineEdit,button
-
-#TODO TESTE
-class teste:
-    def preencher_teste(self: MainWindow):
-        for index, chave in enumerate(self.referencias.keys()):
-            self.referencias[chave] = str(index)
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
