@@ -222,7 +222,6 @@ class File:
         self.arquivo = DocxTemplate(caminho)
         self.arquivo.render(updt)
         self.arquivo.save(caminho)
-
         self.abrir(caminho)
 
     def salvar(self):
@@ -387,9 +386,6 @@ Deltaprice Serviços Contábeis Ltda.                                           
             for index, value in ref.items():
                 self.dictonary[index] = value
 
-            # if "LTDA" in self.dictonary['nomeEmp']:
-            #     self.dictonary['nomeEmp'] = self.dictonary['nomeEmp'].replace('LTDA',' LTDA.')
-
     def __set_valor(self):
         valor = self.dictonary['valorPagamento'].replace(',','.').replace('R$','')
         valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
@@ -408,15 +404,6 @@ Deltaprice Serviços Contábeis Ltda.                                           
         valor = self.dictonary['valorPagamento'].replace(',','.').replace('R$','')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
-    
-        # subLista.add_command(label='Comunhão Parcial de Bens', \
-        #     command= lambda: estadoEntry.set('casado(a) em CPB'))
-        
-        # subLista.add_command(label='Comunhão Universal de Bens',\
-        #     command= lambda: estadoEntry.set('casado(a) em CUB'))
-        
-        # subLista.add_command(label='Separação Total de Bens',\
-        #     command= lambda: estadoEntry.set('casado(a) em STB'))
 
 class IExececao(metaclass=ABCMeta):
     @abstractmethod
@@ -635,6 +622,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             base = conteudo.base(qnt_repre)
             atualizado = conteudo.update_dict(qnt_repre)
 
+            print(base)
             self.file.alterar(base, atualizado)
         except ValueError:
             messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
