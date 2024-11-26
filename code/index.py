@@ -1,5 +1,3 @@
-from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
 from tkinter.filedialog import asksaveasfilename
 from abc import ABCMeta, abstractmethod
@@ -8,14 +6,13 @@ from docxtpl import DocxTemplate, RichText
 from datetime import datetime
 from itertools import cycle
 from unidecode import unidecode
-import decimal
 import copy
-import keyboard
 import re
 import sys
 import os
 import locale
 import traceback
+from time import sleep
 
 from PySide6.QtWidgets import (
     QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton, QSpinBox, QDoubleSpinBox
@@ -622,7 +619,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             base = conteudo.base(qnt_repre)
             atualizado = conteudo.update_dict(qnt_repre)
 
-            print(base)
             self.file.alterar(base, atualizado)
         except ValueError:
             messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
