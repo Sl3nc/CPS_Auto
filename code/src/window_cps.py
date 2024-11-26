@@ -26,8 +26,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(794, 706)
-        MainWindow.setMinimumSize(QSize(794, 0))
+        MainWindow.resize(794, 718)
+        MainWindow.setMinimumSize(QSize(500, 0))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -109,16 +109,24 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.header_form = QGridLayout()
         self.header_form.setObjectName(u"header_form")
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.header_form.addItem(self.horizontalSpacer, 1, 0, 1, 1)
-
         self.back_button = QPushButton(self.form)
         self.back_button.setObjectName(u"back_button")
         self.back_button.setMaximumSize(QSize(100, 16777215))
         self.back_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.header_form.addWidget(self.back_button, 0, 0, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.header_form.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
+
+        self.header_form.addItem(self.horizontalSpacer_3, 2, 2, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.header_form.addItem(self.horizontalSpacer, 2, 0, 1, 1)
 
         self.titulo_id1 = QLabel(self.form)
         self.titulo_id1.setObjectName(u"titulo_id1")
@@ -130,7 +138,7 @@ class Ui_MainWindow(object):
         self.titulo_id1.setScaledContents(True)
         self.titulo_id1.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.header_form.addWidget(self.titulo_id1, 1, 1, 1, 1)
+        self.header_form.addWidget(self.titulo_id1, 2, 1, 1, 1)
 
         self.logo_form = QLabel(self.form)
         self.logo_form.setObjectName(u"logo_form")
@@ -138,15 +146,11 @@ class Ui_MainWindow(object):
         self.logo_form.setPixmap(QPixmap(u"../imgs/cps_logo.png"))
         self.logo_form.setScaledContents(True)
 
-        self.header_form.addWidget(self.logo_form, 1, 3, 1, 1)
+        self.header_form.addWidget(self.logo_form, 2, 3, 1, 1)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.header_form.addItem(self.horizontalSpacer_3, 1, 2, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.header_form.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
+        self.header_form.addItem(self.verticalSpacer_2, 1, 1, 1, 1)
 
 
         self.verticalLayout_3.addLayout(self.header_form)
@@ -738,11 +742,6 @@ class Ui_MainWindow(object):
 
         self.grid_contrato = QGridLayout()
         self.grid_contrato.setObjectName(u"grid_contrato")
-        self.label_dt_inicio_contrato = QLabel(self.form)
-        self.label_dt_inicio_contrato.setObjectName(u"label_dt_inicio_contrato")
-
-        self.grid_contrato.addWidget(self.label_dt_inicio_contrato, 0, 1, 1, 1)
-
         self.pushButton_executar = QPushButton(self.form)
         self.pushButton_executar.setObjectName(u"pushButton_executar")
         sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
@@ -761,31 +760,11 @@ class Ui_MainWindow(object):
 
         self.grid_contrato.addWidget(self.lineEdit_dt_inicio_contrato, 2, 1, 1, 1)
 
-        self.label_num_empreg_contrato = QLabel(self.form)
-        self.label_num_empreg_contrato.setObjectName(u"label_num_empreg_contrato")
-
-        self.grid_contrato.addWidget(self.label_num_empreg_contrato, 0, 4, 1, 1)
-
-        self.label_dt_assinatura_contrato = QLabel(self.form)
-        self.label_dt_assinatura_contrato.setObjectName(u"label_dt_assinatura_contrato")
-
-        self.grid_contrato.addWidget(self.label_dt_assinatura_contrato, 0, 2, 1, 1)
-
-        self.label_valor_contrato = QLabel(self.form)
-        self.label_valor_contrato.setObjectName(u"label_valor_contrato")
-
-        self.grid_contrato.addWidget(self.label_valor_contrato, 0, 0, 1, 1)
-
         self.lineEdit_dt_assinatura_contrato = QLineEdit(self.form)
         self.lineEdit_dt_assinatura_contrato.setObjectName(u"lineEdit_dt_assinatura_contrato")
         self.lineEdit_dt_assinatura_contrato.setMaxLength(10)
 
         self.grid_contrato.addWidget(self.lineEdit_dt_assinatura_contrato, 2, 2, 1, 1)
-
-        self.label_dia_vencimento_contrato = QLabel(self.form)
-        self.label_dia_vencimento_contrato.setObjectName(u"label_dia_vencimento_contrato")
-
-        self.grid_contrato.addWidget(self.label_dia_vencimento_contrato, 0, 3, 1, 1)
 
         self.lineEdit_valor_contrato = QDoubleSpinBox(self.form)
         self.lineEdit_valor_contrato.setObjectName(u"lineEdit_valor_contrato")
@@ -810,6 +789,31 @@ class Ui_MainWindow(object):
         self.lineEdit_dia_vencimento_contrato.setMaximum(30)
 
         self.grid_contrato.addWidget(self.lineEdit_dia_vencimento_contrato, 2, 3, 1, 1)
+
+        self.label_valor_contrato = QLabel(self.form)
+        self.label_valor_contrato.setObjectName(u"label_valor_contrato")
+
+        self.grid_contrato.addWidget(self.label_valor_contrato, 1, 0, 1, 1)
+
+        self.label_dt_inicio_contrato = QLabel(self.form)
+        self.label_dt_inicio_contrato.setObjectName(u"label_dt_inicio_contrato")
+
+        self.grid_contrato.addWidget(self.label_dt_inicio_contrato, 1, 1, 1, 1)
+
+        self.label_dt_assinatura_contrato = QLabel(self.form)
+        self.label_dt_assinatura_contrato.setObjectName(u"label_dt_assinatura_contrato")
+
+        self.grid_contrato.addWidget(self.label_dt_assinatura_contrato, 1, 2, 1, 1)
+
+        self.label_dia_vencimento_contrato = QLabel(self.form)
+        self.label_dia_vencimento_contrato.setObjectName(u"label_dia_vencimento_contrato")
+
+        self.grid_contrato.addWidget(self.label_dia_vencimento_contrato, 1, 3, 1, 1)
+
+        self.label_num_empreg_contrato = QLabel(self.form)
+        self.label_num_empreg_contrato.setObjectName(u"label_num_empreg_contrato")
+
+        self.grid_contrato.addWidget(self.label_num_empreg_contrato, 1, 4, 1, 1)
 
 
         self.verticalLayout_3.addLayout(self.grid_contrato)
@@ -917,14 +921,14 @@ class Ui_MainWindow(object):
         self.pushButton_clienteC.setText(QCoreApplication.translate("MainWindow", u"Editar ", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Representante C", None))
         self.titulo_contrato.setText(QCoreApplication.translate("MainWindow", u"Contrato", None))
-        self.label_dt_inicio_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Inicio", None))
         self.pushButton_executar.setText(QCoreApplication.translate("MainWindow", u"Enviar", None))
         self.lineEdit_dt_inicio_contrato.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__/__/____", None))
-        self.label_num_empreg_contrato.setText(QCoreApplication.translate("MainWindow", u"Num. Empregados", None))
-        self.label_dt_assinatura_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Assinatura", None))
-        self.label_valor_contrato.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
         self.lineEdit_dt_assinatura_contrato.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__/__/____", None))
-        self.label_dia_vencimento_contrato.setText(QCoreApplication.translate("MainWindow", u"Dia Vencimento", None))
         self.lineEdit_valor_contrato.setPrefix(QCoreApplication.translate("MainWindow", u"R$ ", None))
+        self.label_valor_contrato.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
+        self.label_dt_inicio_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Inicio", None))
+        self.label_dt_assinatura_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Assinatura", None))
+        self.label_dia_vencimento_contrato.setText(QCoreApplication.translate("MainWindow", u"Dia Vencimento", None))
+        self.label_num_empreg_contrato.setText(QCoreApplication.translate("MainWindow", u"Num. Empregados", None))
     # retranslateUi
 

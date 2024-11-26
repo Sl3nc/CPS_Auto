@@ -725,9 +725,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
         self.grid_contrato.removeWidget(self.pushButton_executar)
-        self.grid_contrato.addWidget(self.label_EFD,0,5)
-        self.grid_contrato.addWidget(self.lineEdit_EFD, 1,5)
-        self.grid_contrato.addWidget(self.pushButton_executar, 0,6, 2, 1)
+        self.grid_contrato.addWidget(self.label_EFD,1,5)
+        self.grid_contrato.addWidget(self.lineEdit_EFD, 2,5)
+        self.grid_contrato.addWidget(self.pushButton_executar, 1,6, 2, 1)
         self.lineEdit_EFD.show()
         self.label_EFD.show()
 
