@@ -350,11 +350,11 @@ Deltaprice Serviços Contábeis Ltda.                                           
         return self.dictonary
     
     def __update_repre(self, qnt_repre):
-        ref_estado = {
-            'STB': 'Casado em Separação Total de Bens',
-            'CPB': 'Casado em Comunhão Parcial de Bens',
-            'CUB': 'Casado em Comunhão Universal de Bens'
-        }
+        # ref_estado = {
+        #     'STB': 'Casado em Separação Total de Bens',
+        #     'CPB': 'Casado em Comunhão Parcial de Bens',
+        #     'CUB': 'Casado em Comunhão Universal de Bens'
+        # }
 
         for i in range(1, qnt_repre + 1):
             i = str(i)
@@ -366,9 +366,9 @@ Deltaprice Serviços Contábeis Ltda.                                           
                 'compleContra': self.dictonary['compleContra'+ i].title()
             }
 
-            regime = self.dictonary['estadoCivilContra' + i]
-            if regime in ref_estado:
-                self.dictonary['estadoCivilContra' + i] = ref_estado[regime]
+            # regime = self.dictonary['estadoCivilContra' + i]
+            # if regime in ref_estado:
+            #     self.dictonary['estadoCivilContra' + i] = ref_estado[regime]
 
             for index, value in ref.items():
                 self.dictonary[index + i] = value
@@ -432,7 +432,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
-        self.vez = 1
+        # self.vez = 1
 
         self.atual_stacked_2 = 0
 
@@ -636,10 +636,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             atualizado = conteudo.update_dict(qnt_repre)
 
             self.file.alterar(base, atualizado)
-        # except decimal.InvalidOperation:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira um número válido')
-        # except ValueError:
-        #     messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
+        except ValueError:
+            messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
         except ZeroDivisionError:
             messagebox.showwarning(title='Aviso', message= 'Insira um valor de contrato diferente de R$ 0.00')
         except Exception as e:
@@ -717,8 +715,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif f'Contra{id}' in key and type(widget) == QComboBox:
                     self.referencias[key] = widget.currentText()
 
-                print(f'Contra{id}')
-                print(f'chave - {key}')
+                # print(f'Contra{id}')
+                # print(f'chave - {key}')
 
             elif 'Contra' not in key:
                 self.referencias[key] = widget.text()
@@ -731,8 +729,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if f'Contra{id}' in key:
                 widget.setText(self.referencias[key])
 
-        print(f'---------------------------------------{self.vez}')
-        self.vez = self.vez + 1
+        # print(f'---------------------------------------{self.vez}')
+        # self.vez = self.vez + 1
 
     def items_checkbox(self, check_box: QCheckBox):
         for key, list in self.relacoes_checkbox.items():
