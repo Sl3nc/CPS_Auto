@@ -195,8 +195,8 @@ Deltaprice Serviços Contábeis Ltda.                                           
             'numEmp': self.__set_num(self.dictonary['numEmp']),
             'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
             'dataComple': lambda: self.dictonary['dataInicio'][2:],
-            # 'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
-            # 'dataInicio': self.__set_data(self.dictonary['dataInicio']),
+            'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
+            'dataInicio': self.__set_data(self.dictonary['dataInicio']),
         }
 
         self.dictonary['valPorc'] = self.__calc_porc()
@@ -253,9 +253,11 @@ Deltaprice Serviços Contábeis Ltda.                                           
             .replace('reais e','reais,')
         return f'R$ {float(valor):_.2f} ({valorExtenso})'.replace('.',',').replace('_','.')
     
-    def __set_num(self, num):
-        valorExtenso = num2words(num,lang='pt_BR')
-        return f'{num} ({valorExtenso})'
+    def __set_num(self, num: str):
+        if num.isdigit() == True:
+            valorExtenso = num2words(num,lang='pt_BR')
+            return f'{num} ({valorExtenso})'
+        return 'S/N'
 
     def __set_data(self, data):
         data_format = datetime.strptime(data, '%d/%m/%Y')
@@ -337,7 +339,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'estadoContra': self.lineEdit_estado_repre, 
             'compleContra': self.lineEdit_complemento_repre,
             'nacionalidadeContra': self.lineEdit_nacio, 
-            'empregoContra': self.lineEdit_cargo
+            'empregoContra': self.lineEdit_cargo,
         }
         #Colocar aqui seu lineEdit da janela, se este estiver vazio, fica como "brasileiro"
         
@@ -375,6 +377,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.relacoes_nacio_emprego = {
             'nacionalidadeContra': 'Brasileiro(a)', 'empregoContra':'Empresário(a)'
+        }
+
+        self.relacao_numeros = {
+            self.radioButton_numero_empresa: 'numEmp',
+            self.radioButton_numero_repre: 'numContra{0}'
         }
 
         self.correio_empresa = [
@@ -423,6 +430,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.comboBox_repre.currentTextChanged.connect(
             self.change_repre
+        )
+
+        self.radioButton_numero_repre.clicked.connect(
+            lambda: self.lineEdit_numero_repre.setDisabled(True) if self.radioButton_numero_repre.isChecked() == True else self.lineEdit_numero_repre.setDisabled(False)
+        )
+
+        self.radioButton_numero_empresa.clicked.connect(
+            lambda: self.lineEdit_numero_empresa.setDisabled(True) if self.radioButton_numero_empresa.isChecked() == True else self.lineEdit_numero_empresa.setDisabled(False)
         )
 
         self.lineEdit_cep_empresa.textChanged.connect(
@@ -569,12 +584,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
 
-        if self.excecao.__qualname__ != ILucroPresumido.__qualname__:
-            ref_temp.pop('valorEFD')
+        if self.excecao != None:
+            if self.excecao.__qualname__ != ILucroPresumido.__qualname__:
+                ref_temp.pop('valorEFD')
 
-        if self.excecao.__qualname__ == IFisica.__qualname__:
-            for key in self.relacoes.keys():
-                ref_temp.pop(key, None) if 'Emp' in key else None
+            if self.excecao.__qualname__ == IFisica.__qualname__:
+                for key in self.relacoes.keys():
+                    ref_temp.pop(key, None) if 'Emp' in key else None
+        else:
+            ref_temp.pop('valorEFD')
 
         for i in range(1, self.comboBox_repre.currentIndex() +2):
             ref_temp.pop('emissorContra' + str(i))
@@ -610,6 +628,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, value in self.relacoes_nacio_emprego.items():
             if self.relacoes[f'{key}{id}'].text() == '':
                 self.referencias[f'{key}{id}'] = value
+
+        for widget, key in self.relacao_numeros.items():
+            if widget.isChecked() == True:
+                self.referencias[key.format(id)] = 'S/N'
 
         for key, widget in self.relacoes_label_cliente.items():
             if f'Contra{id}' in key:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1197</width>
-    <height>758</height>
+    <width>1289</width>
+    <height>823</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -486,15 +486,8 @@
         </item>
         <item>
          <layout class="QGridLayout" name="grid_empresa">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_cnpj_empresa">
-            <property name="text">
-             <string>CNPJ</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="lineEdit_bairro_empresa">
+          <item row="3" column="2" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_complemento_empresa">
             <property name="maxLength">
              <number>35</number>
             </property>
@@ -513,10 +506,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="label_bairro_empresa">
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_endereco_empresa">
             <property name="text">
-             <string>Bairro</string>
+             <string>Logradouro</string>
             </property>
            </widget>
           </item>
@@ -527,6 +520,13 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_numero_empresa">
+            <property name="text">
+             <string>Número</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="2">
            <widget class="QLabel" name="label_cep_empresa">
             <property name="text">
@@ -534,24 +534,17 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="2" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_complemento_empresa">
-            <property name="maxLength">
-             <number>35</number>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_bairro_empresa">
+            <property name="text">
+             <string>Bairro</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_nome_empresa">
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_complemento_empresa">
             <property name="text">
-             <string>Nome</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_endereco_empresa">
-            <property name="text">
-             <string>Logradouro</string>
+             <string>Complemento (opcional)</string>
             </property>
            </widget>
           </item>
@@ -568,10 +561,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_numero_empresa">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_nome_empresa">
             <property name="text">
-             <string>Número</string>
+             <string>Nome</string>
             </property>
            </widget>
           </item>
@@ -582,27 +575,53 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_complemento_empresa">
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="lineEdit_bairro_empresa">
+            <property name="maxLength">
+             <number>35</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_cnpj_empresa">
             <property name="text">
-             <string>Complemento (opcional)</string>
+             <string>CNPJ</string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QSpinBox" name="lineEdit_numero_empresa">
-            <property name="accelerated">
-             <bool>true</bool>
+           <widget class="QFrame" name="frame_6">
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
             </property>
-            <property name="minimum">
-             <number>1</number>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
             </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
+            <layout class="QGridLayout" name="gridLayout_14">
+             <item row="0" column="0">
+              <widget class="QSpinBox" name="lineEdit_numero_empresa">
+               <property name="accelerated">
+                <bool>true</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="singleStep">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButton_numero_empresa">
+               <property name="text">
+                <string>Sem número</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -716,58 +735,10 @@
           </property>
           <widget class="QWidget" name="page_form_repre">
            <layout class="QGridLayout" name="grid_repre">
-            <item row="16" column="0">
-             <widget class="QLineEdit" name="lineEdit_bairro_repre">
-              <property name="maxLength">
-               <number>35</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QLineEdit" name="lineEdit_cpf_repre">
-              <property name="inputMask">
-               <string>999.999.999-99</string>
-              </property>
-              <property name="maxLength">
-               <number>14</number>
-              </property>
-              <property name="placeholderText">
-               <string>___.___.___-__</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_funcao_repre">
+            <item row="7" column="3">
+             <widget class="QLabel" name="label_complemento_repre">
               <property name="text">
-               <string>Função</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QLabel" name="label_rg_repre">
-              <property name="text">
-               <string>RG</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_estado_civil_repre">
-              <property name="text">
-               <string>Estado Civil</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QLabel" name="label_orgao_repre">
-              <property name="text">
-               <string>Orgão</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_nome_repre">
-              <property name="maxLength">
-               <number>35</number>
+               <string>Complemento (opcional)</string>
               </property>
              </widget>
             </item>
@@ -778,34 +749,6 @@
               </property>
              </widget>
             </item>
-            <item row="16" column="3" colspan="2">
-             <widget class="QLineEdit" name="lineEdit_complemento_repre">
-              <property name="maxLength">
-               <number>35</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QLabel" name="label_numero_repre">
-              <property name="text">
-               <string>Número</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="3">
-             <widget class="QLabel" name="label_complemento_repre">
-              <property name="text">
-               <string>Complemento (opcional)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_bairro_repre">
-              <property name="text">
-               <string>Bairro</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="3">
              <widget class="QLabel" name="label_endereco_repre">
               <property name="text">
@@ -813,41 +756,47 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QLineEdit" name="lineEdit_rg_repre">
-              <property name="inputMask">
-               <string>AA99.999.999</string>
-              </property>
-              <property name="maxLength">
-               <number>12</number>
-              </property>
-              <property name="placeholderText">
-               <string>XX__.___.___</string>
-              </property>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBox_funcao_repre">
+              <item>
+               <property name="text">
+                <string>Sócio</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Adminstrador</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Procurador</string>
+               </property>
+              </item>
              </widget>
             </item>
-            <item row="1" column="4">
-             <widget class="QLineEdit" name="lineEdit_orgao_repre">
-              <property name="maxLength">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLabel" name="label_cidade_repre">
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_cep_repre">
               <property name="text">
-               <string>Cidade</string>
+               <string>CEP</string>
               </property>
              </widget>
             </item>
-            <item row="16" column="1">
+            <item row="18" column="2">
+             <widget class="QLineEdit" name="lineEdit_estado_repre">
+              <property name="maxLength">
+               <number>20</number>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="1">
              <widget class="QLineEdit" name="lineEdit_cidade_repre">
               <property name="maxLength">
                <number>35</number>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="5" column="0">
              <widget class="QComboBox" name="comboBox_estado_civil_repre">
               <item>
                <property name="text">
@@ -879,6 +828,213 @@
                 <string>Casado(a) em Comunhão Universal de Bens</string>
                </property>
               </item>
+             </widget>
+            </item>
+            <item row="18" column="3" colspan="2">
+             <widget class="QLineEdit" name="lineEdit_complemento_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_nome_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_cpf_repre">
+              <property name="text">
+               <string>CPF</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLineEdit" name="lineEdit_orgao_repre">
+              <property name="maxLength">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_numero_repre">
+              <property name="text">
+               <string>Número</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="lineEdit_rg_repre">
+              <property name="inputMask">
+               <string>AA99.999.999</string>
+              </property>
+              <property name="maxLength">
+               <number>12</number>
+              </property>
+              <property name="placeholderText">
+               <string>XX__.___.___</string>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="0">
+             <widget class="QLineEdit" name="lineEdit_bairro_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLineEdit" name="lineEdit_cep_repre">
+              <property name="inputMask">
+               <string>99999-999</string>
+              </property>
+              <property name="maxLength">
+               <number>9</number>
+              </property>
+              <property name="placeholderText">
+               <string>_____-___</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="lineEdit_cpf_repre">
+              <property name="inputMask">
+               <string>999.999.999-99</string>
+              </property>
+              <property name="maxLength">
+               <number>14</number>
+              </property>
+              <property name="placeholderText">
+               <string>___.___.___-__</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QFrame" name="frame_cargo">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="lineEdit_cargo">
+                 <property name="maxLength">
+                  <number>35</number>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Insira o cargo</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pushButton_cargo">
+                 <property name="text">
+                  <string>Desfazer</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QCheckBox" name="checkBox_cargo_repre">
+                 <property name="text">
+                  <string>Não é Empresário?</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="5" column="4">
+             <widget class="QFrame" name="frame_5">
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_13">
+               <item row="0" column="0">
+                <widget class="QSpinBox" name="lineEdit_numero_repre">
+                 <property name="accelerated">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>1000</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QRadioButton" name="radioButton_numero_repre">
+                 <property name="text">
+                  <string>Sem Número</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_funcao_repre">
+              <property name="text">
+               <string>Função</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_rg_repre">
+              <property name="text">
+               <string>RG</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QLabel" name="label_estado_repre">
+              <property name="text">
+               <string>Estado</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="label_cidade_repre">
+              <property name="text">
+               <string>Cidade</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_orgao_repre">
+              <property name="text">
+               <string>Orgão</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QLineEdit" name="lineEdit_endereco_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_estado_civil_repre">
+              <property name="text">
+               <string>Estado Civil</string>
+              </property>
              </widget>
             </item>
             <item row="2" column="1">
@@ -923,128 +1079,10 @@
               </layout>
              </widget>
             </item>
-            <item row="3" column="1">
-             <widget class="QFrame" name="frame_cargo">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::Shape::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Shadow::Raised</enum>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="1" column="0">
-                <widget class="QLineEdit" name="lineEdit_cargo">
-                 <property name="maxLength">
-                  <number>35</number>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Insira o cargo</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="pushButton_cargo">
-                 <property name="text">
-                  <string>Desfazer</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0" colspan="2">
-                <widget class="QCheckBox" name="checkBox_cargo_repre">
-                 <property name="text">
-                  <string>Não é Empresário?</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="16" column="2">
-             <widget class="QLineEdit" name="lineEdit_estado_repre">
-              <property name="maxLength">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="3">
-             <widget class="QLineEdit" name="lineEdit_endereco_repre">
-              <property name="maxLength">
-               <number>35</number>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="2">
-             <widget class="QLabel" name="label_estado_repre">
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_bairro_repre">
               <property name="text">
-               <string>Estado</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="2">
-             <widget class="QLineEdit" name="lineEdit_cep_repre">
-              <property name="inputMask">
-               <string>99999-999</string>
-              </property>
-              <property name="maxLength">
-               <number>9</number>
-              </property>
-              <property name="placeholderText">
-               <string>_____-___</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QComboBox" name="comboBox_funcao_repre">
-              <item>
-               <property name="text">
-                <string>Sócio</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Adminstrador</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Procurador</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_cpf_repre">
-              <property name="text">
-               <string>CPF</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QLabel" name="label_cep_repre">
-              <property name="text">
-               <string>CEP</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="4">
-             <widget class="QSpinBox" name="lineEdit_numero_repre">
-              <property name="accelerated">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>1000</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
+               <string>Bairro</string>
               </property>
              </widget>
             </item>
@@ -1637,7 +1675,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1197</width>
+     <width>1289</width>
      <height>22</height>
     </rect>
    </property>
