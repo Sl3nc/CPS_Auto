@@ -7,7 +7,7 @@ from num2words import num2words
 from docxtpl import DocxTemplate, RichText
 from datetime import datetime
 from itertools import cycle
-import unicodedata
+from unidecode import unidecode
 import decimal
 import copy
 import keyboard
@@ -199,6 +199,7 @@ class IValidator:
                 return True
         return False
 
+#TODO FILE
 class File:
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
@@ -209,9 +210,10 @@ class File:
         self.arquivo = \
             DocxTemplate(
                 resource_path(self.base_caminho.format(
-                    {unicodedata.normalize("NFKD", nome.upper())}
-                ).encode('ascii', 'ignore').decode('ascii'))) \
-                    if nome in self.options else None
+                        unidecode(nome)
+                    )
+                )
+            )  if nome in self.options else None
 
     def alterar(self, base, updt): 
         caminho = self.salvar() 
@@ -304,8 +306,11 @@ class Conteudo:
             0: [
                 '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
-                '''_______________________________                                                  ____________________________________
-                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                '''_______________________________     
+                
+                
+______________________________
+Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                 '''
                 ],
             1: [
@@ -317,10 +322,11 @@ class Conteudo:
         }
 
     def base(self, index_atual: int):
+        conteudo_base = self.conteudo_base[index_atual]
         return {
             'cabecalho_emp' : self.cabecalho[0],
-            'honorarios' : self.conteudo_base[index_atual][0],
-            'assinatura' : self.conteudo_base[index_atual][1]
+            'honorarios' : conteudo_base[0],
+            'assinatura' : conteudo_base[1]
         }
 
     #TODO UPDT DICT

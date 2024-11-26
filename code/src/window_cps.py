@@ -113,10 +113,6 @@ class Ui_MainWindow(object):
 
         self.header_form.addItem(self.horizontalSpacer, 1, 0, 1, 1)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.header_form.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
-
         self.back_button = QPushButton(self.form)
         self.back_button.setObjectName(u"back_button")
         self.back_button.setMaximumSize(QSize(100, 16777215))
@@ -147,6 +143,10 @@ class Ui_MainWindow(object):
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Minimum)
 
         self.header_form.addItem(self.horizontalSpacer_3, 1, 2, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.header_form.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
 
 
         self.verticalLayout_3.addLayout(self.header_form)
@@ -232,6 +232,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_cnpj_empresa = QLineEdit(self.form)
         self.lineEdit_cnpj_empresa.setObjectName(u"lineEdit_cnpj_empresa")
+        self.lineEdit_cnpj_empresa.setMaxLength(19)
 
         self.grid_empresa.addWidget(self.lineEdit_cnpj_empresa, 1, 1, 1, 1)
 
@@ -829,7 +830,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 
