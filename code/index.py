@@ -94,12 +94,6 @@ class IFormater:
         
         text.set(valor)      
 
-class SpecialOnly(QValidator):
-    def validate(self, string, index):
-        if re.compile("[./0-9-]+").fullmatch(string) or string == '':
-            return QValidator.State.Acceptable
-        return QValidator.State.Invalid
-
 class TextOnly(QValidator):
     def validate(self, string, index):
         if re.compile("[a-zA-Z]+").fullmatch(string) or string == '':
@@ -466,12 +460,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.init_reference()
 
         self.relacoes_validator ={
-            self.lineEdit_cnpj_empresa: SpecialOnly(),
-            self.lineEdit_cep_empresa: SpecialOnly(),
-            self.lineEdit_cpf_repre: SpecialOnly(),
-            self.lineEdit_cep_repre: SpecialOnly(),
-            self.lineEdit_dt_inicio_contrato: SpecialOnly(),
-            self.lineEdit_dt_assinatura_contrato: SpecialOnly(),
             self.lineEdit_nome_repre: TextOnly(),
             self.lineEdit_orgao_repre: TextOnly(),
             self.lineEdit_nacio: TextOnly(),

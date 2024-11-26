@@ -324,10 +324,17 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLineEdit" name="lineEdit_bairro_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_bairro_empresa">
+            <property name="maxLength">
+             <number>35</number>
+            </property>
+           </widget>
           </item>
           <item row="1" column="2">
            <widget class="QLineEdit" name="lineEdit_cep_empresa">
+            <property name="inputMask">
+             <string>99999-999</string>
+            </property>
             <property name="maxLength">
              <number>9</number>
             </property>
@@ -344,7 +351,11 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_nome_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_nome_empresa">
+            <property name="maxLength">
+             <number>35</number>
+            </property>
+           </widget>
           </item>
           <item row="0" column="2">
            <widget class="QLabel" name="label_cep_empresa">
@@ -354,7 +365,11 @@
            </widget>
           </item>
           <item row="3" column="2" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_complemento_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_complemento_empresa">
+            <property name="maxLength">
+             <number>35</number>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_nome_empresa">
@@ -372,8 +387,11 @@
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="lineEdit_cnpj_empresa">
+            <property name="inputMask">
+             <string>99.999.999/999-99</string>
+            </property>
             <property name="maxLength">
-             <number>19</number>
+             <number>17</number>
             </property>
             <property name="placeholderText">
              <string>__.___.___/____-__</string>
@@ -388,7 +406,11 @@
            </widget>
           </item>
           <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_endereco_empresa"/>
+           <widget class="QLineEdit" name="lineEdit_endereco_empresa">
+            <property name="maxLength">
+             <number>35</number>
+            </property>
+           </widget>
           </item>
           <item row="2" column="2">
            <widget class="QLabel" name="label_complemento_empresa">
@@ -519,10 +541,17 @@
           <widget class="QWidget" name="page_form_repre">
            <layout class="QGridLayout" name="grid_repre">
             <item row="16" column="0">
-             <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
+             <widget class="QLineEdit" name="lineEdit_bairro_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
             </item>
             <item row="1" column="3">
              <widget class="QLineEdit" name="lineEdit_cpf_repre">
+              <property name="inputMask">
+               <string>999.999.999-99</string>
+              </property>
               <property name="maxLength">
                <number>14</number>
               </property>
@@ -560,7 +589,11 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_nome_repre"/>
+             <widget class="QLineEdit" name="lineEdit_nome_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
             </item>
             <item row="0" column="1">
              <widget class="QLabel" name="label_nome_repre">
@@ -570,7 +603,11 @@
              </widget>
             </item>
             <item row="16" column="3" colspan="2">
-             <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
+             <widget class="QLineEdit" name="lineEdit_complemento_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
             </item>
             <item row="2" column="4">
              <widget class="QLabel" name="label_numero_repre">
@@ -602,6 +639,9 @@
             </item>
             <item row="1" column="2">
              <widget class="QLineEdit" name="lineEdit_rg_repre">
+              <property name="inputMask">
+               <string>AA99.999.999</string>
+              </property>
               <property name="maxLength">
                <number>12</number>
               </property>
@@ -611,7 +651,11 @@
              </widget>
             </item>
             <item row="1" column="4">
-             <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
+             <widget class="QLineEdit" name="lineEdit_orgao_repre">
+              <property name="maxLength">
+               <number>10</number>
+              </property>
+             </widget>
             </item>
             <item row="5" column="1">
              <widget class="QLabel" name="label_cidade_repre">
@@ -621,7 +665,11 @@
              </widget>
             </item>
             <item row="16" column="1">
-             <widget class="QLineEdit" name="lineEdit_cidade_repre"/>
+             <widget class="QLineEdit" name="lineEdit_cidade_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
             </item>
             <item row="3" column="0">
              <widget class="QComboBox" name="comboBox_estado_civil_repre">
@@ -674,6 +722,9 @@
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="1" column="0">
                 <widget class="QLineEdit" name="lineEdit_nacio">
+                 <property name="maxLength">
+                  <number>35</number>
+                 </property>
                  <property name="placeholderText">
                   <string>Insira a nacionalidade</string>
                  </property>
@@ -713,6 +764,9 @@
               <layout class="QGridLayout" name="gridLayout_7">
                <item row="1" column="0">
                 <widget class="QLineEdit" name="lineEdit_cargo">
+                 <property name="maxLength">
+                  <number>35</number>
+                 </property>
                  <property name="placeholderText">
                   <string>Insira o cargo</string>
                  </property>
@@ -736,10 +790,18 @@
              </widget>
             </item>
             <item row="16" column="2">
-             <widget class="QLineEdit" name="lineEdit_estado_repre"/>
+             <widget class="QLineEdit" name="lineEdit_estado_repre">
+              <property name="maxLength">
+               <number>20</number>
+              </property>
+             </widget>
             </item>
             <item row="3" column="3">
-             <widget class="QLineEdit" name="lineEdit_endereco_repre"/>
+             <widget class="QLineEdit" name="lineEdit_endereco_repre">
+              <property name="maxLength">
+               <number>35</number>
+              </property>
+             </widget>
             </item>
             <item row="5" column="2">
              <widget class="QLabel" name="label_estado_repre">
@@ -750,6 +812,9 @@
             </item>
             <item row="3" column="2">
              <widget class="QLineEdit" name="lineEdit_cep_repre">
+              <property name="inputMask">
+               <string>99999-999</string>
+              </property>
               <property name="maxLength">
                <number>9</number>
               </property>
@@ -1258,6 +1323,9 @@
           </item>
           <item row="2" column="1">
            <widget class="QLineEdit" name="lineEdit_dt_inicio_contrato">
+            <property name="inputMask">
+             <string>99/99/9999</string>
+            </property>
             <property name="maxLength">
              <number>10</number>
             </property>
@@ -1268,6 +1336,9 @@
           </item>
           <item row="2" column="2">
            <widget class="QLineEdit" name="lineEdit_dt_assinatura_contrato">
+            <property name="inputMask">
+             <string>99/99/9999</string>
+            </property>
             <property name="maxLength">
              <number>10</number>
             </property>
