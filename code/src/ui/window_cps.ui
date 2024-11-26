@@ -591,11 +591,17 @@
           </item>
           <item row="3" column="0">
            <widget class="QSpinBox" name="lineEdit_numero_empresa">
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
             <property name="minimum">
              <number>1</number>
             </property>
             <property name="maximum">
              <number>1000</number>
+            </property>
+            <property name="singleStep">
+             <number>10</number>
             </property>
            </widget>
           </item>
@@ -1028,11 +1034,17 @@
             </item>
             <item row="3" column="4">
              <widget class="QSpinBox" name="lineEdit_numero_repre">
+              <property name="accelerated">
+               <bool>true</bool>
+              </property>
               <property name="minimum">
                <number>1</number>
               </property>
               <property name="maximum">
                <number>1000</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -1534,6 +1546,9 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
             </property>
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
             <property name="prefix">
              <string>R$ </string>
             </property>
@@ -1543,16 +1558,29 @@
             <property name="maximum">
              <double>99999.990000000005239</double>
             </property>
+            <property name="singleStep">
+             <double>100.000000000000000</double>
+            </property>
             <property name="stepType">
              <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
             </property>
            </widget>
           </item>
           <item row="2" column="4">
-           <widget class="QSpinBox" name="lineEdit_num_empreg_contrato"/>
+           <widget class="QSpinBox" name="lineEdit_num_empreg_contrato">
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
+            <property name="singleStep">
+             <number>5</number>
+            </property>
+           </widget>
           </item>
           <item row="2" column="3">
            <widget class="QSpinBox" name="lineEdit_dia_vencimento_contrato">
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
             <property name="minimum">
              <number>1</number>
             </property>

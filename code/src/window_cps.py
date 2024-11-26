@@ -338,8 +338,10 @@ class Ui_MainWindow(object):
 
         self.lineEdit_numero_empresa = QSpinBox(self.form)
         self.lineEdit_numero_empresa.setObjectName(u"lineEdit_numero_empresa")
+        self.lineEdit_numero_empresa.setAccelerated(True)
         self.lineEdit_numero_empresa.setMinimum(1)
         self.lineEdit_numero_empresa.setMaximum(1000)
+        self.lineEdit_numero_empresa.setSingleStep(10)
 
         self.grid_empresa.addWidget(self.lineEdit_numero_empresa, 3, 0, 1, 1)
 
@@ -605,8 +607,10 @@ class Ui_MainWindow(object):
 
         self.lineEdit_numero_repre = QSpinBox(self.page_form_repre)
         self.lineEdit_numero_repre.setObjectName(u"lineEdit_numero_repre")
+        self.lineEdit_numero_repre.setAccelerated(True)
         self.lineEdit_numero_repre.setMinimum(1)
         self.lineEdit_numero_repre.setMaximum(1000)
+        self.lineEdit_numero_repre.setSingleStep(10)
 
         self.grid_repre.addWidget(self.lineEdit_numero_repre, 3, 4, 1, 1)
 
@@ -859,19 +863,24 @@ class Ui_MainWindow(object):
         self.lineEdit_valor_contrato.setSizePolicy(sizePolicy)
         self.lineEdit_valor_contrato.setMinimumSize(QSize(100, 0))
         self.lineEdit_valor_contrato.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.UpDownArrows)
+        self.lineEdit_valor_contrato.setAccelerated(True)
         self.lineEdit_valor_contrato.setDecimals(2)
         self.lineEdit_valor_contrato.setMaximum(99999.990000000005239)
+        self.lineEdit_valor_contrato.setSingleStep(100.000000000000000)
         self.lineEdit_valor_contrato.setStepType(QAbstractSpinBox.StepType.DefaultStepType)
 
         self.grid_contrato.addWidget(self.lineEdit_valor_contrato, 2, 0, 1, 1)
 
         self.lineEdit_num_empreg_contrato = QSpinBox(self.form)
         self.lineEdit_num_empreg_contrato.setObjectName(u"lineEdit_num_empreg_contrato")
+        self.lineEdit_num_empreg_contrato.setAccelerated(True)
+        self.lineEdit_num_empreg_contrato.setSingleStep(5)
 
         self.grid_contrato.addWidget(self.lineEdit_num_empreg_contrato, 2, 4, 1, 1)
 
         self.lineEdit_dia_vencimento_contrato = QSpinBox(self.form)
         self.lineEdit_dia_vencimento_contrato.setObjectName(u"lineEdit_dia_vencimento_contrato")
+        self.lineEdit_dia_vencimento_contrato.setAccelerated(True)
         self.lineEdit_dia_vencimento_contrato.setMinimum(1)
         self.lineEdit_dia_vencimento_contrato.setMaximum(30)
 
