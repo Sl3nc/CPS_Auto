@@ -43,8 +43,12 @@ class Ui_MainWindow(object):
         self.menu.setObjectName(u"menu")
         self.verticalLayout = QVBoxLayout(self.menu)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.header_menu = QVBoxLayout()
-        self.header_menu.setObjectName(u"header_menu")
+        self.gridLayout_12 = QGridLayout()
+        self.gridLayout_12.setObjectName(u"gridLayout_12")
+        self.verticalSpacer = QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+
+        self.gridLayout_12.addItem(self.verticalSpacer, 1, 1, 1, 1)
+
         self.logo_menu = QLabel(self.menu)
         self.logo_menu.setObjectName(u"logo_menu")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
@@ -53,14 +57,15 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.logo_menu.sizePolicy().hasHeightForWidth())
         self.logo_menu.setSizePolicy(sizePolicy1)
         self.logo_menu.setMinimumSize(QSize(580, 108))
+        self.logo_menu.setMaximumSize(QSize(1160, 208))
         self.logo_menu.setPixmap(QPixmap(u"../imgs/cps_horizontal.png"))
         self.logo_menu.setScaledContents(True)
 
-        self.header_menu.addWidget(self.logo_menu)
+        self.gridLayout_12.addWidget(self.logo_menu, 0, 1, 1, 1)
 
-        self.verticalSpacer = QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.header_menu.addItem(self.verticalSpacer)
+        self.gridLayout_12.addItem(self.horizontalSpacer_4, 0, 2, 1, 1)
 
         self.intro = QLabel(self.menu)
         self.intro.setObjectName(u"intro")
@@ -73,37 +78,103 @@ class Ui_MainWindow(object):
         self.intro.setFont(font)
         self.intro.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.header_menu.addWidget(self.intro)
+        self.gridLayout_12.addWidget(self.intro, 2, 1, 1, 1)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_12.addItem(self.horizontalSpacer_5, 0, 0, 1, 1)
 
 
-        self.verticalLayout.addLayout(self.header_menu)
+        self.verticalLayout.addLayout(self.gridLayout_12)
+
+        self.line_4 = QFrame(self.menu)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setMinimumSize(QSize(0, 5))
+        self.line_4.setStyleSheet(u"background-color: rgb(85, 170, 255);")
+        self.line_4.setLineWidth(0)
+        self.line_4.setFrameShape(QFrame.Shape.HLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout.addWidget(self.line_4)
 
         self.options_cps = QGridLayout()
         self.options_cps.setObjectName(u"options_cps")
-        self.options_cps.setContentsMargins(30, -1, -1, -1)
-        self.pb_lucro = QPushButton(self.menu)
+        self.frame = QFrame(self.menu)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_8 = QGridLayout(self.frame)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.gridLayout_8.setContentsMargins(100, 30, 100, -1)
+        self.pb_lucro = QPushButton(self.frame)
         self.pb_lucro.setObjectName(u"pb_lucro")
-        self.pb_lucro.setMinimumSize(QSize(100, 50))
+        self.pb_lucro.setMinimumSize(QSize(0, 100))
+        font1 = QFont()
+        font1.setFamilies([u"Tw Cen MT"])
+        font1.setPointSize(18)
+        font1.setBold(False)
+        font1.setItalic(True)
+        self.pb_lucro.setFont(font1)
 
-        self.options_cps.addWidget(self.pb_lucro, 0, 0, 1, 1)
+        self.gridLayout_8.addWidget(self.pb_lucro, 0, 0, 1, 1)
 
-        self.pb_pessoa = QPushButton(self.menu)
+
+        self.options_cps.addWidget(self.frame, 0, 0, 1, 1)
+
+        self.frame_2 = QFrame(self.menu)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_9 = QGridLayout(self.frame_2)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.gridLayout_9.setContentsMargins(100, -1, 100, 30)
+        self.pb_pessoa = QPushButton(self.frame_2)
         self.pb_pessoa.setObjectName(u"pb_pessoa")
-        self.pb_pessoa.setMinimumSize(QSize(0, 50))
+        self.pb_pessoa.setMinimumSize(QSize(0, 100))
+        font2 = QFont()
+        font2.setFamilies([u"Tw Cen MT"])
+        font2.setPointSize(18)
+        font2.setItalic(True)
+        self.pb_pessoa.setFont(font2)
 
-        self.options_cps.addWidget(self.pb_pessoa, 1, 0, 1, 1)
+        self.gridLayout_9.addWidget(self.pb_pessoa, 0, 0, 1, 1)
 
-        self.pb_inatividade = QPushButton(self.menu)
+
+        self.options_cps.addWidget(self.frame_2, 1, 0, 1, 1)
+
+        self.frame_3 = QFrame(self.menu)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_10 = QGridLayout(self.frame_3)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_10.setContentsMargins(100, 30, 100, -1)
+        self.pb_inatividade = QPushButton(self.frame_3)
         self.pb_inatividade.setObjectName(u"pb_inatividade")
-        self.pb_inatividade.setMinimumSize(QSize(100, 50))
+        self.pb_inatividade.setMinimumSize(QSize(0, 100))
+        self.pb_inatividade.setFont(font2)
 
-        self.options_cps.addWidget(self.pb_inatividade, 0, 1, 1, 1)
+        self.gridLayout_10.addWidget(self.pb_inatividade, 0, 0, 1, 1)
 
-        self.pb_simples = QPushButton(self.menu)
+
+        self.options_cps.addWidget(self.frame_3, 0, 1, 1, 1)
+
+        self.frame_4 = QFrame(self.menu)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_11 = QGridLayout(self.frame_4)
+        self.gridLayout_11.setObjectName(u"gridLayout_11")
+        self.gridLayout_11.setContentsMargins(100, -1, 100, 30)
+        self.pb_simples = QPushButton(self.frame_4)
         self.pb_simples.setObjectName(u"pb_simples")
-        self.pb_simples.setMinimumSize(QSize(0, 50))
+        self.pb_simples.setMinimumSize(QSize(0, 100))
+        self.pb_simples.setFont(font2)
 
-        self.options_cps.addWidget(self.pb_simples, 1, 1, 1, 1)
+        self.gridLayout_11.addWidget(self.pb_simples, 0, 0, 1, 1)
+
+
+        self.options_cps.addWidget(self.frame_4, 1, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.options_cps)
@@ -136,11 +207,11 @@ class Ui_MainWindow(object):
 
         self.titulo_id1 = QLabel(self.form)
         self.titulo_id1.setObjectName(u"titulo_id1")
-        font1 = QFont()
-        font1.setFamilies([u"Times New Roman"])
-        font1.setPointSize(26)
-        font1.setBold(True)
-        self.titulo_id1.setFont(font1)
+        font3 = QFont()
+        font3.setFamilies([u"Times New Roman"])
+        font3.setPointSize(48)
+        font3.setBold(True)
+        self.titulo_id1.setFont(font3)
         self.titulo_id1.setScaledContents(True)
         self.titulo_id1.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -148,7 +219,7 @@ class Ui_MainWindow(object):
 
         self.logo_form = QLabel(self.form)
         self.logo_form.setObjectName(u"logo_form")
-        self.logo_form.setMaximumSize(QSize(100, 75))
+        self.logo_form.setMaximumSize(QSize(160, 120))
         self.logo_form.setPixmap(QPixmap(u"../imgs/cps_logo.png"))
         self.logo_form.setScaledContents(True)
 
@@ -170,12 +241,12 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.titulo_empresa.sizePolicy().hasHeightForWidth())
         self.titulo_empresa.setSizePolicy(sizePolicy2)
-        font2 = QFont()
-        font2.setFamilies([u"Times New Roman"])
-        font2.setPointSize(16)
-        font2.setBold(True)
-        font2.setItalic(True)
-        self.titulo_empresa.setFont(font2)
+        font4 = QFont()
+        font4.setFamilies([u"Times New Roman"])
+        font4.setPointSize(16)
+        font4.setBold(True)
+        font4.setItalic(True)
+        self.titulo_empresa.setFont(font4)
 
         self.intro_empresa.addWidget(self.titulo_empresa)
 
@@ -281,7 +352,7 @@ class Ui_MainWindow(object):
         self.titulo_repre.setObjectName(u"titulo_repre")
         sizePolicy2.setHeightForWidth(self.titulo_repre.sizePolicy().hasHeightForWidth())
         self.titulo_repre.setSizePolicy(sizePolicy2)
-        self.titulo_repre.setFont(font2)
+        self.titulo_repre.setFont(font4)
 
         self.intro_repre.addWidget(self.titulo_repre)
 
@@ -305,12 +376,12 @@ class Ui_MainWindow(object):
         self.titulo_quantidade.setObjectName(u"titulo_quantidade")
         sizePolicy2.setHeightForWidth(self.titulo_quantidade.sizePolicy().hasHeightForWidth())
         self.titulo_quantidade.setSizePolicy(sizePolicy2)
-        font3 = QFont()
-        font3.setFamilies([u"Times New Roman"])
-        font3.setPointSize(14)
-        font3.setBold(False)
-        font3.setItalic(True)
-        self.titulo_quantidade.setFont(font3)
+        font5 = QFont()
+        font5.setFamilies([u"Times New Roman"])
+        font5.setPointSize(14)
+        font5.setBold(False)
+        font5.setItalic(True)
+        self.titulo_quantidade.setFont(font5)
 
         self.intro_repre.addWidget(self.titulo_quantidade)
 
@@ -561,11 +632,11 @@ class Ui_MainWindow(object):
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.label_nome_clienteA.sizePolicy().hasHeightForWidth())
         self.label_nome_clienteA.setSizePolicy(sizePolicy4)
-        font4 = QFont()
-        font4.setFamilies([u"Yu Gothic"])
-        font4.setPointSize(16)
-        font4.setBold(True)
-        self.label_nome_clienteA.setFont(font4)
+        font6 = QFont()
+        font6.setFamilies([u"Yu Gothic"])
+        font6.setPointSize(16)
+        font6.setBold(True)
+        self.label_nome_clienteA.setFont(font6)
 
         self.gridLayout_2.addWidget(self.label_nome_clienteA, 0, 0, 1, 1)
 
@@ -573,26 +644,26 @@ class Ui_MainWindow(object):
         self.label_cpf_clienteA.setObjectName(u"label_cpf_clienteA")
         sizePolicy4.setHeightForWidth(self.label_cpf_clienteA.sizePolicy().hasHeightForWidth())
         self.label_cpf_clienteA.setSizePolicy(sizePolicy4)
-        self.label_cpf_clienteA.setFont(font4)
+        self.label_cpf_clienteA.setFont(font6)
 
         self.gridLayout_2.addWidget(self.label_cpf_clienteA, 2, 0, 1, 1)
 
         self.label_cpf_input_clienteA = QLabel(self.tab)
         self.label_cpf_input_clienteA.setObjectName(u"label_cpf_input_clienteA")
-        font5 = QFont()
-        font5.setPointSize(16)
-        font5.setBold(False)
-        self.label_cpf_input_clienteA.setFont(font5)
+        font7 = QFont()
+        font7.setPointSize(16)
+        font7.setBold(False)
+        self.label_cpf_input_clienteA.setFont(font7)
         self.label_cpf_input_clienteA.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.label_cpf_input_clienteA, 2, 1, 1, 1)
 
         self.pushButton_clienteA = QPushButton(self.tab)
         self.pushButton_clienteA.setObjectName(u"pushButton_clienteA")
-        font6 = QFont()
-        font6.setFamilies([u"Yu Gothic UI"])
-        font6.setPointSize(16)
-        self.pushButton_clienteA.setFont(font6)
+        font8 = QFont()
+        font8.setFamilies([u"Yu Gothic UI"])
+        font8.setPointSize(16)
+        self.pushButton_clienteA.setFont(font8)
         self.pushButton_clienteA.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_clienteA.setStyleSheet(u"background-color: #E1E1E1;")
         icon = QIcon()
@@ -612,9 +683,9 @@ class Ui_MainWindow(object):
 
         self.label_nome_input_clienteA = QLabel(self.tab)
         self.label_nome_input_clienteA.setObjectName(u"label_nome_input_clienteA")
-        font7 = QFont()
-        font7.setPointSize(16)
-        self.label_nome_input_clienteA.setFont(font7)
+        font9 = QFont()
+        font9.setPointSize(16)
+        self.label_nome_input_clienteA.setFont(font9)
         self.label_nome_input_clienteA.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.label_nome_input_clienteA, 0, 1, 1, 2)
@@ -627,7 +698,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.label_nome_input_clienteB = QLabel(self.tab_2)
         self.label_nome_input_clienteB.setObjectName(u"label_nome_input_clienteB")
-        self.label_nome_input_clienteB.setFont(font7)
+        self.label_nome_input_clienteB.setFont(font9)
         self.label_nome_input_clienteB.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_4.addWidget(self.label_nome_input_clienteB, 0, 1, 1, 2)
@@ -636,13 +707,13 @@ class Ui_MainWindow(object):
         self.label_cpf_clienteB.setObjectName(u"label_cpf_clienteB")
         sizePolicy4.setHeightForWidth(self.label_cpf_clienteB.sizePolicy().hasHeightForWidth())
         self.label_cpf_clienteB.setSizePolicy(sizePolicy4)
-        self.label_cpf_clienteB.setFont(font4)
+        self.label_cpf_clienteB.setFont(font6)
 
         self.gridLayout_4.addWidget(self.label_cpf_clienteB, 2, 0, 1, 1)
 
         self.label_cpf_input_clienteB = QLabel(self.tab_2)
         self.label_cpf_input_clienteB.setObjectName(u"label_cpf_input_clienteB")
-        self.label_cpf_input_clienteB.setFont(font5)
+        self.label_cpf_input_clienteB.setFont(font7)
         self.label_cpf_input_clienteB.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_4.addWidget(self.label_cpf_input_clienteB, 2, 1, 1, 1)
@@ -651,13 +722,13 @@ class Ui_MainWindow(object):
         self.label_nome_clienteB.setObjectName(u"label_nome_clienteB")
         sizePolicy4.setHeightForWidth(self.label_nome_clienteB.sizePolicy().hasHeightForWidth())
         self.label_nome_clienteB.setSizePolicy(sizePolicy4)
-        self.label_nome_clienteB.setFont(font4)
+        self.label_nome_clienteB.setFont(font6)
 
         self.gridLayout_4.addWidget(self.label_nome_clienteB, 0, 0, 1, 1)
 
         self.pushButton_clienteB = QPushButton(self.tab_2)
         self.pushButton_clienteB.setObjectName(u"pushButton_clienteB")
-        self.pushButton_clienteB.setFont(font6)
+        self.pushButton_clienteB.setFont(font8)
         self.pushButton_clienteB.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_clienteB.setStyleSheet(u"background-color: #E1E1E1;")
         self.pushButton_clienteB.setIcon(icon)
@@ -683,13 +754,13 @@ class Ui_MainWindow(object):
         self.label_nome_clienteC.setObjectName(u"label_nome_clienteC")
         sizePolicy4.setHeightForWidth(self.label_nome_clienteC.sizePolicy().hasHeightForWidth())
         self.label_nome_clienteC.setSizePolicy(sizePolicy4)
-        self.label_nome_clienteC.setFont(font4)
+        self.label_nome_clienteC.setFont(font6)
 
         self.gridLayout_5.addWidget(self.label_nome_clienteC, 0, 0, 1, 1)
 
         self.label_nome_input_clienteC = QLabel(self.tab_3)
         self.label_nome_input_clienteC.setObjectName(u"label_nome_input_clienteC")
-        self.label_nome_input_clienteC.setFont(font7)
+        self.label_nome_input_clienteC.setFont(font9)
         self.label_nome_input_clienteC.setStyleSheet(u"")
         self.label_nome_input_clienteC.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -706,20 +777,20 @@ class Ui_MainWindow(object):
         self.label_cpf_clienteC.setObjectName(u"label_cpf_clienteC")
         sizePolicy4.setHeightForWidth(self.label_cpf_clienteC.sizePolicy().hasHeightForWidth())
         self.label_cpf_clienteC.setSizePolicy(sizePolicy4)
-        self.label_cpf_clienteC.setFont(font4)
+        self.label_cpf_clienteC.setFont(font6)
 
         self.gridLayout_5.addWidget(self.label_cpf_clienteC, 2, 0, 1, 1)
 
         self.label_cpf_input_clienteC = QLabel(self.tab_3)
         self.label_cpf_input_clienteC.setObjectName(u"label_cpf_input_clienteC")
-        self.label_cpf_input_clienteC.setFont(font5)
+        self.label_cpf_input_clienteC.setFont(font7)
         self.label_cpf_input_clienteC.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_5.addWidget(self.label_cpf_input_clienteC, 2, 1, 1, 1)
 
         self.pushButton_clienteC = QPushButton(self.tab_3)
         self.pushButton_clienteC.setObjectName(u"pushButton_clienteC")
-        self.pushButton_clienteC.setFont(font6)
+        self.pushButton_clienteC.setFont(font8)
         self.pushButton_clienteC.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_clienteC.setStyleSheet(u"background-color: #E1E1E1;")
         self.pushButton_clienteC.setIcon(icon)
@@ -742,7 +813,7 @@ class Ui_MainWindow(object):
         self.titulo_contrato.setObjectName(u"titulo_contrato")
         sizePolicy2.setHeightForWidth(self.titulo_contrato.sizePolicy().hasHeightForWidth())
         self.titulo_contrato.setSizePolicy(sizePolicy2)
-        self.titulo_contrato.setFont(font2)
+        self.titulo_contrato.setFont(font4)
 
         self.intro_contrato.addWidget(self.titulo_contrato)
 
