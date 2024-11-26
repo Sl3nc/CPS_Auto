@@ -5,3 +5,4 @@ build/
 *.exe
 *~
 *.autosave
+code/src/__pycache__
