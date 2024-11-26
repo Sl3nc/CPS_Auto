@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>643</width>
-    <height>592</height>
+    <width>794</width>
+    <height>718</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -18,7 +24,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="menu">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -152,18 +158,21 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <layout class="QGridLayout" name="header_form">
-          <item row="1" column="0">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="back_button">
+            <property name="maximumSize">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>100</width>
+              <height>16777215</height>
              </size>
             </property>
-           </spacer>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>Voltar ao menu</string>
+            </property>
+           </widget>
           </item>
           <item row="0" column="3">
            <spacer name="horizontalSpacer_2">
@@ -178,20 +187,36 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="back_button">
-            <property name="maximumSize">
+          <item row="2" column="2">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Policy::Maximum</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>100</width>
-              <height>16777215</height>
+              <width>40</width>
+              <height>20</height>
              </size>
             </property>
-            <property name="text">
-             <string>Voltar ao menu</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="0">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="2" column="1">
            <widget class="QLabel" name="titulo_id1">
             <property name="font">
              <font>
@@ -211,7 +236,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3" alignment="">
+          <item row="2" column="3">
            <widget class="QLabel" name="logo_form">
             <property name="maximumSize">
              <size>
@@ -230,18 +255,15 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <spacer name="horizontalSpacer_3">
+          <item row="1" column="1">
+           <spacer name="verticalSpacer_2">
             <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Maximum</enum>
+             <enum>Qt::Orientation::Vertical</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>40</height>
              </size>
             </property>
            </spacer>
@@ -294,16 +316,23 @@
         </item>
         <item>
          <layout class="QGridLayout" name="grid_empresa">
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_nome_empresa"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="lineEdit_cep_empresa"/>
-          </item>
           <item row="0" column="1">
            <widget class="QLabel" name="label_cnpj_empresa">
             <property name="text">
              <string>CNPJ</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="lineEdit_bairro_empresa"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLineEdit" name="lineEdit_cep_empresa">
+            <property name="maxLength">
+             <number>9</number>
+            </property>
+            <property name="placeholderText">
+             <string>_____-___</string>
             </property>
            </widget>
           </item>
@@ -314,8 +343,8 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_cnpj_empresa"/>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="lineEdit_nome_empresa"/>
           </item>
           <item row="0" column="2">
            <widget class="QLabel" name="label_cep_empresa">
@@ -324,15 +353,8 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="lineEdit_bairro_empresa"/>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_complemento_empresa">
-            <property name="text">
-             <string>Complemento (opcional)</string>
-            </property>
-           </widget>
+          <item row="3" column="2" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_complemento_empresa"/>
           </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_nome_empresa">
@@ -348,11 +370,15 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_endereco_empresa"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLineEdit" name="lineEdit_numero_empresa"/>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="lineEdit_cnpj_empresa">
+            <property name="maxLength">
+             <number>19</number>
+            </property>
+            <property name="placeholderText">
+             <string>__.___.___/____-__</string>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label_numero_empresa">
@@ -361,8 +387,25 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="2" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_complemento_empresa"/>
+          <item row="1" column="3">
+           <widget class="QLineEdit" name="lineEdit_endereco_empresa"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="label_complemento_empresa">
+            <property name="text">
+             <string>Complemento (opcional)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QSpinBox" name="lineEdit_numero_empresa">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -446,6 +489,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <item>
              <property name="text">
               <string>1</string>
@@ -466,189 +512,681 @@
          </layout>
         </item>
         <item>
-         <layout class="QGridLayout" name="grid_repre">
-          <item row="15" column="0">
-           <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_orgao_repre">
-            <property name="text">
-             <string>Orgão</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_estado_civil_repre">
-            <property name="text">
-             <string>Estado Civil</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="checkBox_empresario_repre">
-            <property name="text">
-             <string>Não é Empresário?</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLineEdit" name="lineEdit_cep_repre"/>
-          </item>
-          <item row="3" column="3">
-           <widget class="QLineEdit" name="lineEdit_endereco_repre"/>
-          </item>
-          <item row="4" column="3">
-           <widget class="QLabel" name="label_complemento_repre">
-            <property name="text">
-             <string>Complemento (opcional)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBox_brasileiro_repre">
-            <property name="text">
-             <string>Não é Brasileiro?</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_bairro_repre">
-            <property name="text">
-             <string>Bairro</string>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="1">
-           <widget class="QLineEdit" name="lineEdit_cidade_repre"/>
-          </item>
-          <item row="3" column="0">
-           <widget class="QComboBox" name="comboBox_estado_civil_repre">
-            <item>
-             <property name="text">
-              <string>Solteiro(a)</string>
-             </property>
+         <widget class="QStackedWidget" name="stackedWidget_2">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_form_repre">
+           <layout class="QGridLayout" name="grid_repre">
+            <item row="16" column="0">
+             <widget class="QLineEdit" name="lineEdit_bairro_repre"/>
             </item>
-            <item>
-             <property name="text">
-              <string>Divorciado(a)</string>
-             </property>
+            <item row="1" column="3">
+             <widget class="QLineEdit" name="lineEdit_cpf_repre">
+              <property name="maxLength">
+               <number>14</number>
+              </property>
+              <property name="placeholderText">
+               <string>___.___.___-__</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Viúvo(a)</string>
-             </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_funcao_repre">
+              <property name="text">
+               <string>Função</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Casado(a)</string>
-             </property>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_rg_repre">
+              <property name="text">
+               <string>RG</string>
+              </property>
+             </widget>
             </item>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_cep_repre">
-            <property name="text">
-             <string>CEP</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_nome_repre">
-            <property name="text">
-             <string>Nome</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_funcao_repre">
-            <property name="text">
-             <string>Função</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="4">
-           <widget class="QLineEdit" name="lineEdit_numero_repre"/>
-          </item>
-          <item row="15" column="3" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
-          </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_cpf_repre"/>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_estado_repre">
-            <property name="text">
-             <string>Estado</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_nome_repre"/>
-          </item>
-          <item row="15" column="2">
-           <widget class="QLineEdit" name="lineEdit_estado_repre"/>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_cpf_repre">
-            <property name="text">
-             <string>CPF</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QComboBox" name="comboBox_funcao_repre">
-            <item>
-             <property name="text">
-              <string>Sócio</string>
-             </property>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_estado_civil_repre">
+              <property name="text">
+               <string>Estado Civil</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Adminstrador</string>
-             </property>
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_orgao_repre">
+              <property name="text">
+               <string>Orgão</string>
+              </property>
+             </widget>
             </item>
-            <item>
-             <property name="text">
-              <string>Procurador</string>
-             </property>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEdit_nome_repre"/>
             </item>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="lineEdit_rg_repre"/>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLabel" name="label_cidade_repre">
-            <property name="text">
-             <string>Cidade</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_rg_repre">
-            <property name="text">
-             <string>RG</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QLabel" name="label_numero_repre">
-            <property name="text">
-             <string>Número</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QLabel" name="label_endereco_repre">
-            <property name="text">
-             <string>Endereço</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_nome_repre">
+              <property name="text">
+               <string>Nome</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="3" colspan="2">
+             <widget class="QLineEdit" name="lineEdit_complemento_repre"/>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_numero_repre">
+              <property name="text">
+               <string>Número</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QLabel" name="label_complemento_repre">
+              <property name="text">
+               <string>Complemento (opcional)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_bairro_repre">
+              <property name="text">
+               <string>Bairro</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QLabel" name="label_endereco_repre">
+              <property name="text">
+               <string>Endereço</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="lineEdit_rg_repre">
+              <property name="maxLength">
+               <number>12</number>
+              </property>
+              <property name="placeholderText">
+               <string>XX__.___.___</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLineEdit" name="lineEdit_orgao_repre"/>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_cidade_repre">
+              <property name="text">
+               <string>Cidade</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="1">
+             <widget class="QLineEdit" name="lineEdit_cidade_repre"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QComboBox" name="comboBox_estado_civil_repre">
+              <item>
+               <property name="text">
+                <string>Solteiro(a)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Divorciado(a)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Viúvo(a)</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Casado(a) em Separação Total de Bens</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Casado(a) em Comunhão Parcial de Bens</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Casado(a) em Comunhão Universal de Bens</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QFrame" name="frame_nacio">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="lineEdit_nacio">
+                 <property name="placeholderText">
+                  <string>Insira a nacionalidade</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pushButton_nacio">
+                 <property name="text">
+                  <string>Desfazer</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QCheckBox" name="checkBox_nacio_repre">
+                 <property name="text">
+                  <string>Não é Brasileiro?</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QFrame" name="frame_cargo">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="lineEdit_cargo">
+                 <property name="placeholderText">
+                  <string>Insira o cargo</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pushButton_cargo">
+                 <property name="text">
+                  <string>Desfazer</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QCheckBox" name="checkBox_cargo_repre">
+                 <property name="text">
+                  <string>Não é Empresário?</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="16" column="2">
+             <widget class="QLineEdit" name="lineEdit_estado_repre"/>
+            </item>
+            <item row="3" column="3">
+             <widget class="QLineEdit" name="lineEdit_endereco_repre"/>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLabel" name="label_estado_repre">
+              <property name="text">
+               <string>Estado</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="lineEdit_cep_repre">
+              <property name="maxLength">
+               <number>9</number>
+              </property>
+              <property name="placeholderText">
+               <string>_____-___</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBox_funcao_repre">
+              <item>
+               <property name="text">
+                <string>Sócio</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Adminstrador</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Procurador</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_cpf_repre">
+              <property name="text">
+               <string>CPF</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_cep_repre">
+              <property name="text">
+               <string>CEP</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QSpinBox" name="lineEdit_numero_repre">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_show_cliente">
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QTabWidget" name="tabWidget">
+              <property name="cursor">
+               <cursorShape>ArrowCursor</cursorShape>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(85, 170, 255);</string>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tab">
+               <property name="cursor">
+                <cursorShape>ArrowCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: white;</string>
+               </property>
+               <attribute name="title">
+                <string>Representante A</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_nome_clienteA">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Nome: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_cpf_clienteA">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>CPF: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_cpf_input_clienteA">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_clienteA">
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic UI</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: #E1E1E1;</string>
+                  </property>
+                  <property name="text">
+                   <string>Editar </string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../imgs/engine.png</normaloff>../imgs/engine.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="3">
+                 <widget class="Line" name="line_clienteA">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" colspan="2">
+                 <widget class="QLabel" name="label_nome_input_clienteA">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_2">
+               <property name="styleSheet">
+                <string notr="true">background-color: white;</string>
+               </property>
+               <attribute name="title">
+                <string>Representante B</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <item row="0" column="1" colspan="2">
+                 <widget class="QLabel" name="label_nome_input_clienteB">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_cpf_clienteB">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>CPF: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_cpf_input_clienteB">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_nome_clienteB">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Nome: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_clienteB">
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic UI</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: #E1E1E1;</string>
+                  </property>
+                  <property name="text">
+                   <string>Editar </string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../imgs/engine.png</normaloff>../imgs/engine.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="3">
+                 <widget class="Line" name="line_clienteB">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_3">
+               <property name="styleSheet">
+                <string notr="true">background-color: white;</string>
+               </property>
+               <attribute name="title">
+                <string>Representante C</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_nome_clienteC">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Nome: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" colspan="2">
+                 <widget class="QLabel" name="label_nome_input_clienteC">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="3">
+                 <widget class="Line" name="line_clienteC">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_cpf_clienteC">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic</family>
+                    <pointsize>16</pointsize>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>CPF: </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_cpf_input_clienteC">
+                  <property name="font">
+                   <font>
+                    <pointsize>16</pointsize>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QPushButton" name="pushButton_clienteC">
+                  <property name="font">
+                   <font>
+                    <family>Yu Gothic UI</family>
+                    <pointsize>16</pointsize>
+                   </font>
+                  </property>
+                  <property name="cursor">
+                   <cursorShape>PointingHandCursor</cursorShape>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color: #E1E1E1;</string>
+                  </property>
+                  <property name="text">
+                   <string>Editar </string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../imgs/engine.png</normaloff>../imgs/engine.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="intro_contrato">
@@ -696,57 +1234,7 @@
         </item>
         <item>
          <layout class="QGridLayout" name="grid_contrato">
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_dt_inicio_contrato"/>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLineEdit" name="lineEdit_dt_assinatura_contrato"/>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_dia_vencimento_contrato">
-            <property name="text">
-             <string>Dia Vencimento</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLineEdit" name="lineEdit_num_empreg_contrato"/>
-          </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="lineEdit_dia_vencimento_contrato"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_valor_contrato"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_dt_assinatura_contrato">
-            <property name="text">
-             <string>Data Assinatura</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_valor_contrato">
-            <property name="text">
-             <string>Valor</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLabel" name="label_num_empreg_contrato">
-            <property name="text">
-             <string>Num. Empregados</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_dt_inicio_contrato">
-            <property name="text">
-             <string>Data Inicio</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5" rowspan="2">
+          <item row="0" column="5" rowspan="3">
            <widget class="QPushButton" name="pushButton_executar">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -760,8 +1248,110 @@
               <height>0</height>
              </size>
             </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
             <property name="text">
              <string>Enviar</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="lineEdit_dt_inicio_contrato">
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>__/__/____</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLineEdit" name="lineEdit_dt_assinatura_contrato">
+            <property name="maxLength">
+             <number>10</number>
+            </property>
+            <property name="placeholderText">
+             <string>__/__/____</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QDoubleSpinBox" name="lineEdit_valor_contrato">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::ButtonSymbols::UpDownArrows</enum>
+            </property>
+            <property name="prefix">
+             <string>R$ </string>
+            </property>
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <double>99999.990000000005239</double>
+            </property>
+            <property name="stepType">
+             <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QSpinBox" name="lineEdit_num_empreg_contrato"/>
+          </item>
+          <item row="2" column="3">
+           <widget class="QSpinBox" name="lineEdit_dia_vencimento_contrato">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>30</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_valor_contrato">
+            <property name="text">
+             <string>Valor</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_dt_inicio_contrato">
+            <property name="text">
+             <string>Data Inicio</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_dt_assinatura_contrato">
+            <property name="text">
+             <string>Data Assinatura</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="label_dia_vencimento_contrato">
+            <property name="text">
+             <string>Dia Vencimento</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="label_num_empreg_contrato">
+            <property name="text">
+             <string>Num. Empregados</string>
             </property>
            </widget>
           </item>
@@ -778,7 +1368,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>643</width>
+     <width>794</width>
      <height>22</height>
     </rect>
    </property>
