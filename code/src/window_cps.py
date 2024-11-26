@@ -80,6 +80,7 @@ class Ui_MainWindow(object):
 
         self.options_cps = QGridLayout()
         self.options_cps.setObjectName(u"options_cps")
+        self.options_cps.setContentsMargins(30, -1, -1, -1)
         self.pb_lucro = QPushButton(self.menu)
         self.pb_lucro.setObjectName(u"pb_lucro")
         self.pb_lucro.setMinimumSize(QSize(100, 50))
@@ -244,7 +245,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_cnpj_empresa = QLineEdit(self.form)
         self.lineEdit_cnpj_empresa.setObjectName(u"lineEdit_cnpj_empresa")
-        self.lineEdit_cnpj_empresa.setMaxLength(17)
+        self.lineEdit_cnpj_empresa.setMaxLength(18)
 
         self.grid_empresa.addWidget(self.lineEdit_cnpj_empresa, 1, 1, 1, 1)
 
@@ -876,7 +877,7 @@ class Ui_MainWindow(object):
         self.label_cep_empresa.setText(QCoreApplication.translate("MainWindow", u"CEP", None))
         self.label_nome_empresa.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
         self.label_endereco_empresa.setText(QCoreApplication.translate("MainWindow", u"Logradouro", None))
-        self.lineEdit_cnpj_empresa.setInputMask(QCoreApplication.translate("MainWindow", u"99.999.999/999-99", None))
+        self.lineEdit_cnpj_empresa.setInputMask(QCoreApplication.translate("MainWindow", u"99.999.999/9999-99", None))
         self.lineEdit_cnpj_empresa.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__.___.___/____-__", None))
         self.label_numero_empresa.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
         self.label_complemento_empresa.setText(QCoreApplication.translate("MainWindow", u"Complemento (opcional)", None))
