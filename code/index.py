@@ -12,6 +12,8 @@ import sys
 import os
 import locale
 import traceback
+import requests
+import json
 
 from PySide6.QtWidgets import (
     QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton, QSpinBox, QDoubleSpinBox
@@ -157,11 +159,11 @@ class Conteudo:
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
 
-        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
+        self.cabecalho = '{{ nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{ cnpjEmp }}, neste ato representada por ',
 
         self.conteudo_base = {
             0: [
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+                '{{ nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }}',
 
                 '''_______________________________     
                 
@@ -273,6 +275,20 @@ class IExececao(metaclass=ABCMeta):
     def remocao(self):
         pass
 
+class Correios:
+    URL = 'https://viacep.com.br/ws/{0}/json/'
+
+    def __init__(self) -> None:
+        pass
+
+    def pesquisar_cep(self, endereco):
+        try:
+            url = requests.get(self.URL.format(endereco)).content
+            dic = json.loads(url)
+            return [dic["logradouro"], dic["bairro"], dic["localidade"], dic["estado"]]
+        except:
+            raise Exception('Verifique se o cep foi digitado corretamente e tente novamente') 
+
 #TODO MAIN
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
@@ -361,6 +377,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'nacionalidadeContra': 'Brasileiro(a)', 'empregoContra':'Empresário(a)'
         }
 
+        self.correio_empresa = [
+            self.lineEdit_cep_empresa, self.lineEdit_endereco_empresa, self.lineEdit_bairro_empresa
+        ]
+        
+        self.correio_repre = [
+            self.lineEdit_cep_repre, self.lineEdit_endereco_repre, self.lineEdit_bairro_repre, self.lineEdit_cidade_repre, self.lineEdit_estado_repre
+        ]
+
+
         self.ID_MENU = 0
         self.ID_FORM = 1
         
@@ -398,6 +423,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.comboBox_repre.currentTextChanged.connect(
             self.change_repre
+        )
+
+        self.lineEdit_cep_empresa.textChanged.connect(
+            lambda: self.consultar_correio(self.correio_empresa)
+        )
+
+        self.lineEdit_cep_repre.textChanged.connect(
+            lambda: self.consultar_correio(self.correio_repre)
         )
 
         self.checkBox_nacio_repre.checkStateChanged.connect(
@@ -480,6 +513,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
         except ZeroDivisionError:
             messagebox.showwarning(title='Aviso', message= 'Insira um valor de contrato diferente de R$ 0.00')
+        except Exception as e:
+            traceback.print_exc()
+            messagebox.showwarning(title='Aviso', message= e)
+
+    def consultar_correio(self, lineEdit: list[QLineEdit]):
+        try:
+            cep = lineEdit[0].text()
+            if len(cep) == 9:
+                resp = Correios().pesquisar_cep(cep)
+
+                for i in range(1, len(lineEdit)):
+                    lineEdit[i].setText(resp[i - 1])
+
         except Exception as e:
             traceback.print_exc()
             messagebox.showwarning(title='Aviso', message= e)

@@ -6,13 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>794</width>
-    <height>718</height>
+    <width>1197</width>
+    <height>758</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
+    <width>0</width>
     <height>0</height>
    </size>
   </property>
@@ -381,7 +387,7 @@
           <item row="0" column="3">
            <widget class="QLabel" name="label_endereco_empresa">
             <property name="text">
-             <string>Endereço</string>
+             <string>Logradouro</string>
             </property>
            </widget>
           </item>
@@ -633,7 +639,7 @@
             <item row="2" column="3">
              <widget class="QLabel" name="label_endereco_repre">
               <property name="text">
-               <string>Endereço</string>
+               <string>Logradouro</string>
               </property>
              </widget>
             </item>
@@ -1439,7 +1445,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>794</width>
+     <width>1197</width>
      <height>22</height>
     </rect>
    </property>
