@@ -12,7 +12,6 @@ import sys
 import os
 import locale
 import traceback
-from time import sleep
 
 from PySide6.QtWidgets import (
     QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton, QSpinBox, QDoubleSpinBox
@@ -30,166 +29,35 @@ def resource_path(relative_path):
         os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-class IFormater:
-    def cpf_formater(self, text, var, index, mode):
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 11:
-           valor = valor[:3] + "." + valor[3:6] + "." + valor[6:9] + "-" + valor[9:]
-        else:
-            valor = valor.replace('.','').replace('-','')
-        text.set(valor)
-
-    def cnpj_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 14:
-           valor = valor[:2] + "." + valor[2:5] + "." + valor[5:8] + "/" + valor[8:12] + "-" + valor[12:]
-        else:
-            valor = valor.replace('.','').replace('-','').replace('/','')
-        text.set(valor)
-    
-
-    def cep_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 8 and '-' not in valor:
-           valor = valor[:5] + "-" + valor[5:]
-        else:
-            valor = valor.replace('-','')
-        text.set(valor)
-
-    def rg_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 10:
-           valor = valor[:2] + "-" + valor[2:4] + "." + valor[4:7] + "." + valor[7:]
-        else:
-            valor = valor.replace('.','').replace('-','').replace(' ','')
-        text.set(valor)
-    
-    def date_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 8:
-           valor = valor[:2] + "/" + valor[2:4] + "/" + valor[4:]
-        else:
-            valor = valor.replace('/','')
-        text.set(valor)
-
-    def comp_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if len(valor) == 6 and '/' not in valor:
-           valor = valor[:2] + "/" + valor[2:]
-        else:
-            valor = valor.replace('/','')
-        text.set(valor)
-
-    def valor_formater(self, text, var, index, mode): 
-        #Só recebe valor que passa pelo validador
-        valor = text.get()
-        if ',' not in valor:
-            valor = valor + ',00'
-        
-        text.set(valor)      
-
 class TextOnly(QValidator):
     def validate(self, string, index):
         if re.compile("[a-zA-Z]+").fullmatch(string) or string == '':
             return QValidator.State.Acceptable
         return QValidator.State.Invalid
 
-class IValidator:    
-    def str_validator(self, text):
-        return not text.isdecimal()
-    
-    def num_validator(self, text):
-        return text.isdecimal()
-    
-    def valor_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) == 0:
-            return True
-        return re.match(padrao, text) is not None
-
-    def operacao_cpf(self, text):
-        numeros = [int(digito) for digito in text if digito.isdigit()]
+    # def operacao_cpf(self, text):
+    #     numeros = [int(digito) for digito in text if digito.isdigit()]
   
-        for i in range(9,11):
-            soma_produtos = sum(a*b for a, b in zip (numeros[0:i], range (i + 1, 1, -1)))
-            digito_esperado = (soma_produtos * 10 % 11) % 10
-            if numeros[i] != digito_esperado:
-                return False
-        return True
-        
-    def cpf_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 15:
-            if len(text) >= 12:
-                if len(text) == 14 and self.operacao_cpf(text) == False:
-                    messagebox.showwarning(title='Aviso', message='O CPF digitado é inválido')
-                return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
-                return True
-        return False
+    #     for i in range(9,11):
+    #         soma_produtos = sum(a*b for a, b in zip (numeros[0:i], range (i + 1, 1, -1)))
+    #         digito_esperado = (soma_produtos * 10 % 11) % 10
+    #         if numeros[i] != digito_esperado:
+    #             return False
+    #     return True
     
-    def operacao_cnpj(self, text):
-        cnpj = ''.join([digito for digito in text if digito.isdigit()])
-        if cnpj in (c * 14 for c in "1234567890"):
-            return False
+    # def operacao_cnpj(self, text):
+    #     cnpj = ''.join([digito for digito in text if digito.isdigit()])
+    #     if cnpj in (c * 14 for c in "1234567890"):
+    #         return False
 
-        cnpj_r = cnpj[::-1]
-        for i in range(2, 0, -1):
-            cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
-            dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
-        if cnpj_r[i - 1:i] != str(dv % 10):
-            return False
-        return True
+    #     cnpj_r = cnpj[::-1]
+    #     for i in range(2, 0, -1):
+    #         cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
+    #         dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
+    #     if cnpj_r[i - 1:i] != str(dv % 10):
+    #         return False
+    #     return True
         
-    def cnpj_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 19:
-            if len(text) >= 15:
-                if len(text) == 18 and self.operacao_cnpj(text) == False:
-                    messagebox.showwarning(title='Aviso', message='O CNPJ digitado é inválido')
-                return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
-                return True
-        return False
-    
-    def cep_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 10:
-            if len(text) >= 9:
-                return re.match(padrao, text) is not None
-            elif len(text) in [0,8] or text.isdecimal():
-                return True
-        return False
-    
-    def rg_validator(self, text):
-        if len(text) < 14:
-            return True
-        return False
-    
-    def date_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 11:
-            if len(text) >= 9:
-                return re.match(padrao, text) is not None
-            elif len(text) == 0 or text.isdecimal():
-                return True
-        return False
-    
-    def comp_validator(self, text):
-        padrao = r"^[-\d.,/]+$"  # Permite dígitos, ponto, vírgula, hífen e barra
-        if len(text) < 8:
-            if len(text) >= 7:
-                return re.match(padrao, text) is not None
-            elif len(text) in [0,6] or text.isdecimal():
-                return True
-        return False
-
 class File:
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
