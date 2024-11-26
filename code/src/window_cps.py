@@ -26,8 +26,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(794, 718)
-        MainWindow.setMinimumSize(QSize(500, 0))
+        MainWindow.resize(1197, 758)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
+        MainWindow.setSizePolicy(sizePolicy)
+        MainWindow.setMinimumSize(QSize(0, 0))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -42,11 +47,11 @@ class Ui_MainWindow(object):
         self.header_menu.setObjectName(u"header_menu")
         self.logo_menu = QLabel(self.menu)
         self.logo_menu.setObjectName(u"logo_menu")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.logo_menu.sizePolicy().hasHeightForWidth())
-        self.logo_menu.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.logo_menu.sizePolicy().hasHeightForWidth())
+        self.logo_menu.setSizePolicy(sizePolicy1)
         self.logo_menu.setMinimumSize(QSize(580, 108))
         self.logo_menu.setPixmap(QPixmap(u"../imgs/cps_horizontal.png"))
         self.logo_menu.setScaledContents(True)
@@ -59,8 +64,8 @@ class Ui_MainWindow(object):
 
         self.intro = QLabel(self.menu)
         self.intro.setObjectName(u"intro")
-        sizePolicy.setHeightForWidth(self.intro.sizePolicy().hasHeightForWidth())
-        self.intro.setSizePolicy(sizePolicy)
+        sizePolicy1.setHeightForWidth(self.intro.sizePolicy().hasHeightForWidth())
+        self.intro.setSizePolicy(sizePolicy1)
         font = QFont()
         font.setFamilies([u"Tw Cen MT"])
         font.setPointSize(26)
@@ -75,6 +80,7 @@ class Ui_MainWindow(object):
 
         self.options_cps = QGridLayout()
         self.options_cps.setObjectName(u"options_cps")
+        self.options_cps.setContentsMargins(30, -1, -1, -1)
         self.pb_lucro = QPushButton(self.menu)
         self.pb_lucro.setObjectName(u"pb_lucro")
         self.pb_lucro.setMinimumSize(QSize(100, 50))
@@ -159,11 +165,11 @@ class Ui_MainWindow(object):
         self.intro_empresa.setObjectName(u"intro_empresa")
         self.titulo_empresa = QLabel(self.form)
         self.titulo_empresa.setObjectName(u"titulo_empresa")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.titulo_empresa.sizePolicy().hasHeightForWidth())
-        self.titulo_empresa.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.titulo_empresa.sizePolicy().hasHeightForWidth())
+        self.titulo_empresa.setSizePolicy(sizePolicy2)
         font2 = QFont()
         font2.setFamilies([u"Times New Roman"])
         font2.setPointSize(16)
@@ -195,6 +201,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_bairro_empresa = QLineEdit(self.form)
         self.lineEdit_bairro_empresa.setObjectName(u"lineEdit_bairro_empresa")
+        self.lineEdit_bairro_empresa.setMaxLength(35)
 
         self.grid_empresa.addWidget(self.lineEdit_bairro_empresa, 3, 1, 1, 1)
 
@@ -211,6 +218,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_nome_empresa = QLineEdit(self.form)
         self.lineEdit_nome_empresa.setObjectName(u"lineEdit_nome_empresa")
+        self.lineEdit_nome_empresa.setMaxLength(35)
 
         self.grid_empresa.addWidget(self.lineEdit_nome_empresa, 1, 0, 1, 1)
 
@@ -221,6 +229,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_complemento_empresa = QLineEdit(self.form)
         self.lineEdit_complemento_empresa.setObjectName(u"lineEdit_complemento_empresa")
+        self.lineEdit_complemento_empresa.setMaxLength(35)
 
         self.grid_empresa.addWidget(self.lineEdit_complemento_empresa, 3, 2, 1, 2)
 
@@ -236,7 +245,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_cnpj_empresa = QLineEdit(self.form)
         self.lineEdit_cnpj_empresa.setObjectName(u"lineEdit_cnpj_empresa")
-        self.lineEdit_cnpj_empresa.setMaxLength(19)
+        self.lineEdit_cnpj_empresa.setMaxLength(18)
 
         self.grid_empresa.addWidget(self.lineEdit_cnpj_empresa, 1, 1, 1, 1)
 
@@ -247,6 +256,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_endereco_empresa = QLineEdit(self.form)
         self.lineEdit_endereco_empresa.setObjectName(u"lineEdit_endereco_empresa")
+        self.lineEdit_endereco_empresa.setMaxLength(35)
 
         self.grid_empresa.addWidget(self.lineEdit_endereco_empresa, 1, 3, 1, 1)
 
@@ -269,8 +279,8 @@ class Ui_MainWindow(object):
         self.intro_repre.setObjectName(u"intro_repre")
         self.titulo_repre = QLabel(self.form)
         self.titulo_repre.setObjectName(u"titulo_repre")
-        sizePolicy1.setHeightForWidth(self.titulo_repre.sizePolicy().hasHeightForWidth())
-        self.titulo_repre.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.titulo_repre.sizePolicy().hasHeightForWidth())
+        self.titulo_repre.setSizePolicy(sizePolicy2)
         self.titulo_repre.setFont(font2)
 
         self.intro_repre.addWidget(self.titulo_repre)
@@ -278,11 +288,11 @@ class Ui_MainWindow(object):
         self.line = QFrame(self.form)
         self.line.setObjectName(u"line")
         self.line.setWindowModality(Qt.WindowModality.NonModal)
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.line.sizePolicy().hasHeightForWidth())
-        self.line.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.line.sizePolicy().hasHeightForWidth())
+        self.line.setSizePolicy(sizePolicy3)
         self.line.setMinimumSize(QSize(0, 5))
         self.line.setStyleSheet(u"background-color: rgb(85, 170, 255);")
         self.line.setLineWidth(0)
@@ -293,8 +303,8 @@ class Ui_MainWindow(object):
 
         self.titulo_quantidade = QLabel(self.form)
         self.titulo_quantidade.setObjectName(u"titulo_quantidade")
-        sizePolicy1.setHeightForWidth(self.titulo_quantidade.sizePolicy().hasHeightForWidth())
-        self.titulo_quantidade.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.titulo_quantidade.sizePolicy().hasHeightForWidth())
+        self.titulo_quantidade.setSizePolicy(sizePolicy2)
         font3 = QFont()
         font3.setFamilies([u"Times New Roman"])
         font3.setPointSize(14)
@@ -309,8 +319,8 @@ class Ui_MainWindow(object):
         self.comboBox_repre.addItem("")
         self.comboBox_repre.addItem("")
         self.comboBox_repre.setObjectName(u"comboBox_repre")
-        sizePolicy1.setHeightForWidth(self.comboBox_repre.sizePolicy().hasHeightForWidth())
-        self.comboBox_repre.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.comboBox_repre.sizePolicy().hasHeightForWidth())
+        self.comboBox_repre.setSizePolicy(sizePolicy2)
         self.comboBox_repre.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.intro_repre.addWidget(self.comboBox_repre)
@@ -326,6 +336,7 @@ class Ui_MainWindow(object):
         self.grid_repre.setObjectName(u"grid_repre")
         self.lineEdit_bairro_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_bairro_repre.setObjectName(u"lineEdit_bairro_repre")
+        self.lineEdit_bairro_repre.setMaxLength(35)
 
         self.grid_repre.addWidget(self.lineEdit_bairro_repre, 16, 0, 1, 1)
 
@@ -357,6 +368,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_nome_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_nome_repre.setObjectName(u"lineEdit_nome_repre")
+        self.lineEdit_nome_repre.setMaxLength(35)
 
         self.grid_repre.addWidget(self.lineEdit_nome_repre, 1, 1, 1, 1)
 
@@ -367,6 +379,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_complemento_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_complemento_repre.setObjectName(u"lineEdit_complemento_repre")
+        self.lineEdit_complemento_repre.setMaxLength(35)
 
         self.grid_repre.addWidget(self.lineEdit_complemento_repre, 16, 3, 1, 2)
 
@@ -398,6 +411,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_orgao_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_orgao_repre.setObjectName(u"lineEdit_orgao_repre")
+        self.lineEdit_orgao_repre.setMaxLength(10)
 
         self.grid_repre.addWidget(self.lineEdit_orgao_repre, 1, 4, 1, 1)
 
@@ -408,6 +422,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_cidade_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_cidade_repre.setObjectName(u"lineEdit_cidade_repre")
+        self.lineEdit_cidade_repre.setMaxLength(35)
 
         self.grid_repre.addWidget(self.lineEdit_cidade_repre, 16, 1, 1, 1)
 
@@ -424,14 +439,15 @@ class Ui_MainWindow(object):
 
         self.frame_nacio = QFrame(self.page_form_repre)
         self.frame_nacio.setObjectName(u"frame_nacio")
-        sizePolicy1.setHeightForWidth(self.frame_nacio.sizePolicy().hasHeightForWidth())
-        self.frame_nacio.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.frame_nacio.sizePolicy().hasHeightForWidth())
+        self.frame_nacio.setSizePolicy(sizePolicy2)
         self.frame_nacio.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_nacio.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_6 = QGridLayout(self.frame_nacio)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.lineEdit_nacio = QLineEdit(self.frame_nacio)
         self.lineEdit_nacio.setObjectName(u"lineEdit_nacio")
+        self.lineEdit_nacio.setMaxLength(35)
 
         self.gridLayout_6.addWidget(self.lineEdit_nacio, 1, 0, 1, 1)
 
@@ -450,14 +466,15 @@ class Ui_MainWindow(object):
 
         self.frame_cargo = QFrame(self.page_form_repre)
         self.frame_cargo.setObjectName(u"frame_cargo")
-        sizePolicy1.setHeightForWidth(self.frame_cargo.sizePolicy().hasHeightForWidth())
-        self.frame_cargo.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.frame_cargo.sizePolicy().hasHeightForWidth())
+        self.frame_cargo.setSizePolicy(sizePolicy2)
         self.frame_cargo.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_cargo.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_7 = QGridLayout(self.frame_cargo)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.lineEdit_cargo = QLineEdit(self.frame_cargo)
         self.lineEdit_cargo.setObjectName(u"lineEdit_cargo")
+        self.lineEdit_cargo.setMaxLength(35)
 
         self.gridLayout_7.addWidget(self.lineEdit_cargo, 1, 0, 1, 1)
 
@@ -476,11 +493,13 @@ class Ui_MainWindow(object):
 
         self.lineEdit_estado_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_estado_repre.setObjectName(u"lineEdit_estado_repre")
+        self.lineEdit_estado_repre.setMaxLength(20)
 
         self.grid_repre.addWidget(self.lineEdit_estado_repre, 16, 2, 1, 1)
 
         self.lineEdit_endereco_repre = QLineEdit(self.page_form_repre)
         self.lineEdit_endereco_repre.setObjectName(u"lineEdit_endereco_repre")
+        self.lineEdit_endereco_repre.setMaxLength(35)
 
         self.grid_repre.addWidget(self.lineEdit_endereco_repre, 3, 3, 1, 1)
 
@@ -537,11 +556,11 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.label_nome_clienteA = QLabel(self.tab)
         self.label_nome_clienteA.setObjectName(u"label_nome_clienteA")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.label_nome_clienteA.sizePolicy().hasHeightForWidth())
-        self.label_nome_clienteA.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_nome_clienteA.sizePolicy().hasHeightForWidth())
+        self.label_nome_clienteA.setSizePolicy(sizePolicy4)
         font4 = QFont()
         font4.setFamilies([u"Yu Gothic"])
         font4.setPointSize(16)
@@ -552,8 +571,8 @@ class Ui_MainWindow(object):
 
         self.label_cpf_clienteA = QLabel(self.tab)
         self.label_cpf_clienteA.setObjectName(u"label_cpf_clienteA")
-        sizePolicy3.setHeightForWidth(self.label_cpf_clienteA.sizePolicy().hasHeightForWidth())
-        self.label_cpf_clienteA.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_cpf_clienteA.sizePolicy().hasHeightForWidth())
+        self.label_cpf_clienteA.setSizePolicy(sizePolicy4)
         self.label_cpf_clienteA.setFont(font4)
 
         self.gridLayout_2.addWidget(self.label_cpf_clienteA, 2, 0, 1, 1)
@@ -615,8 +634,8 @@ class Ui_MainWindow(object):
 
         self.label_cpf_clienteB = QLabel(self.tab_2)
         self.label_cpf_clienteB.setObjectName(u"label_cpf_clienteB")
-        sizePolicy3.setHeightForWidth(self.label_cpf_clienteB.sizePolicy().hasHeightForWidth())
-        self.label_cpf_clienteB.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_cpf_clienteB.sizePolicy().hasHeightForWidth())
+        self.label_cpf_clienteB.setSizePolicy(sizePolicy4)
         self.label_cpf_clienteB.setFont(font4)
 
         self.gridLayout_4.addWidget(self.label_cpf_clienteB, 2, 0, 1, 1)
@@ -630,8 +649,8 @@ class Ui_MainWindow(object):
 
         self.label_nome_clienteB = QLabel(self.tab_2)
         self.label_nome_clienteB.setObjectName(u"label_nome_clienteB")
-        sizePolicy3.setHeightForWidth(self.label_nome_clienteB.sizePolicy().hasHeightForWidth())
-        self.label_nome_clienteB.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_nome_clienteB.sizePolicy().hasHeightForWidth())
+        self.label_nome_clienteB.setSizePolicy(sizePolicy4)
         self.label_nome_clienteB.setFont(font4)
 
         self.gridLayout_4.addWidget(self.label_nome_clienteB, 0, 0, 1, 1)
@@ -662,8 +681,8 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.label_nome_clienteC = QLabel(self.tab_3)
         self.label_nome_clienteC.setObjectName(u"label_nome_clienteC")
-        sizePolicy3.setHeightForWidth(self.label_nome_clienteC.sizePolicy().hasHeightForWidth())
-        self.label_nome_clienteC.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_nome_clienteC.sizePolicy().hasHeightForWidth())
+        self.label_nome_clienteC.setSizePolicy(sizePolicy4)
         self.label_nome_clienteC.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_nome_clienteC, 0, 0, 1, 1)
@@ -685,8 +704,8 @@ class Ui_MainWindow(object):
 
         self.label_cpf_clienteC = QLabel(self.tab_3)
         self.label_cpf_clienteC.setObjectName(u"label_cpf_clienteC")
-        sizePolicy3.setHeightForWidth(self.label_cpf_clienteC.sizePolicy().hasHeightForWidth())
-        self.label_cpf_clienteC.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_cpf_clienteC.sizePolicy().hasHeightForWidth())
+        self.label_cpf_clienteC.setSizePolicy(sizePolicy4)
         self.label_cpf_clienteC.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_cpf_clienteC, 2, 0, 1, 1)
@@ -721,8 +740,8 @@ class Ui_MainWindow(object):
         self.intro_contrato.setObjectName(u"intro_contrato")
         self.titulo_contrato = QLabel(self.form)
         self.titulo_contrato.setObjectName(u"titulo_contrato")
-        sizePolicy1.setHeightForWidth(self.titulo_contrato.sizePolicy().hasHeightForWidth())
-        self.titulo_contrato.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.titulo_contrato.sizePolicy().hasHeightForWidth())
+        self.titulo_contrato.setSizePolicy(sizePolicy2)
         self.titulo_contrato.setFont(font2)
 
         self.intro_contrato.addWidget(self.titulo_contrato)
@@ -744,11 +763,8 @@ class Ui_MainWindow(object):
         self.grid_contrato.setObjectName(u"grid_contrato")
         self.pushButton_executar = QPushButton(self.form)
         self.pushButton_executar.setObjectName(u"pushButton_executar")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.pushButton_executar.sizePolicy().hasHeightForWidth())
-        self.pushButton_executar.setSizePolicy(sizePolicy4)
+        sizePolicy.setHeightForWidth(self.pushButton_executar.sizePolicy().hasHeightForWidth())
+        self.pushButton_executar.setSizePolicy(sizePolicy)
         self.pushButton_executar.setMinimumSize(QSize(200, 0))
         self.pushButton_executar.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
@@ -768,8 +784,8 @@ class Ui_MainWindow(object):
 
         self.lineEdit_valor_contrato = QDoubleSpinBox(self.form)
         self.lineEdit_valor_contrato.setObjectName(u"lineEdit_valor_contrato")
-        sizePolicy4.setHeightForWidth(self.lineEdit_valor_contrato.sizePolicy().hasHeightForWidth())
-        self.lineEdit_valor_contrato.setSizePolicy(sizePolicy4)
+        sizePolicy.setHeightForWidth(self.lineEdit_valor_contrato.sizePolicy().hasHeightForWidth())
+        self.lineEdit_valor_contrato.setSizePolicy(sizePolicy)
         self.lineEdit_valor_contrato.setMinimumSize(QSize(100, 0))
         self.lineEdit_valor_contrato.setButtonSymbols(QAbstractSpinBox.ButtonSymbols.UpDownArrows)
         self.lineEdit_valor_contrato.setDecimals(2)
@@ -825,7 +841,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 794, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1197, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -855,11 +871,13 @@ class Ui_MainWindow(object):
         self.logo_form.setText("")
         self.titulo_empresa.setText(QCoreApplication.translate("MainWindow", u"Empresa", None))
         self.label_cnpj_empresa.setText(QCoreApplication.translate("MainWindow", u"CNPJ", None))
+        self.lineEdit_cep_empresa.setInputMask(QCoreApplication.translate("MainWindow", u"99999-999", None))
         self.lineEdit_cep_empresa.setPlaceholderText(QCoreApplication.translate("MainWindow", u"_____-___", None))
         self.label_bairro_empresa.setText(QCoreApplication.translate("MainWindow", u"Bairro", None))
         self.label_cep_empresa.setText(QCoreApplication.translate("MainWindow", u"CEP", None))
         self.label_nome_empresa.setText(QCoreApplication.translate("MainWindow", u"Nome", None))
-        self.label_endereco_empresa.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
+        self.label_endereco_empresa.setText(QCoreApplication.translate("MainWindow", u"Logradouro", None))
+        self.lineEdit_cnpj_empresa.setInputMask(QCoreApplication.translate("MainWindow", u"99.999.999/9999-99", None))
         self.lineEdit_cnpj_empresa.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__.___.___/____-__", None))
         self.label_numero_empresa.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
         self.label_complemento_empresa.setText(QCoreApplication.translate("MainWindow", u"Complemento (opcional)", None))
@@ -869,6 +887,7 @@ class Ui_MainWindow(object):
         self.comboBox_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"2", None))
         self.comboBox_repre.setItemText(2, QCoreApplication.translate("MainWindow", u"3", None))
 
+        self.lineEdit_cpf_repre.setInputMask(QCoreApplication.translate("MainWindow", u"999.999.999-99", None))
         self.lineEdit_cpf_repre.setPlaceholderText(QCoreApplication.translate("MainWindow", u"___.___.___-__", None))
         self.label_funcao_repre.setText(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00e3o", None))
         self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
@@ -878,7 +897,8 @@ class Ui_MainWindow(object):
         self.label_numero_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00famero", None))
         self.label_complemento_repre.setText(QCoreApplication.translate("MainWindow", u"Complemento (opcional)", None))
         self.label_bairro_repre.setText(QCoreApplication.translate("MainWindow", u"Bairro", None))
-        self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Endere\u00e7o", None))
+        self.label_endereco_repre.setText(QCoreApplication.translate("MainWindow", u"Logradouro", None))
+        self.lineEdit_rg_repre.setInputMask(QCoreApplication.translate("MainWindow", u"AA99.999.999", None))
         self.lineEdit_rg_repre.setPlaceholderText(QCoreApplication.translate("MainWindow", u"XX__.___.___", None))
         self.label_cidade_repre.setText(QCoreApplication.translate("MainWindow", u"Cidade", None))
         self.comboBox_estado_civil_repre.setItemText(0, QCoreApplication.translate("MainWindow", u"Solteiro(a)", None))
@@ -895,6 +915,7 @@ class Ui_MainWindow(object):
         self.pushButton_cargo.setText(QCoreApplication.translate("MainWindow", u"Desfazer", None))
         self.checkBox_cargo_repre.setText(QCoreApplication.translate("MainWindow", u"N\u00e3o \u00e9 Empres\u00e1rio?", None))
         self.label_estado_repre.setText(QCoreApplication.translate("MainWindow", u"Estado", None))
+        self.lineEdit_cep_repre.setInputMask(QCoreApplication.translate("MainWindow", u"99999-999", None))
         self.lineEdit_cep_repre.setPlaceholderText(QCoreApplication.translate("MainWindow", u"_____-___", None))
         self.comboBox_funcao_repre.setItemText(0, QCoreApplication.translate("MainWindow", u"S\u00f3cio", None))
         self.comboBox_funcao_repre.setItemText(1, QCoreApplication.translate("MainWindow", u"Adminstrador", None))
@@ -922,7 +943,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Representante C", None))
         self.titulo_contrato.setText(QCoreApplication.translate("MainWindow", u"Contrato", None))
         self.pushButton_executar.setText(QCoreApplication.translate("MainWindow", u"Enviar", None))
+        self.lineEdit_dt_inicio_contrato.setInputMask(QCoreApplication.translate("MainWindow", u"99/99/9999", None))
         self.lineEdit_dt_inicio_contrato.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__/__/____", None))
+        self.lineEdit_dt_assinatura_contrato.setInputMask(QCoreApplication.translate("MainWindow", u"99/99/9999", None))
         self.lineEdit_dt_assinatura_contrato.setPlaceholderText(QCoreApplication.translate("MainWindow", u"__/__/____", None))
         self.lineEdit_valor_contrato.setPrefix(QCoreApplication.translate("MainWindow", u"R$ ", None))
         self.label_valor_contrato.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
