@@ -719,7 +719,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, list in self.relacoes_checkbox.items():
             if key == check_box:
                 lineEdit, button = list
-        return lineEdit,button
+        return lineEdit,button#
 
 class ILucroPresumido(IExececao):
     def aplicacao(self: MainWindow):
