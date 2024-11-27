@@ -153,7 +153,7 @@ class Aviso:
 
 #TODO CONTEUDO
 class Conteudo:
-    def __init__(self, referencias):
+    def __init__(self, referencias: dict[str:str]):
         self.dictonary = copy.deepcopy(referencias)
         
         self.SAL_MINIMO = 1412.00
@@ -204,7 +204,7 @@ Deltaprice Serviços Contábeis Ltda.                                           
         for key, func in ref.items():
             self.dictonary[key] = func
 
-        self.__set_IJuridica()
+        self.__set_empresa()
         self.__update_repre(qnt_repre)
 
         return self.dictonary
@@ -224,8 +224,9 @@ Deltaprice Serviços Contábeis Ltda.                                           
             for index, value in ref.items():
                 self.dictonary[index + i] = value
 
-    def __set_IJuridica(self):
-        if 'nomeEmp' in self.dictonary.keys():
+    def __set_empresa(self):
+        if self.dictonary.get('nomeEmp') != None:
+            print('Entrou')
 
             ref = {
                 'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
@@ -289,6 +290,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # self.vez = 1
 
+        #1 a mais do criado pois é o máximo (n<max), não os disponíveis
+        self.max_repre = 4
+
+        self.ID_MENU = 0
+        self.ID_FORM = 1
+          
+        self.file = File()
+        self.excecao = None
+
+        self.setWindowTitle('Gerador de CPS')
+
+        self.setWindowIcon(QIcon(
+            resource_path('src\\imgs\\cps-icon.ico'))
+        )
+
         self.atual_stacked_2 = 0
 
         self.label_EFD = QLabel('Valor EFD')
@@ -336,6 +352,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.init_reference()
 
+        self.widgets_especials = {
+            'cnpjEmp': self.lineEdit_cnpj_empresa,
+            'cepEmp': self.lineEdit_cep_empresa,
+            'dataInicio': self.lineEdit_dt_inicio_contrato,
+            'dataAssinatura': self.lineEdit_dt_assinatura_contrato
+        }
+
+        self.widgets_especials_contra = {
+            'rgContra': self.lineEdit_rg_repre,
+            'cpfContra': self.lineEdit_cpf_repre,
+            'cepContra': self.lineEdit_cep_repre,
+        }
+
         self.relacoes_validator ={
             self.lineEdit_nome_repre: TextOnly(),
             self.lineEdit_orgao_repre: TextOnly(),
@@ -382,21 +411,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.correio_repre = [
             self.lineEdit_cep_repre, self.lineEdit_endereco_repre, self.lineEdit_bairro_repre, self.lineEdit_cidade_repre, self.lineEdit_estado_repre
         ]
-
-
-        self.ID_MENU = 0
-        self.ID_FORM = 1
-        
-        self.max_repre = 3
-      
-        self.file = File()
-        self.excecao = None
-
-        self.setWindowTitle('Gerador de CPS')
-
-        self.setWindowIcon(QIcon(
-            resource_path('src\\imgs\\cps-icon.ico'))
-        )
 
         for i in [self.pushButton_clienteA, self.pushButton_clienteB, self.pushButton_clienteC]:
             icon = QIcon()
@@ -487,7 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def init_reference(self):
-        for index in range(1, 3):
+        for index in range(1, self.max_repre):
             for nome, widget in self.valores_contratante.items():
                 self.relacoes[nome + str(index)] = widget
 
@@ -502,6 +516,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
+        print(self.referencias)
+
     #TODO EXECUTAR
     def executar(self):
         try:    
@@ -512,7 +528,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             qnt_repre = self.comboBox_repre.currentIndex() + 1
             base = conteudo.base(qnt_repre)
-            print(base)
             atualizado = conteudo.update_dict(qnt_repre)
 
             self.file.alterar(base, atualizado)
@@ -572,6 +587,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.excecao != None:
             self.excecao.remocao(self)
 
+    #TODO FILTRO
     def filtro(self):
         ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
@@ -586,13 +602,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             ref_temp.pop('valorEFD')
 
-        for i in range(1, self.comboBox_repre.currentIndex() +2):
+        for i in range(1, self.max_repre):
             ref_temp.pop('emissorContra' + str(i))
             ref_temp.pop('compleContra' + str(i))
-            if ref_temp['nacionalidadeContra' + str(i)] != 'brasileiro(a)':
+            if ref_temp['nacionalidadeContra' + str(i)] != 'Brasileiro(a)':
                 ref_temp.pop('rgContra' + str(i))
 
-        for i in range(self.comboBox_repre.currentIndex() + 2, 4):
+        for i in range(1, self.comboBox_repre.currentIndex() + 2):
+            for key, widget in self.widgets_especials_contra.items():
+                value = widget.text()
+                ref_temp[key+str(i)] = value.replace('.','').replace('-','').replace('/','').replace(' ','')
+        
+        for key, widget in self.widgets_especials.items():
+            value = widget.text()
+            ref_temp[key] = value.replace('.','').replace('-','').replace('/','').replace(' ','')
+                
+
+        #Desconsiderar do atual pra frente
+        for i in range(self.comboBox_repre.currentIndex() + 2, self.max_repre):
             for j in self.valores_contratante:
                 ref_temp.pop(j + str(i),None)
 
