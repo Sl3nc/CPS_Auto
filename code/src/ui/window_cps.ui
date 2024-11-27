@@ -192,6 +192,9 @@
                <property name="text">
                 <string>CPS Lucro Presumido / Real</string>
                </property>
+               <property name="shortcut">
+                <string>1</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -232,6 +235,9 @@
                </property>
                <property name="text">
                 <string>CPS Pessoa Física</string>
+               </property>
+               <property name="shortcut">
+                <string>3</string>
                </property>
               </widget>
              </item>
@@ -274,6 +280,9 @@
                <property name="text">
                 <string>CPS Inatividade</string>
                </property>
+               <property name="shortcut">
+                <string>2</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -315,6 +324,9 @@
                <property name="text">
                 <string>CPS Simples Nacional</string>
                </property>
+               <property name="shortcut">
+                <string>4</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -341,6 +353,9 @@
             </property>
             <property name="text">
              <string>Voltar ao menu</string>
+            </property>
+            <property name="shortcut">
+             <string>Esc</string>
             </property>
            </widget>
           </item>
@@ -1538,6 +1553,9 @@
             </property>
             <property name="text">
              <string>Enviar</string>
+            </property>
+            <property name="shortcut">
+             <string>Enter</string>
             </property>
            </widget>
           </item>
