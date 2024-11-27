@@ -159,11 +159,11 @@ class Conteudo:
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
 
-        self.cabecalho = '{{ nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{ cnpjEmp }}, neste ato representada por ',
+        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
 
         self.conteudo_base = {
-            0: [
-                '{{ nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{ cpfContra1 }}',
+            1: [
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
 
                 '''_______________________________     
                 
@@ -172,7 +172,7 @@ ______________________________
 Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                 '''
                 ],
-            1: [
+            2: [
                 '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
                 '''_______________________________                                                  ____________________________________
@@ -209,13 +209,8 @@ Deltaprice Serviços Contábeis Ltda.                                           
 
         return self.dictonary
     
+    #TODO UPDT REPRE
     def __update_repre(self, qnt_repre):
-        # ref_estado = {
-        #     'STB': 'Casado em Separação Total de Bens',
-        #     'CPB': 'Casado em Comunhão Parcial de Bens',
-        #     'CUB': 'Casado em Comunhão Universal de Bens'
-        # }
-
         for i in range(1, qnt_repre + 1):
             i = str(i)
             ref = {
@@ -226,15 +221,11 @@ Deltaprice Serviços Contábeis Ltda.                                           
                 'compleContra': self.dictonary['compleContra'+ i].title()
             }
 
-            # regime = self.dictonary['estadoCivilContra' + i]
-            # if regime in ref_estado:
-            #     self.dictonary['estadoCivilContra' + i] = ref_estado[regime]
-
             for index, value in ref.items():
                 self.dictonary[index + i] = value
 
     def __set_IJuridica(self):
-        if 'nomeEmp' in self.dictonary:
+        if 'nomeEmp' in self.dictonary.keys():
 
             ref = {
                 'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
@@ -519,8 +510,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Aviso(self.filtro()).validar()
             conteudo = Conteudo(self.referencias)
 
-            qnt_repre = self.comboBox_repre.currentIndex()
+            qnt_repre = self.comboBox_repre.currentIndex() + 1
             base = conteudo.base(qnt_repre)
+            print(base)
             atualizado = conteudo.update_dict(qnt_repre)
 
             self.file.alterar(base, atualizado)
