@@ -226,7 +226,6 @@ Deltaprice Serviços Contábeis Ltda.                                           
 
     def __set_empresa(self):
         if self.dictonary.get('nomeEmp') != None:
-            print('Entrou')
 
             ref = {
                 'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
@@ -516,8 +515,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
-        print(self.referencias)
-
     #TODO EXECUTAR
     def executar(self):
         try:    
@@ -638,9 +635,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif f'Contra{id}' in key and type(widget) == QComboBox:
                     self.referencias[key] = widget.currentText()
 
-                # print(f'Contra{id}')
-                # print(f'chave - {key}')
-
             elif 'Contra' not in key:
                 self.referencias[key] = widget.text()
 
@@ -655,9 +649,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, widget in self.relacoes_label_cliente.items():
             if f'Contra{id}' in key:
                 widget.setText(self.referencias[key])
-
-        # print(f'---------------------------------------{self.vez}')
-        # self.vez = self.vez + 1
 
     def items_checkbox(self, check_box: QCheckBox):
         for key, list in self.relacoes_checkbox.items():
