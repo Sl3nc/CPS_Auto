@@ -155,49 +155,51 @@ class Conteudo:
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
 
-        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representada por ',
+        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representado(a) por ',
 
-        self.conteudo_base = {
-            1: [
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+        self.honorario_base = {
+            1: 
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+               
+            2:
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
+            3: 
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP Ë{{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra2 }}, CPF {{r cpfContra2 }} e {{r nomeContra3 }}, {{ nacionalidadeContra3 }}, {{ empregoContra3 }}, {{ estadoCivilContra3 }}, residente e domiciliado(a) na rua {{ ruaContra3 }}, nº {{ numContra3 }}, {{ compleContra3 }} bairro {{ bairroContra3 }} , CEP {{ cepContra3 }}, {{ cidadeContra3 }}, {{ estadoContra3 }}, portador(a) do documento de identidade sob o nº {{ rgContra3 }} {{ emissorContra3 }}, CPF {{r cpfContra3 }} denominados(as) daqui por diante de Contratante;'
+        }
+
+        self.assinatura_base = {
+            1:  
                 '''_______________________________     
                 
                 
-______________________________
-Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                '''
-                ],
-            2: [
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
-
+                ______________________________
+                Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                ''',
+            2: 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                     {{r nomeContra2 }}
-                '''],
-            3: [
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra2 }}, CPF {{r cpfContra2 }} e {{r nomeContra3 }}, {{ nacionalidadeContra3 }}, {{ empregoContra3 }}, {{ estadoCivilContra3 }}, residente e domiciliado(a) na rua {{ ruaContra3 }}, nº {{ numContra3 }}, {{ compleContra3 }} bairro {{ bairroContra3 }} , CEP {{ cepContra3 }}, {{ cidadeContra3 }}, {{ estadoContra3 }}, portador(a) do documento de identidade sob o nº {{ rgContra3 }} {{ emissorContra3 }}, CPF {{r cpfContra3 }} denominados(as) daqui por diante de Contratante;',
-
+                ''',
+            3: 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                     {{r nomeContra2 }}
                     {{r nomeContra3 }}
-                ''']
+                '''
         }
 
     def base(self, index_atual: int):
-        conteudo_base = self.conteudo_base[index_atual]
         return {
             'cabecalho_emp' : self.cabecalho[0],
-            'honorarios' : conteudo_base[0],
-            'assinatura' : conteudo_base[1]
+            'honorarios' : self.honorario_base[index_atual],
+            'assinatura' : self.assinatura_base[index_atual]
         }
 
     #TODO UPDT DICT
     def update_dict(self, qnt_repre):
         ref = {
             'valorPagamento': self.__set_valor(),
-            'numEmp': self.__set_num(self.dictonary['numEmp']),
             'diaVenc': self.__set_num(self.dictonary['diaVencimento']),
             'dataComple': lambda: self.dictonary['dataInicio'][2:],
             'dataAssinatura': self.__set_data(self.dictonary['dataAssinatura']),
@@ -220,7 +222,7 @@ Deltaprice Serviços Contábeis Ltda.                                           
             i = str(i)
             ref = {
                 'nomeContra': RichText(self.dictonary['nomeContra' + i].upper(), bold = True),
-                'ruaContra': self.dictonary['ruaContra'+ i].title(), 
+                'ruaContra': self.dictonary['ruaContra'+ i].title().replace('Rua ',''), 
                 'bairroContra':self.dictonary['bairroContra'+ i].title(),
                 'cpfContra' : RichText(self.dictonary['cpfContra'+ i].upper(), bold = True),
                 'compleContra': self.dictonary['compleContra'+ i].title()
@@ -234,10 +236,10 @@ Deltaprice Serviços Contábeis Ltda.                                           
 
             ref = {
                 'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
-                'ruaEmp': self.dictonary['ruaEmp'].title(), 
+                'ruaEmp': self.dictonary['ruaEmp'].title().replace('Rua ',''), 
                 'bairroEmp':self.dictonary['bairroEmp'].title(),
                 'cnpjEmp' : RichText(self.dictonary['cnpjEmp'].upper(), bold = True),
-                'compleEmp': self.dictonary['bairroEmp'].title()
+                'compleEmp': self.dictonary['compleEmp'].title()
             }
 
             for index, value in ref.items():
