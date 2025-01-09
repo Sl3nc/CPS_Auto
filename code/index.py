@@ -544,6 +544,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #TODO EXECUTAR
     def executar(self):
         try:    
+            self.pushButton_executar.setEnabled(False)
             if self.comboBox_repre.currentIndex() == 0:
                 self.absorve_preenche(1)
             self.slim_absorve_preenche()
@@ -580,12 +581,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             traceback.print_exc()
             messagebox.showwarning(title='Aviso', message= e)
+        finally:
+            self.pushButton_executar.setEnabled(True)
 
     def start_load(self):
          self.movie.start()
          self.stackedWidget.setCurrentIndex(self.ID_LOAD)
 
     def end_load(self, caminho: str):
+        self.pushButton_executar.setEnabled(True)
         self.movie.stop()
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
 
