@@ -70,8 +70,7 @@ class File:
     def set_option(self, nome: str):
         self.current_option = nome if nome in self.options else Exception('Nome de arquivo inválido')
 
-    def alterar(self, base, updt): 
-        caminho = self.salvar() 
+    def alterar(self, base: dict, updt: dict, caminho: str): 
         self.arquivo = \
             DocxTemplate(
                 resource_path(self.base_caminho.format(
@@ -85,7 +84,6 @@ class File:
         self.arquivo = DocxTemplate(caminho)
         self.arquivo.render(updt)
         self.arquivo.save(caminho)
-        self.abrir(caminho)
 
     def salvar(self):
         caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
@@ -94,10 +92,6 @@ class File:
             raise Exception('Operação Cancelada')
         
         return caminho + '.docx'
-    
-    def abrir(self, caminho: str):
-        messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
-        os.startfile(caminho)
 
 class Aviso:
     def __init__(self, ref) -> None:
@@ -293,6 +287,23 @@ class Correios:
         except:
             raise Exception('Verifique se o cep foi digitado corretamente e tente novamente') 
 
+class Worker(QObject):
+    inicio = Signal()
+    fim = Signal(str)
+
+
+    def __init__(self, file: File, base: dict, atualizado: dict) -> None:
+        super().__init__()
+        self.file = file
+        self.base = base
+        self.atualizado = atualizado
+
+    def main(self):
+        caminho = self.file.salvar() 
+        self.inicio.emit()
+        self.file.alterar(self.base, self.atualizado, caminho)
+        self.fim.emit(caminho)
+
 #TODO MAIN
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
@@ -305,6 +316,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.ID_MENU = 0
         self.ID_FORM = 1
+        self.ID_LOAD = 2
           
         self.file = File()
         self.excecao = None
@@ -314,6 +326,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowIcon(QIcon(
             resource_path('src\\imgs\\cps-icon.ico'))
         )
+
+        self.movie = QMovie(resource_path("src\\imgs\\load.gif"))
+        self.gif_load.setMovie(self.movie)
 
         self.atual_stacked_2 = 0
 
@@ -540,7 +555,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             base = conteudo.base(qnt_repre)
             atualizado = conteudo.update_dict(qnt_repre)
 
-            self.file.alterar(base, atualizado)
+            self._worker = Worker(
+                self.file,
+                base,
+                atualizado
+            )
+
+            self._thread = QThread()
+            worker = self._worker
+            thread = self._thread
+
+            worker.moveToThread(thread)
+            thread.started.connect(worker.main)
+            worker.fim.connect(thread.quit)
+            worker.fim.connect(thread.deleteLater)
+            thread.finished.connect(worker.deleteLater)
+            worker.inicio.connect(self.start_load) 
+            worker.fim.connect(self.end_load) 
+            thread.start() 
         except ValueError:
             messagebox.showwarning(title='Aviso', message= 'Insira datas válidas')
         except ZeroDivisionError:
@@ -548,6 +580,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             traceback.print_exc()
             messagebox.showwarning(title='Aviso', message= e)
+
+    def start_load(self):
+         self.movie.start()
+         self.stackedWidget.setCurrentIndex(self.ID_LOAD)
+
+    def end_load(self, caminho: str):
+        self.movie.stop()
+        self.stackedWidget.setCurrentIndex(self.ID_FORM)
+
+        messagebox.showinfo(title='Aviso', message='Abrindo o arquivo gerado!')
+        os.startfile(caminho)
 
     def consultar_correio(self, lineEdit: list[QLineEdit]):
         try:

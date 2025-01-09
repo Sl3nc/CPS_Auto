@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.logo_menu.sizePolicy().hasHeightForWidth())
         self.logo_menu.setSizePolicy(sizePolicy1)
         self.logo_menu.setMinimumSize(QSize(580, 108))
-        self.logo_menu.setMaximumSize(QSize(1160, 208))
+        self.logo_menu.setMaximumSize(QSize(1160, 216))
         self.logo_menu.setPixmap(QPixmap(u"../imgs/cps_horizontal.png"))
         self.logo_menu.setScaledContents(True)
 
@@ -943,6 +943,44 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addLayout(self.grid_contrato)
 
         self.stackedWidget.addWidget(self.form)
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.gridLayout_15 = QGridLayout(self.page)
+        self.gridLayout_15.setObjectName(u"gridLayout_15")
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_15.addItem(self.horizontalSpacer_6, 0, 0, 1, 1)
+
+        self.text_load = QLabel(self.page)
+        self.text_load.setObjectName(u"text_load")
+        font10 = QFont()
+        font10.setFamilies([u"Tw Cen MT"])
+        font10.setPointSize(48)
+        self.text_load.setFont(font10)
+        self.text_load.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_15.addWidget(self.text_load, 1, 1, 1, 1)
+
+        self.gif_load = QLabel(self.page)
+        self.gif_load.setObjectName(u"gif_load")
+        self.gif_load.setPixmap(QPixmap(u"../imgs/load.gif"))
+        self.gif_load.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_15.addWidget(self.gif_load, 0, 1, 1, 1)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_15.addItem(self.horizontalSpacer_7, 1, 0, 1, 1)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_15.addItem(self.horizontalSpacer_8, 0, 2, 1, 1)
+
+        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_15.addItem(self.horizontalSpacer_9, 1, 2, 1, 1)
+
+        self.stackedWidget.addWidget(self.page)
 
         self.gridLayout.addWidget(self.stackedWidget, 0, 0, 1, 1)
 
@@ -1042,7 +1080,7 @@ class Ui_MainWindow(object):
         self.label_rg_repre.setText(QCoreApplication.translate("MainWindow", u"RG", None))
         self.label_estado_repre.setText(QCoreApplication.translate("MainWindow", u"Estado", None))
         self.label_cidade_repre.setText(QCoreApplication.translate("MainWindow", u"Cidade", None))
-        self.label_orgao_repre.setText(QCoreApplication.translate("MainWindow", u"Org\u00e3o", None))
+        self.label_orgao_repre.setText(QCoreApplication.translate("MainWindow", u"Org\u00e3o (opcional)", None))
         self.label_estado_civil_repre.setText(QCoreApplication.translate("MainWindow", u"Estado Civil", None))
         self.lineEdit_nacio.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Insira a nacionalidade", None))
         self.pushButton_nacio.setText(QCoreApplication.translate("MainWindow", u"Desfazer", None))
@@ -1081,5 +1119,7 @@ class Ui_MainWindow(object):
         self.label_dt_assinatura_contrato.setText(QCoreApplication.translate("MainWindow", u"Data Assinatura", None))
         self.label_dia_vencimento_contrato.setText(QCoreApplication.translate("MainWindow", u"Dia Vencimento", None))
         self.label_num_empreg_contrato.setText(QCoreApplication.translate("MainWindow", u"Num. Empregados", None))
+        self.text_load.setText(QCoreApplication.translate("MainWindow", u"Carregando...", None))
+        self.gif_load.setText("")
     # retranslateUi
 
