@@ -64,19 +64,21 @@ class File:
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
         self.base_caminho = 'src\\CPS\'s\\CPS {0}.docx'
+        self.current_option = ''
 
 #Falta usarmos o set quando se escolhe uma opção do menu
     def set_option(self, nome: str):
-        self.arquivo = \
-            DocxTemplate(
-                resource_path(self.base_caminho.format(
-                        unidecode(nome)
-                    )
-                )
-            )  if nome in self.options else None
+        self.current_option = nome if nome in self.options else Exception('Nome de arquivo inválido')
 
     def alterar(self, base, updt): 
         caminho = self.salvar() 
+        self.arquivo = \
+            DocxTemplate(
+                resource_path(self.base_caminho.format(
+                        unidecode(self.current_option)
+                    )
+                )
+            )
 
         self.arquivo.render(base)
         self.arquivo.save(caminho)
@@ -173,10 +175,19 @@ Deltaprice Serviços Contábeis Ltda.                                           
                 '''
                 ],
             2: [
-                '{{r nomeContra1 }}, brasileiro(a), empresário(a), {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, brasileiro(a), empresário(a), {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
 
                 '''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                    {{r nomeContra2 }}
+                '''],
+            3: [
+                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra2 }}, CPF {{r cpfContra2 }} e {{r nomeContra3 }}, {{ nacionalidadeContra3 }}, {{ empregoContra3 }}, {{ estadoCivilContra3 }}, residente e domiciliado(a) na rua {{ ruaContra3 }}, nº {{ numContra3 }}, {{ compleContra3 }} bairro {{ bairroContra3 }} , CEP {{ cepContra3 }}, {{ cidadeContra3 }}, {{ estadoContra3 }}, portador(a) do documento de identidade sob o nº {{ rgContra3 }} {{ emissorContra3 }}, CPF {{r cpfContra3 }} denominados(as) daqui por diante de Contratante;',
+
+                '''_______________________________                                                  ____________________________________
+                    Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
+                    {{r nomeContra2 }}
+                    {{r nomeContra3 }}
                 ''']
         }
 
@@ -520,6 +531,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:    
             if self.comboBox_repre.currentIndex() == 0:
                 self.absorve_preenche(1)
+            self.slim_absorve_preenche()
+
             Aviso(self.filtro()).validar()
             conteudo = Conteudo(self.referencias)
 
@@ -589,6 +602,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
 
+        for key, widget in self.widgets_especials.items():
+            value = widget.text()
+            ref_temp[key] = value.replace('.','').replace('-','').replace('/','').replace(' ','')
+
+        for i in range(1, self.comboBox_repre.currentIndex() + 2):
+            for key, widget in self.widgets_especials_contra.items():
+                value = widget.text()
+                ref_temp[key+str(i)] = value.replace('.','').replace('-','').replace('/','').replace(' ','') 
+
         if self.excecao != None:
             if self.excecao.__qualname__ != ILucroPresumido.__qualname__:
                 ref_temp.pop('valorEFD')
@@ -605,16 +627,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if ref_temp['nacionalidadeContra' + str(i)] != 'Brasileiro(a)':
                 ref_temp.pop('rgContra' + str(i))
 
-        for i in range(1, self.comboBox_repre.currentIndex() + 2):
-            for key, widget in self.widgets_especials_contra.items():
-                value = widget.text()
-                ref_temp[key+str(i)] = value.replace('.','').replace('-','').replace('/','').replace(' ','')
-        
-        for key, widget in self.widgets_especials.items():
-            value = widget.text()
-            ref_temp[key] = value.replace('.','').replace('-','').replace('/','').replace(' ','')
-                
-
         #Desconsiderar do atual pra frente
         for i in range(self.comboBox_repre.currentIndex() + 2, self.max_repre):
             for j in self.valores_contratante:
@@ -626,7 +638,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
-#TODO ABS
+            
+    def slim_absorve_preenche(self):
+        for key, widget in self.relacoes.items():
+            if 'Contra' not in key:
+                self.referencias[key] = widget.text()
+
+        for widget, key in self.relacao_numeros.items():
+            if widget.isChecked() == True and 'Contra' not in key:
+                self.referencias[key] = 'S/N'
+            
+#TODO ABS_PRE
     def absorve_preenche(self, id):
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key:
