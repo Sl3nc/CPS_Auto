@@ -155,38 +155,38 @@ class Conteudo:
         self.SAL_MINIMO = 1412.00
         self.CUSTO_CORREIO = 0.02
 
-        self.cabecalho = '{{r nomeEmp }}, estabelecida na rua {{ ruaEmp }}, nº {{ numEmp }}, {{ compleEmp }}, bairro {{ bairroEmp }}, CEP {{ cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representado(a) por ',
+        self.cabecalho = RichText('{{r nomeEmp }}, estabelecida na rua {{r ruaEmp }}, nº {{r numEmp }}, {{r compleEmp }}, bairro {{r bairroEmp }}, CEP {{r cepEmp }}, CNPJ {{r cnpjEmp }}, neste ato representado(a) por ', size= 10, font= 'Calibri'),
 
         self.honorario_base = {
             1: 
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra1 }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}',
+                RichText('{{r nomeContra1 }}, {{r nacionalidadeContra1 }}, {{r empregoContra1 }}, {{r estadoCivilContra1 }}, residente e domiciliado(a) na {{r ruaContra1 }}, nº {{r numContra1 }}, {{r compleContra1 }} bairro {{r bairroContra1 }} , CEP {{r cepContra1 }}, {{r cidadeContra1 }}, {{r estadoContra1 }}, portador(a) do documento de identidade sob o nº {{r rgContra1 }} {{r emissorContra1 }}, CPF {{r cpfContra1 }}', size= 10, font= 'Calibri'),
                
             2:
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;',
+                RichText('{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }} e {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP {{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra }}, CPF {{r cpfContra2 }} denominados(a) daqui por diante de Contratante;', size= 10, font= 'Calibri'),
 
             3: 
-                '{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP Ë{{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra2 }}, CPF {{r cpfContra2 }} e {{r nomeContra3 }}, {{ nacionalidadeContra3 }}, {{ empregoContra3 }}, {{ estadoCivilContra3 }}, residente e domiciliado(a) na rua {{ ruaContra3 }}, nº {{ numContra3 }}, {{ compleContra3 }} bairro {{ bairroContra3 }} , CEP {{ cepContra3 }}, {{ cidadeContra3 }}, {{ estadoContra3 }}, portador(a) do documento de identidade sob o nº {{ rgContra3 }} {{ emissorContra3 }}, CPF {{r cpfContra3 }} denominados(as) daqui por diante de Contratante;'
+                RichText('{{r nomeContra1 }}, {{ nacionalidadeContra1 }}, {{ empregoContra1 }}, {{ estadoCivilContra1 }}, residente e domiciliado(a) na rua {{ ruaContra1 }}, nº {{ numContra1 }}, {{ compleContra1 }} bairro {{ bairroContra1 }} , CEP {{ cepContra1 }}, {{ cidadeContra }}, {{ estadoContra1 }}, portador(a) do documento de identidade sob o nº {{ rgContra1 }} {{ emissorContra1 }}, CPF {{r cpfContra1 }}, {{r nomeContra2 }}, {{ nacionalidadeContra2 }}, {{ empregoContra2 }}, {{ estadoCivilContra2 }}, residente e domiciliado(a) na rua {{ ruaContra2 }}, nº {{ numContra2 }}, {{ compleContra2 }} bairro {{ bairroContra2 }} , CEP Ë{{ cepContra2 }}, {{ cidadeContra2 }}, {{ estadoContra2 }}, portador(a) do documento de identidade sob o nº {{ rgContra2 }} {{ emissorContra2 }}, CPF {{r cpfContra2 }} e {{r nomeContra3 }}, {{ nacionalidadeContra3 }}, {{ empregoContra3 }}, {{ estadoCivilContra3 }}, residente e domiciliado(a) na rua {{ ruaContra3 }}, nº {{ numContra3 }}, {{ compleContra3 }} bairro {{ bairroContra3 }} , CEP {{ cepContra3 }}, {{ cidadeContra3 }}, {{ estadoContra3 }}, portador(a) do documento de identidade sob o nº {{ rgContra3 }} {{ emissorContra3 }}, CPF {{r cpfContra3 }} denominados(as) daqui por diante de Contratante;', size= 10, font= 'Calibri')
         }
 
         self.assinatura_base = {
             1:  
-                '''_______________________________     
+                RichText('''_______________________________     
                 
                 
                 ______________________________
                 Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
-                ''',
+                ''', size= 10, font= 'Calibri'),
             2: 
-                '''_______________________________                                                  ____________________________________
+                RichText('''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                     {{r nomeContra2 }}
-                ''',
+                ''', size= 10, font= 'Calibri'),
             3: 
-                '''_______________________________                                                  ____________________________________
+                RichText('''_______________________________                                                  ____________________________________
                     Deltaprice Serviços Contábeis Ltda.                                                        {{r nomeContra1 }}
                     {{r nomeContra2 }}
                     {{r nomeContra3 }}
-                '''
+                ''', size= 10, font= 'Calibri')
         }
 
     def base(self, index_atual: int):
@@ -213,6 +213,9 @@ class Conteudo:
 
         self.__set_empresa()
         self.__update_repre(qnt_repre)
+        for key, value in self.dictonary.items():
+            if type(self.dictonary[key]) != RichText:
+                self.dictonary[key] = RichText(value, size= 10, font='Calibri')
 
         return self.dictonary
     
@@ -221,10 +224,10 @@ class Conteudo:
         for i in range(1, qnt_repre + 1):
             i = str(i)
             ref = {
-                'nomeContra': RichText(self.dictonary['nomeContra' + i].upper(), bold = True),
+                'nomeContra': RichText(self.dictonary['nomeContra' + i].upper(), bold = True, size= 10, font= 'Calibri'),
                 'ruaContra': self.dictonary['ruaContra'+ i].title().replace('Rua ',''), 
                 'bairroContra':self.dictonary['bairroContra'+ i].title(),
-                'cpfContra' : RichText(self.dictonary['cpfContra'+ i].upper(), bold = True),
+                'cpfContra' : RichText(self.dictonary['cpfContra'+ i].upper(), bold = True, size= 10, font= 'Calibri'),
                 'compleContra': self.dictonary['compleContra'+ i].title()
             }
 
@@ -235,10 +238,10 @@ class Conteudo:
         if self.dictonary.get('nomeEmp') != None:
 
             ref = {
-                'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True),
+                'nomeEmp': RichText(self.dictonary['nomeEmp'].upper(), bold = True, size= 10, font= 'Calibri'),
                 'ruaEmp': self.dictonary['ruaEmp'].title().replace('Rua ',''), 
                 'bairroEmp':self.dictonary['bairroEmp'].title(),
-                'cnpjEmp' : RichText(self.dictonary['cnpjEmp'].upper(), bold = True),
+                'cnpjEmp' : RichText(self.dictonary['cnpjEmp'].upper(), bold = True, size= 10, font= 'Calibri'),
                 'compleEmp': self.dictonary['compleEmp'].title()
             }
 
@@ -292,7 +295,6 @@ class Correios:
 class Worker(QObject):
     inicio = Signal()
     fim = Signal(str)
-
 
     def __init__(self, file: File, base: dict, atualizado: dict) -> None:
         super().__init__()
