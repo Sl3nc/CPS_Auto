@@ -289,6 +289,8 @@ class Correios:
             url = requests.get(self.URL.format(endereco)).content
             dic = json.loads(url)
             return [dic["logradouro"], dic["bairro"], dic["localidade"], dic["estado"]]
+        except requests.exceptions.ConnectionError:
+            raise Exception('Falha de conexão aos sistemas dos Correios, verifique sua rede e tente novamente')
         except:
             raise Exception('Verifique se o cep foi digitado corretamente e tente novamente') 
 
