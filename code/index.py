@@ -14,7 +14,6 @@ import locale
 import traceback
 import requests
 import json
-from pathlib import Path
 
 from PySide6.QtWidgets import (
     QMainWindow, QApplication, QLabel, QLineEdit, QComboBox, QCheckBox, QPushButton, QSpinBox, QDoubleSpinBox
@@ -25,41 +24,59 @@ from src.window_cps import Ui_MainWindow
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
+def resource_path(relative_path):
+    base_path = getattr(
+        sys,
+        '_MEIPASS',
+        os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 class TextOnly(QValidator):
-    """
-    Validador personalizado para aceitar apenas texto (letras) em campos de entrada.
-    """
     def validate(self, string, index):
         if re.compile("[a-zA-Z]+").fullmatch(string) or string == '':
             return QValidator.State.Acceptable
         return QValidator.State.Invalid
+
+    # def operacao_cpf(self, text):
+    #     numeros = [int(digito) for digito in text if digito.isdigit()]
+  
+    #     for i in range(9,11):
+    #         soma_produtos = sum(a*b for a, b in zip (numeros[0:i], range (i + 1, 1, -1)))
+    #         digito_esperado = (soma_produtos * 10 % 11) % 10
+    #         if numeros[i] != digito_esperado:
+    #             return False
+    #     return True
+    
+    # def operacao_cnpj(self, text):
+    #     cnpj = ''.join([digito for digito in text if digito.isdigit()])
+    #     if cnpj in (c * 14 for c in "1234567890"):
+    #         return False
+
+    #     cnpj_r = cnpj[::-1]
+    #     for i in range(2, 0, -1):
+    #         cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
+    #         dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
+    #     if cnpj_r[i - 1:i] != str(dv % 10):
+    #         return False
+    #     return True
         
 class File:
-    """
-    Gerencia operações relacionadas a arquivos de contratos, como seleção de modelo,
-    alteração e salvamento do documento gerado.
-    """
     def __init__(self):
         self.options = ['Pessoa Física', 'Inatividade', 'Lucro Presumido', 'Simples Nacional']
         self.base_caminho = 'src\\CPS\'s\\CPS {0}.docx'
         self.current_option = ''
 
+#Falta usarmos o set quando se escolhe uma opção do menu
     def set_option(self, nome: str):
-        """
-        Define a opção/modelo de contrato a ser utilizado.
-        """
         self.current_option = nome if nome in self.options else Exception('Nome de arquivo inválido')
 
     def alterar(self, base: dict, updt: dict, caminho: str): 
-        """
-        Renderiza e salva o documento Word com os dados fornecidos.
-        """
         self.arquivo = \
             DocxTemplate(
-                (Path(__file__).parent).__str__() + \
-                    self.base_caminho.format(
+                resource_path(self.base_caminho.format(
                         unidecode(self.current_option)
                     )
+                )
             )
 
         self.arquivo.render(base)
@@ -69,9 +86,6 @@ class File:
         self.arquivo.save(caminho)
 
     def salvar(self):
-        """
-        Abre diálogo para o usuário escolher onde salvar o arquivo gerado.
-        """
         caminho = asksaveasfilename(title='Defina o nome e o local onde o arquivo será salvo', filetypes=((".docx","*.docx"),))
 
         if caminho[caminho.rfind('/') + 1:] == '':
@@ -80,17 +94,11 @@ class File:
         return caminho + '.docx'
 
 class Aviso:
-    """
-    Responsável por validar se todos os campos obrigatórios foram preenchidos.
-    """
     def __init__(self, ref) -> None:
         self.ref = ref
         pass
 
     def validar(self):
-        """
-        Verifica se há campos vazios e lança exceção se necessário.
-        """
         resp_final = self.__textos_vazios(self.__add_vazios())
 
         if len(resp_final) != 0:
@@ -139,11 +147,8 @@ class Aviso:
 
         return resp_final
 
+#TODO CONTEUDO
 class Conteudo:
-    """
-    Manipula e prepara os dados que serão inseridos no contrato, incluindo
-    formatação, cálculos e textos em extenso.
-    """
     def __init__(self, referencias: dict[str:str]):
         self.dictonary = copy.deepcopy(referencias)
         
@@ -203,9 +208,6 @@ class Conteudo:
         }
 
     def base(self, index_atual: int):
-        """
-        Retorna o dicionário base para renderização do contrato.
-        """
         return {
             'cabecalho_emp' : self.cabecalho[0],
             'honorarios' : self.honorario_base[index_atual],
@@ -213,10 +215,8 @@ class Conteudo:
             'rodape': self.rodape[index_atual]
         }
 
+    #TODO UPDT DICT
     def update_dict(self, qnt_repre):
-        """
-        Atualiza o dicionário de referências com valores calculados e formatados.
-        """
         ref = {
             'valPag': self.__set_valor(),
             'diaVenc': self.__set_num(self.dictonary['dtVenc']),
@@ -238,10 +238,8 @@ class Conteudo:
 
         return self.dictonary
     
+    #TODO UPDT REPRE
     def __update_repre(self, qnt_repre):
-        """
-        Atualiza os dados dos representantes no dicionário de referências.
-        """
         for i in range(1, qnt_repre + 1):
             i = str(i)
             ref = {
@@ -256,9 +254,6 @@ class Conteudo:
                 self.dictonary[index + i] = value
 
     def __set_empresa(self):
-        """
-        Define os dados da empresa no dicionário de referências.
-        """
         if self.dictonary.get('nomeEmp') != None:
 
             ref = {
@@ -273,42 +268,27 @@ class Conteudo:
                 self.dictonary[index] = value
 
     def __set_valor(self):
-        """
-        Formata o valor do pagamento em moeda e por extenso.
-        """
         valor = self.dictonary['valPag'].replace(',','.').replace('R$','')
         valorExtenso = num2words(valor, lang='pt_BR', to='currency')\
             .replace('reais e','reais,')
         return f'R$ {float(valor):_.2f} ({valorExtenso})'.replace('.',',').replace('_','.')
     
     def __set_num(self, num: str):
-        """
-        Formata números para exibição no contrato, incluindo por extenso.
-        """
         if num.isdigit() == True:
             valorExtenso = num2words(num,lang='pt_BR')
             return f'{num} ({valorExtenso})'
         return 'S/N'
 
     def __set_data(self, data):
-        """
-        Converte e formata datas para o padrão do contrato.
-        """
         data_format = datetime.strptime(data, '%d/%m/%Y')
         return data_format.strftime("%d de %B de %Y")
         
     def __calc_porc(self):
-        """
-        Calcula a porcentagem do valor do contrato que corresponde ao custo de envio.
-        """
         valor = self.dictonary['valPag'].replace(',','.').replace('R$','')
         custo_envio = self.SAL_MINIMO * self.CUSTO_CORREIO
         return f'{((custo_envio / float(valor)) * 100):,.2f}%'
 
 class IExececao(metaclass=ABCMeta):
-    """
-    Interface para exceções de comportamento na interface gráfica.
-    """
     @abstractmethod
     def aplicacao(self):
         pass
@@ -318,18 +298,12 @@ class IExececao(metaclass=ABCMeta):
         pass
 
 class Correios:
-    """
-    Consulta informações de endereço a partir do CEP usando a API ViaCEP.
-    """
     URL = 'https://viacep.com.br/ws/{0}/json/'
 
     def __init__(self) -> None:
         pass
 
     def pesquisar_cep(self, endereco):
-        """
-        Realiza consulta do CEP e retorna dados do endereço.
-        """
         try:
             url = requests.get(self.URL.format(endereco)).content
             dic = json.loads(url)
@@ -340,9 +314,6 @@ class Correios:
             raise Exception('Verifique se o cep foi digitado corretamente e tente novamente') 
 
 class Worker(QObject):
-    """
-    Executa a geração do contrato em uma thread separada para não travar a interface.
-    """
     inicio = Signal()
     fim = Signal(str)
 
@@ -357,9 +328,6 @@ class Worker(QObject):
         ]
 
     def main(self):
-        """
-        Executa o processo de geração e salvamento do contrato.
-        """
         caminho = self.file.salvar() 
         self.inicio.emit()
         for i in self.addctional_base:
@@ -369,9 +337,6 @@ class Worker(QObject):
 
 #TODO MAIN
 class MainWindow(QMainWindow, Ui_MainWindow):
-    """
-    Classe principal da interface gráfica. Gerencia eventos, widgets e fluxo do programa.
-    """
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
@@ -390,12 +355,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle('Gerador de CPS')
 
         self.setWindowIcon(QIcon(
-            (Path(__file__).parent / 'src'/'imgs'/'cps-icon.ico').__str__())
+            resource_path('src\\imgs\\cps-icon.ico'))
         )
 
-        self.movie = QMovie(
-            (Path(__file__).parent / 'src'/'imgs'/'loadgif').__str__()
-        )
+        self.movie = QMovie(resource_path("src\\imgs\\load.gif"))
         self.gif_load.setMovie(self.movie)
 
         self.atual_stacked_2 = 0
@@ -407,6 +370,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cb_enviar_repre.setText('Enviar')
 
         self.referencias = {}
+
+        #TODO relacao
 
         self.relacoes = {
             'nomeEmp': self.lineEdit_nome_empresa,
@@ -507,20 +472,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         for i in [self.pushButton_clienteA, self.pushButton_clienteB, self.pushButton_clienteC]:
             icon = QIcon()
-            icon.addFile(
-                (Path(__file__).parent / 'src'/'imgs'/'engine.png').__str__(),
-                QSize(),
-                QIcon.Mode.Normal,
-                QIcon.State.Off
-            )
+            icon.addFile(resource_path("src\\imgs\\engine.png"), QSize(), QIcon.Mode.Normal, QIcon.State.Off)
             i.setIcon(icon)
 
         self.logo_menu.setPixmap(QPixmap(
-            (Path(__file__).parent / 'src'/'imgs'/'cps_horizontal.png').__str__())
+            resource_path('src\\imgs\\cps_horizontal.png'))
         )
 
         self.logo_form.setPixmap(QPixmap(
-            (Path(__file__).parent / 'src'/'imgs'/'cps_logo.png').__str__())
+            resource_path('src\\imgs\\cps_logo.png'))
         )
 
         self.pushButton_executar.clicked.connect(
@@ -596,9 +556,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def init_reference(self):
-        """
-        Inicializa o dicionário de referências com os widgets da interface.
-        """
         for index in range(1, self.max_repre):
             for nome, widget in self.valores_contratante.items():
                 self.relacoes[nome + str(index)] = widget
@@ -614,10 +571,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 for chave, widget in self.relacoes.items() if type(widget) == QSpinBox or type(widget) == QDoubleSpinBox
         }
 
+    #TODO EXECUTAR
     def executar(self):
-        """
-        Inicia o processo de validação e geração do contrato.
-        """
         try:    
             self.pushButton_executar.setEnabled(False)
             if self.comboBox_repre.currentIndex() == 0:
@@ -660,16 +615,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_executar.setEnabled(True)
 
     def start_load(self):
-        """
-        Exibe animação de carregamento.
-        """
-        self.movie.start()
-        self.stackedWidget.setCurrentIndex(self.ID_LOAD)
+         self.movie.start()
+         self.stackedWidget.setCurrentIndex(self.ID_LOAD)
 
     def end_load(self, caminho: str):
-        """
-        Finaliza animação de carregamento e abre o arquivo gerado.
-        """
         self.pushButton_executar.setEnabled(True)
         self.movie.stop()
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
@@ -678,9 +627,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         os.startfile(caminho)
 
     def consultar_correio(self, lineEdit: list[QLineEdit]):
-        """
-        Consulta endereço pelo CEP e preenche os campos automaticamente.
-        """
         try:
             cep = lineEdit[0].text()
             if len(cep) == 9:
@@ -694,9 +640,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= e)
 
     def acess_form(self, titulo: str, excecao: IExececao|None):
-        """
-        Acessa o formulário de acordo com o tipo de contrato selecionado.
-        """
         self.stackedWidget.setCurrentIndex(self.ID_FORM)
 
         self.file.set_option(titulo)
@@ -707,9 +650,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.excecao.aplicacao(self)
 
     def change_repre(self):
-        """
-        Altera a quantidade de representantes exibidos no formulário.
-        """
         if self.atual_stacked_2 == 0:
             self.absorve_preenche(1)
         self.atual_stacked_2 = self.comboBox_repre.currentIndex()
@@ -730,17 +670,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget_2.setCurrentIndex(index)
 
     def return_menu(self):
-        """
-        Retorna à tela inicial do menu.
-        """
         self.stackedWidget.setCurrentIndex(self.ID_MENU)
         if self.excecao != None:
             self.excecao.remocao(self)
 
+    #TODO FILTRO
     def filtro(self):
-        """
-        Filtra e prepara os dados para validação e geração do contrato.
-        """
         ref_temp = copy.deepcopy(self.referencias)
         ref_temp.pop('compleEmp')
 
@@ -777,17 +712,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return ref_temp
     
     def convert_id(self, id) -> str:
-        """
-        Converte identificador de representante para string numérica.
-        """
         for key, index in self.relacao_ids.items():
             if id == key:
                 return str(index)
             
     def slim_absorve_preenche(self):
-        """
-        Absorve dados dos campos não relacionados a representantes.
-        """
         for key, widget in self.relacoes.items():
             if 'Contra' not in key:
                 self.referencias[key] = widget.text()
@@ -796,10 +725,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if widget.isChecked() == True and 'Contra' not in key:
                 self.referencias[key] = 'S/N'
             
+#TODO ABS_PRE
     def absorve_preenche(self, id):
-        """
-        Absorve e preenche dados dos campos de um representante específico.
-        """
         for key, widget in self.relacoes.items():
             if f'Contra{id}' in key:
                 if type(widget) == QLineEdit:
@@ -823,18 +750,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 widget.setText(self.referencias[key])
 
     def items_checkbox(self, check_box: QCheckBox):
-        """
-        Retorna widgets relacionados a um checkbox específico.
-        """
         for key, list in self.relacoes_checkbox.items():
             if key == check_box:
                 lineEdit, button = list
         return lineEdit,button
 
 class ILucroPresumido(IExececao):
-    """
-    Exceção para contratos do tipo Lucro Presumido, exibindo campo EFD.
-    """
     def aplicacao(self: MainWindow):
         self.grid_contrato.removeWidget(self.pushButton_executar)
         self.grid_contrato.addWidget(self.label_EFD,1,5)
@@ -850,9 +771,6 @@ class ILucroPresumido(IExececao):
         self.label_EFD.hide()
             
 class IFisica(IExececao):
-    """
-    Exceção para contratos do tipo Pessoa Física, ocultando campos de empresa.
-    """
     def aplicacao(self: MainWindow):
         for layout in [self.grid_empresa, self.intro_empresa]:
             for i in range(layout.count()):
@@ -864,9 +782,6 @@ class IFisica(IExececao):
                 layout.itemAt(i).widget().show()
 
 class IEnviar(IExececao):
-    """
-    Exceção para envio de dados de representantes.
-    """
     def aplicacao(self: MainWindow, id: str):
         self.titulo_repre.setText(f'Representante {id}')
 
@@ -900,9 +815,6 @@ class IEnviar(IExececao):
         self.stackedWidget_2.setCurrentIndex(1)
 
 class ICheckBox:
-    """
-    Gerencia exibição de campos alternativos ativados por checkbox.
-    """
     def aplicacao(self: MainWindow, check_box: QCheckBox):
         lineEdit, button = self.items_checkbox(check_box)
 
@@ -922,9 +834,6 @@ class ICheckBox:
         button.hide()
 
 if __name__ == '__main__':
-    """
-    Ponto de entrada do programa. Inicializa a aplicação Qt.
-    """
     app = QApplication()
     window = MainWindow()
     window.show()
